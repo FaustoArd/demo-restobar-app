@@ -23,7 +23,7 @@ import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
 
 @RestController
-@RequestMapping("/api/v1/arbam/orders")
+@RequestMapping("/api/v1/arbam/resto_tables")
 public class RestoTableController {
 	
 	private static final Logger log = LoggerFactory.getLogger(RestoTableController.class);
