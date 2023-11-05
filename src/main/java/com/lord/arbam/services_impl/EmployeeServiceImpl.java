@@ -1,0 +1,59 @@
+package com.lord.arbam.services_impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lord.arbam.exceptions.ItemNotFoundException;
+import com.lord.arbam.models.Employee;
+import com.lord.arbam.models.EmployeeJob;
+import com.lord.arbam.repositories.EmployeeJobRepository;
+import com.lord.arbam.repositories.EmployeeRepository;
+import com.lord.arbam.services.EmployeeService;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+
+	
+	@Autowired
+	private final EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private final EmployeeJobRepository employeeJobRepository;
+	
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository,EmployeeJobRepository employeeJobRepository) {
+		this.employeeRepository = employeeRepository;
+		this.employeeJobRepository = employeeJobRepository;
+	}
+
+	@Override
+	public Employee findEmployeeById(Long id) {
+		return employeeRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("No se encontro el empleado. EmployeeServiceImpl.findEmployeeById"));
+	}
+
+	@Override
+	public Employee saveEmployee(Employee employee) {
+		EmployeeJob empJob = employeeJobRepository.findById(employee.getEmployeeJob().getId())
+				.orElseThrow(()-> new ItemNotFoundException("No se encontro el puesto de trabajo. EmployeeServiceImpl.saveEmployee"));
+		employee.setEmployeeJob(empJob);
+		return employeeRepository.save(employee);
+	}
+
+	@Override
+	public List<Employee> findAllEmployees() {
+		return (List<Employee>)employeeRepository.findAll();
+	}
+
+	@Override
+	public void deleteEmployeeById(Long id) {
+		if(employeeRepository.existsById(id)) {
+			employeeRepository.deleteById(id);
+		}else {
+			throw new ItemNotFoundException("No se encontro el empleado. EmployeeServiceImpl.deleteEmployeeById");
+		}
+		
+	}
+	
+}
+
