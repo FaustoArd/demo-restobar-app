@@ -1,5 +1,7 @@
 package com.lord.arbam.models;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,14 +21,24 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name="roles")
-public class Role {
+public class Role implements GrantedAuthority {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@NonNull
 	@Column(name="role", nullable = false)
-	private String role;
+	private String authority;
+
+	@Override
+	public String getAuthority() {
+		return this.authority;
+	}
 
 }
