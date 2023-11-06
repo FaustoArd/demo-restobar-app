@@ -29,7 +29,6 @@ public interface UserMapper {
 	@Mapping(target="authorities", ignore = true)
 	public User LoginDtoToUser(LoginResponseDto LoginDto);
 	
-	@Mapping(target="jwtToken", ignore = true)
-	public LoginResponseDto toLoginDto(User user);
+	
 	
 }

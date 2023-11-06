@@ -77,7 +77,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			User loggedUser = userService.findByUsername(user.getUsername());
 			LoginResponseDto loginDto = new LoginResponseDto();
 			loginDto.setUsername(loggedUser.getUsername());
-			loginDto.setPassword(loggedUser.getPassword());
 			loginDto.setJwtToken(jwtToken);
 			return loginDto;
 		}catch(AuthenticationException ex) {

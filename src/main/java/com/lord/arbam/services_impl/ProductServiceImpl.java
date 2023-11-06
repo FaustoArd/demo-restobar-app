@@ -1,5 +1,7 @@
 package com.lord.arbam.services_impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,6 +109,11 @@ public class ProductServiceImpl implements ProductService {
 			throw new ItemNotFoundException("No se encontro el producto. ProductServiceImpl.deleteProductById");
 		}
 
+	}
+
+	@Override
+	public List<Product> findAllProducts() {
+	return (List<Product>)productRepository.findAll();
 	}
 
 }
