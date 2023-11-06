@@ -16,7 +16,9 @@ import com.lord.arbam.models.ProductPrice;
 import com.lord.arbam.models.ProductStock;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
+import com.lord.arbam.models.Role;
 import com.lord.arbam.repositories.EmployeeJobRepository;
+import com.lord.arbam.repositories.RoleRepository;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.EmployeeJob;
 import com.lord.arbam.models.Ingredient;
@@ -45,8 +47,11 @@ public class ArbamApplication {
 			IngredientCategoryService ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
 			ProductMixService productMixService,RestoTableService restoTableService,
-			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,EmployeeJobRepository employeeJobRepository) {
+			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository) {
 		return args -> {
+			
+			Role role = Role.builder().authority("USER").build();
+			roleRepository.save(role);
 
 			ProductCategory pCategory1 = ProductCategory.builder().categoryName("Pizza").build();
 			categoryService.saveCategory(pCategory1);

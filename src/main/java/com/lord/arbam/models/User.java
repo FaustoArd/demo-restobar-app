@@ -39,23 +39,23 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NonNull
+	
 	@Column(name="name", nullable = false)
 	private String name;
 
-	@NonNull
+	
 	@Column(name="lastname", nullable = false)
 	private String lastname;
 	
-	@NonNull
+	
 	@Column(name="username", nullable = false)
 	private String username;
 	
-	@Nonnull
+	
 	@Column(name="email", nullable =  false)
 	private String email;
 	
-	@NonNull
+	
 	@Column(name="password", nullable =  false)
 	private String password;
 	

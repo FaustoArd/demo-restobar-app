@@ -15,13 +15,18 @@ public interface UserMapper {
 	
 	@Mapping(target="id", ignore = true)
 	@Mapping(target = "enabled", ignore=true)
+	@Mapping(target="authorities", ignore = true)
 	public User RegDtotoUser(RegistrationDto regDto);
+	
+	
+	public RegistrationDto userToRegDto(User user);
 	
 	@Mapping(target="id", ignore = true)
 	@Mapping(target = "name", ignore = true)
 	@Mapping(target="lastname", ignore = true)
 	@Mapping(target="email", ignore = true)
 	@Mapping(target = "enabled", ignore = true)
+	@Mapping(target="authorities", ignore = true)
 	public User LoginDtoToUser(LoginResponseDto LoginDto);
 	
 	@Mapping(target="jwtToken", ignore = true)
