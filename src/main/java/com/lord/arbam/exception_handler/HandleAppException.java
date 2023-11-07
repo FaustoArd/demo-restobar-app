@@ -2,6 +2,7 @@ package com.lord.arbam.exception_handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -20,6 +21,11 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(NegativeNumberException.class)
 	ResponseEntity<String> handleNegativeNumber(NegativeNumberException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	ResponseEntity<String> handleAuthentication(AuthenticationException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
 	}
 
 }

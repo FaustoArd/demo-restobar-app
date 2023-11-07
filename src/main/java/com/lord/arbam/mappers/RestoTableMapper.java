@@ -16,14 +16,17 @@ public interface RestoTableMapper {
 	
 	@Mapping(target="employee.id", source="employeeId")
 	@Mapping(target="employee.employeeName", source="employeeName")
+	@Mapping(target="tableOrder.id", source="tableOrderId")
 	public RestoTable toRestoTable(RestoTableDto restoTableDto);
 	
 	@Mapping(target="employeeId", source="employee.id")
 	@Mapping(target="employeeName", source="employee.employeeName")
+	@Mapping(target="tableOrderId", source="tableOrder.id")
 	public RestoTableDto toRestotableDto(RestoTable restoTable);
 	
 	@Mapping(target="employeeId", source="employee.id")
 	@Mapping(target="employeeName", source="employee.employeeName")
+	@Mapping(target="tableOrderId", source="tableOrder.id")
 	public List<RestoTableDto> toRestoTablesDto(List<RestoTable> restoTables);
 
 }

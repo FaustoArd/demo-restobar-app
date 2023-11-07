@@ -3,8 +3,8 @@ package com.lord.arbam.services_impl;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.management.relation.RoleNotFoundException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.lord.arbam.dtos.LoginResponseDto;
 import com.lord.arbam.models.Role;
 import com.lord.arbam.models.User;
@@ -24,6 +23,8 @@ import com.lord.arbam.services.UserService;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
+	
+	private static final Logger log = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 	
 	@Autowired
 	private final UserService userService;
@@ -53,6 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public User registerUser(User user)  {
+		log.info("Register new user");
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		Role userRole = roleRepository.findByAuthority("USER").get();
 		Set<Role> authorities = new HashSet<>();
@@ -69,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 	@Override
-	public LoginResponseDto loginUser(User user) {
+	public LoginResponseDto loginUser(User user)throws AuthenticationException {
 		try {
 			Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 			
@@ -78,8 +80,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			LoginResponseDto loginDto = new LoginResponseDto();
 			loginDto.setUsername(loggedUser.getUsername());
 			loginDto.setJwtToken(jwtToken);
+			log.info("Login complete" + loggedUser.getUsername());
 			return loginDto;
+			
 		}catch(AuthenticationException ex) {
+			log.info("Login error");
 			return new LoginResponseDto();
 		}
 	}

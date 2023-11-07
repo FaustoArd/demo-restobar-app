@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,7 +39,7 @@ public class User implements UserDetails {
 	private Long id;
 	
 	
-	@Column(name="name", nullable = false)
+	@Column(name="name", nullable = false )
 	private String name;
 
 	
@@ -48,11 +47,11 @@ public class User implements UserDetails {
 	private String lastname;
 	
 	
-	@Column(name="username", nullable = false)
+	@Column(name="username", nullable = false, unique = true)
 	private String username;
 	
 	
-	@Column(name="email", nullable =  false)
+	@Column(name="email", nullable =  false, unique = true)
 	private String email;
 	
 	
@@ -103,7 +102,7 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return true;
+		return this.enabled;
 	}
 	
 	

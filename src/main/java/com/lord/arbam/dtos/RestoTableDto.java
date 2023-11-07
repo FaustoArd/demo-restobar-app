@@ -17,7 +17,9 @@ public class RestoTableDto {
 	
 	private String employeeName;
 	
-	private Double restoTableTotalPrice;
+	private Double totalTablePrice;
+	
+	private Long tableOrderId;
 	
 	private Calendar closeTime;
 	
