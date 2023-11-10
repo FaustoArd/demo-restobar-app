@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ public class ProductController {
 
 	@Autowired
 	private final ProductService productService;
+	
+	
 
 	public ProductController(ProductService productService) {
 		this.productService = productService;
@@ -33,6 +36,15 @@ public class ProductController {
 		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
 		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("/all_by_category/{id}")
+	ResponseEntity<List<ProductDto>> findAllProductsByCategoryId(@PathVariable("id")Long id){
+		List<Product> products = productService.findByCategoryId(id);
+		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
+		return new ResponseEntity<List<ProductDto>>(productsDto,HttpStatus.OK);
+	}
+	
 
 	@PostMapping("/")
 	ResponseEntity<ProductDto> saveProduct(@RequestBody ProductDto productDto) {

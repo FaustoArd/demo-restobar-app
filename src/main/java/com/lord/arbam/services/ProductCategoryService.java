@@ -2,6 +2,8 @@ package com.lord.arbam.services;
 
 
 
+import java.util.List;
+
 import com.lord.arbam.models.ProductCategory;
 
 public interface ProductCategoryService {
@@ -13,5 +15,7 @@ public interface ProductCategoryService {
 	public ProductCategory updateCategory(ProductCategory category);
 	
 	public void deleteCategoryById(Long id);
+	
+	public List<ProductCategory> findAllCategories();
 
 }

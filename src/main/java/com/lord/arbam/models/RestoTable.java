@@ -32,7 +32,7 @@ public class RestoTable {
 	private Long id;
 	
 	@NonNull
-	@Column(name="table_number", nullable = false)
+	@Column(name="table_number")
 	private Integer tableNumber;
 	
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)

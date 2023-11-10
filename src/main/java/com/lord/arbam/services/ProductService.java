@@ -18,4 +18,6 @@ public interface ProductService {
 	public Product createProductStock(Product product,ProductStock stock);
 	
 	public List<Product> findAllProducts();
+	
+	public List<Product> findByCategoryId(Long id);
 }

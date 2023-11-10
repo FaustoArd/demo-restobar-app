@@ -1,11 +1,14 @@
 package com.lord.arbam.controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,6 +44,19 @@ public class RestoTableController {
 		this.restoTableService = restoTableService;
 	}
 	
+	@GetMapping("/all")
+	ResponseEntity<List<RestoTableDto>> findAll(){
+		List<RestoTable> tables = restoTableService.findAllRestoTables();
+		List<RestoTableDto> tablesDto = RestoTableMapper.INSTANCE.toRestoTablesDto(tables);
+		return new ResponseEntity<List<RestoTableDto>>(tablesDto,HttpStatus.OK);
+	}
+	@GetMapping("/all_id_asc")
+	ResponseEntity<List<RestoTableDto>> findAllOrderByIdAsc(){
+		List<RestoTable> tables = restoTableService.findAllByOrderByIdAsc();
+		List<RestoTableDto> tablesDto = RestoTableMapper.INSTANCE.toRestoTablesDto(tables);
+		return new ResponseEntity<List<RestoTableDto>>(tablesDto,HttpStatus.OK);
+	}
+	
 	@PostMapping("/new_table")
 	ResponseEntity<RestoTableDto> createNewTable(@RequestBody RestoTableDto restoTableDto){
 		log.info("Create new Table");
@@ -71,6 +87,7 @@ public class RestoTableController {
 	
 	@PutMapping("/update_table_price")
 	ResponseEntity<RestoTableDto> updateRestoTablePrice(@RequestBody RestoTableDto restoTableDto){
+		log.info("Update table price");
 		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
 		RestoTable udpatedTable = restoTableService.updateRestoTablePrice(table);
 		RestoTableDto updatedTableDto = RestoTableMapper.INSTANCE.toRestotableDto(udpatedTable);

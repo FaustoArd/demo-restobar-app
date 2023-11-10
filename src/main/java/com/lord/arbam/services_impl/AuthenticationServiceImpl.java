@@ -63,6 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				.name(user.getName())
 				.username(user.getUsername())
 				.lastname(user.getLastname())
+				.enabled(true)
 				.email(user.getEmail())
 				.password(encodedPassword)
 				.authorities(authorities).build();
@@ -80,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			LoginResponseDto loginDto = new LoginResponseDto();
 			loginDto.setUsername(loggedUser.getUsername());
 			loginDto.setJwtToken(jwtToken);
-			log.info("Login complete" + loggedUser.getUsername());
+			log.info("Login complete. User: " + loggedUser.getUsername());
 			return loginDto;
 			
 		}catch(AuthenticationException ex) {

@@ -45,10 +45,12 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Override
 	public RestoTable createRestoTable(RestoTable restoTable) {
+		RestoTable newRestotable = findRestoTableById(restoTable.getId());
 		Employee employee = employeeService.findEmployeeById(restoTable.getEmployee().getId());
-		restoTable.setEmployee(employee);
-		restoTable.setOpen(true);
-		return restoTableRepository.save(restoTable);
+		newRestotable.setEmployee(employee);
+		newRestotable.setTableNumber(restoTable.getTableNumber());
+		newRestotable.setOpen(true);
+		return restoTableRepository.save(newRestotable);
 	}
 
 	@Override
@@ -74,6 +76,11 @@ public class RestoTableServiceImpl implements RestoTableService {
 	public RestoTable closeRestoTable(RestoTable restoTable) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<RestoTable> findAllByOrderByIdAsc() {
+		return(List<RestoTable>)restoTableRepository.findAllByOrderByIdAsc();
 	}
 
 }

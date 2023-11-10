@@ -18,5 +18,7 @@ public interface RestoTableService {
 	
 	public RestoTable closeRestoTable(RestoTable restoTable);
 	
+	public List<RestoTable> findAllByOrderByIdAsc();
+	
 
 }
