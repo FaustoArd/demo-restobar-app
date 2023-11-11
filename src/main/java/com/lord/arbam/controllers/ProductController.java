@@ -17,8 +17,11 @@ import com.lord.arbam.mappers.ProductMapper;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.services.ProductService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1/arbam/products")
+@RequiredArgsConstructor
 public class ProductController {
 
 	@Autowired
@@ -26,9 +29,7 @@ public class ProductController {
 	
 	
 
-	public ProductController(ProductService productService) {
-		this.productService = productService;
-	}
+	
 
 	@GetMapping("/all")
 	ResponseEntity<List<ProductDto>> findAllProducts() {

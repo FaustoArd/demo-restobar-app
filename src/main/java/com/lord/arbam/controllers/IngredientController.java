@@ -18,8 +18,11 @@ import com.lord.arbam.services.IngredientCategoryService;
 import com.lord.arbam.services.IngredientService;
 import com.lord.arbam.services.ProductCategoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1/arbam/ingredients")
+@RequiredArgsConstructor
 public class IngredientController {
 	
 	@Autowired
@@ -28,10 +31,7 @@ public class IngredientController {
 	@Autowired
 	private final IngredientCategoryService categoryService;
 
-	public IngredientController(IngredientService ingredientService,IngredientCategoryService categoryService) {
-		this.ingredientService = ingredientService;
-		this.categoryService = categoryService;
-	}
+	
 	
 	@PostMapping("/")
 	ResponseEntity<IngredientDto> saveIngredient(@RequestBody IngredientDto ingredientDto){

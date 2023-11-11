@@ -25,8 +25,11 @@ import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1/arbam/resto_tables")
+@RequiredArgsConstructor
 public class RestoTableController {
 	
 	private static final Logger log = LoggerFactory.getLogger(RestoTableController.class);
@@ -39,10 +42,7 @@ public class RestoTableController {
 	
 	
 
-	public RestoTableController(RestoTableOrderService restoTableOrderService,RestoTableService restoTableService) {
-		this.restoTableOrderService = restoTableOrderService;
-		this.restoTableService = restoTableService;
-	}
+	
 	
 	@GetMapping("/all")
 	ResponseEntity<List<RestoTableDto>> findAll(){

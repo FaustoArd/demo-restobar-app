@@ -15,8 +15,11 @@ import com.lord.arbam.mappers.UserMapper;
 import com.lord.arbam.models.User;
 import com.lord.arbam.services.AuthenticationService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1/arbam/authentication")
+@RequiredArgsConstructor
 public class AuthenticationController {
 	
 	
@@ -24,9 +27,7 @@ public class AuthenticationController {
 	@Autowired
 	private final AuthenticationService authenticationService;
 	
-	public AuthenticationController(AuthenticationService authenticationService) {
-		this.authenticationService = authenticationService;
-	}
+	
 	
 	@PostMapping("/register")
 	ResponseEntity<RegistrationDto> registerUser(@RequestBody RegistrationDto regDto){
