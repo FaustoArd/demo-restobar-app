@@ -1,5 +1,7 @@
 package com.lord.arbam.dtos;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +19,7 @@ public class ProductDto {
 	
 	private Integer productStock;
 	
-	private Double productPrice;
+	private BigDecimal productPrice;
 	
 	private boolean mixed;
 

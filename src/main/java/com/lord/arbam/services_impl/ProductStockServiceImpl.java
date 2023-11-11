@@ -8,15 +8,16 @@ import com.lord.arbam.models.ProductStock;
 import com.lord.arbam.repositories.ProductStockRepository;
 import com.lord.arbam.services.ProductStockService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductStockServiceImpl implements ProductStockService {
 	
 	@Autowired
 	private final ProductStockRepository productStockRepository;
 
-	public ProductStockServiceImpl( ProductStockRepository productStockRepository) {
-		this.productStockRepository = productStockRepository;
-	}
+	
 
 	@Override
 	public ProductStock saveProductStock(ProductStock productStock) {

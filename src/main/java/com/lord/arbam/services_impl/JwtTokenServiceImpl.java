@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.lord.arbam.services.JwtTokenService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class JwtTokenServiceImpl implements JwtTokenService {
 	
 	@Autowired
@@ -23,10 +26,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 	@Autowired
 	private final JwtDecoder jwtDecoder;
 	
-	public JwtTokenServiceImpl( JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
-		this.jwtEncoder = jwtEncoder;
-		this.jwtDecoder = jwtDecoder;
-	}
+	
 
 	@Override
 	public String generateJwt(Authentication auth) {

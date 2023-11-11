@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -73,7 +74,7 @@ public class ProductServiceTest {
 		ProductDto productDto = new ProductDto();
 		productDto.setProductName("Pizza Muzarella");
 		productDto.setCategoryId(1L);
-		productDto.setProductPrice(3000.00);
+		productDto.setProductPrice(new BigDecimal(3000.00));
 		productDto.setProductStock(50);
 		product = new Product();
 		product = ProductMapper.INSTANCE.toProduct(productDto);

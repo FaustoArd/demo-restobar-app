@@ -1,5 +1,6 @@
 package com.lord.arbam.dtos;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class RestoTableDto {
 	
 	private String employeeName;
 	
-	private Double totalTablePrice;
+	private BigDecimal totalTablePrice;
 	
 	private Long tableOrderId;
 	

@@ -12,7 +12,10 @@ import com.lord.arbam.repositories.ProductMixRepository;
 import com.lord.arbam.repositories.ProductRepository;
 import com.lord.arbam.services.ProductMixService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductMixServiceImpl implements ProductMixService {
 
 	@Autowired
@@ -20,10 +23,7 @@ public class ProductMixServiceImpl implements ProductMixService {
 	
 	private final ProductRepository productRepository;
 
-	public ProductMixServiceImpl(ProductMixRepository productMixRepository,ProductRepository productRepository) {
-		this.productMixRepository = productMixRepository;
-		this.productRepository = productRepository;
-	}
+	
 
 	@Override
 	public ProductMix findProductMixById(Long id) {

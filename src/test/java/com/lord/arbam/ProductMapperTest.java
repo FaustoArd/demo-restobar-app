@@ -1,6 +1,8 @@
 package com.lord.arbam;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.math.BigDecimal;
 import java.util.Calendar;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +26,7 @@ public class ProductMapperTest {
 		productDto.setProductName("Milanesa de pollo");
 		productDto.setCategoryId(2L);
 		productDto.setProductStock(20);
-		productDto.setProductPrice(2000.00);
+		productDto.setProductPrice(new BigDecimal(2000.00));
 	
 		
 		Product product = ProductMapper.INSTANCE.toProduct(productDto);

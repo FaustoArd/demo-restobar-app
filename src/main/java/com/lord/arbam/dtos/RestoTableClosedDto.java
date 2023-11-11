@@ -1,5 +1,7 @@
 package com.lord.arbam.dtos;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,7 @@ public class RestoTableClosedDto {
 	
 	private String employeeName;
 	
-	private Double totalPrice;
+	private BigDecimal totalPrice;
 	
 	private String paymentMethod;
 	

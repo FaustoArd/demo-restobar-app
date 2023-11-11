@@ -18,7 +18,10 @@ import com.lord.arbam.services.IngredientService;
 import com.lord.arbam.services.ProductService;
 import com.lord.arbam.services.ProductStockService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
@@ -36,16 +39,7 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final IngredientService ingredientService;
 
-	public ProductServiceImpl(ProductRepository productRepository, ProductCategoryRepository productCategoryRepository,
-			ProductPriceRepository productPriceRepository, ProductStockService productStockService,
-			IngredientService ingredientService) {
-		this.productRepository = productRepository;
-		this.productCategoryRepository = productCategoryRepository;
-		this.productPriceRepository = productPriceRepository;
-		this.productStockService = productStockService;
-		this.ingredientService = ingredientService;
-
-	}
+	
 
 	@Override
 	public Product findProductById(Long id) {

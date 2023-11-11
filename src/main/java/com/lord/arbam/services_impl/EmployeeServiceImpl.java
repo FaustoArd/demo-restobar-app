@@ -12,7 +12,10 @@ import com.lord.arbam.repositories.EmployeeJobRepository;
 import com.lord.arbam.repositories.EmployeeRepository;
 import com.lord.arbam.services.EmployeeService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
 	
@@ -22,10 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private final EmployeeJobRepository employeeJobRepository;
 	
-	public EmployeeServiceImpl(EmployeeRepository employeeRepository,EmployeeJobRepository employeeJobRepository) {
-		this.employeeRepository = employeeRepository;
-		this.employeeJobRepository = employeeJobRepository;
-	}
+	
 
 	@Override
 	public Employee findEmployeeById(Long id) {

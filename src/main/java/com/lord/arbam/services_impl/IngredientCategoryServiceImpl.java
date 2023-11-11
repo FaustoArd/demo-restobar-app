@@ -7,14 +7,15 @@ import com.lord.arbam.models.IngredientCategory;
 import com.lord.arbam.repositories.IngredientCategoryRepository;
 import com.lord.arbam.services.IngredientCategoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class IngredientCategoryServiceImpl implements IngredientCategoryService {
 	
 	private final IngredientCategoryRepository ingredientCategoryRepository;
 	
-	public IngredientCategoryServiceImpl(IngredientCategoryRepository ingredientCategoryRepository) {
-		this.ingredientCategoryRepository = ingredientCategoryRepository;
-	}
+
 
 	@Override
 	public IngredientCategory saveCategory(IngredientCategory ingredientCategory) {

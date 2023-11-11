@@ -1,5 +1,6 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,7 +35,7 @@ public class RestoTableOrder {
 	private Integer productQuantity;
 	
 	@Column(name="total_order_price")
-	private Double totalOrderPrice;
+	private BigDecimal totalOrderPrice;
 	
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name="product_id", referencedColumnName = "id")

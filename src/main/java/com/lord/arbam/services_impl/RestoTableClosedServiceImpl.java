@@ -7,15 +7,16 @@ import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.repositories.RestoTableClosedRepository;
 import com.lord.arbam.services.RestoTableClosedService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
 	
-	public RestoTableClosedServiceImpl(RestoTableClosedRepository restoTableClosedRepository) {
-		this.restoTableClosedRepository = restoTableClosedRepository;
-	}
+	
 
 	@Override
 	public RestoTableClosed findRestoTableClosedById(Long id) {

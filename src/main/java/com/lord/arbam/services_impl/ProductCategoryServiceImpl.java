@@ -9,16 +9,17 @@ import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.repositories.ProductCategoryRepository;
 import com.lord.arbam.services.ProductCategoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
 	@Autowired
 	private final ProductCategoryRepository productCategoryRepository;
 
 	
-	public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryRepository) {
-		this.productCategoryRepository = productCategoryRepository;
-	}
+	
 
 	@Override
 	public ProductCategory findCategoryById(Long id) {

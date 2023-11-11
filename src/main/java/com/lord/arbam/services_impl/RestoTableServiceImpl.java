@@ -1,5 +1,6 @@
 package com.lord.arbam.services_impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -15,7 +16,10 @@ import com.lord.arbam.services.EmployeeService;
 import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Autowired
@@ -27,11 +31,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Autowired
 	private final EmployeeService employeeService;
 	
-	public RestoTableServiceImpl(RestoTableRepository restoTableRepository,RestoTableOrderService restoTableOrderService,EmployeeService employeeService) {
-		this.restoTableRepository = restoTableRepository;
-		this.restoTableOrderService = restoTableOrderService;
-		this.employeeService = employeeService;
-	}
+	
 
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -62,11 +62,13 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Override
 	public RestoTable updateRestoTablePrice(RestoTable restoTable) {
-		Double totalTablePrice = 0.00;
+		BigDecimal totalTablePrice = new BigDecimal(0.00);
+		
 		List<RestoTableOrder> orders = restoTableOrderService.findByRestoTablesId(restoTable.getId());
 		ListIterator<RestoTableOrder> ordersIt = orders.listIterator();
 		while(ordersIt.hasNext()) {
-			totalTablePrice += ordersIt.next().getTotalOrderPrice();
+			totalTablePrice.add(ordersIt.next().getTotalOrderPrice());
+			
 		}
 		restoTable.setTotalTablePrice(totalTablePrice);
 		return restoTableRepository.save(restoTable);

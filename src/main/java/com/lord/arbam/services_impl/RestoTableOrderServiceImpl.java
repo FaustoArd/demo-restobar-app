@@ -1,5 +1,6 @@
 package com.lord.arbam.services_impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,10 @@ import com.lord.arbam.repositories.ProductRepository;
 import com.lord.arbam.repositories.RestoTableOrderRepository;
 import com.lord.arbam.services.RestoTableOrderService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class RestoTableOrderServiceImpl implements RestoTableOrderService{
 	
 	@Autowired
@@ -19,10 +23,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService{
 	@Autowired
 	private final ProductRepository productRepository;
 	
-	public RestoTableOrderServiceImpl(RestoTableOrderRepository restoTableOrderRepository,ProductRepository productRepository) {
-		this.restoTableOrderRepository = restoTableOrderRepository;
-		this.productRepository = productRepository;
-	}
+	
 
 	@Override
 	public RestoTableOrder findOrderById(Long id) {
@@ -36,7 +37,8 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService{
 		RestoTableOrder newOrder = RestoTableOrder.builder()
 				.product(product)
 				.productQuantity(order.getProductQuantity())
-				.totalOrderPrice(product.getProductPrice().getPrice() * order.getProductQuantity()).build();
+				.totalOrderPrice(product.getProductPrice().getPrice().multiply(new BigDecimal(order.getProductQuantity()))).build();
+				//.totalOrderPrice(product.getProductPrice().getPrice() * order.getProductQuantity()).build();
 		
 		return restoTableOrderRepository.save(newOrder);
 	}

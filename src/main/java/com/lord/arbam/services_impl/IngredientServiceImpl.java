@@ -14,7 +14,10 @@ import com.lord.arbam.repositories.IngredientRepository;
 import com.lord.arbam.services.IngredientService;
 import com.lord.arbam.services.ProductMixService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
 
 	@Autowired
@@ -23,10 +26,7 @@ public class IngredientServiceImpl implements IngredientService {
 	@Autowired
 	private final ProductMixService productMixService;
 
-	public IngredientServiceImpl(IngredientRepository ingredientRepository, ProductMixService productMixService) {
-		this.ingredientRepository = ingredientRepository;
-		this.productMixService = productMixService;
-	}
+	
 
 	@Override
 	public Ingredient findIngredientById(Long id) {

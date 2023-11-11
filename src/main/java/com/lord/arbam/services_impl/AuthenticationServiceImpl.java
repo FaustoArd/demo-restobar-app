@@ -20,7 +20,10 @@ import com.lord.arbam.services.AuthenticationService;
 import com.lord.arbam.services.JwtTokenService;
 import com.lord.arbam.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	
@@ -41,15 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Autowired
 	private final JwtTokenService jwtTokenService;
 	
-	public AuthenticationServiceImpl(UserService userService,RoleRepository roleRepository,PasswordEncoder passwordEncoder,
-			AuthenticationManager authenticationManager,JwtTokenService jwtTokenService) {
-		this.userService= userService;
-		this.roleRepository = roleRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.authenticationManager = authenticationManager;
-		this.jwtTokenService = jwtTokenService;
-				
-	}
+	
 	
 
 	@Override

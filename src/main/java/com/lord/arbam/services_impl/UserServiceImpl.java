@@ -11,15 +11,16 @@ import com.lord.arbam.models.User;
 import com.lord.arbam.repositories.UserRepository;
 import com.lord.arbam.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private final UserRepository userRepository;
 
-	public UserServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	
 
 	@Override
 	public User findByUsername(String username) {

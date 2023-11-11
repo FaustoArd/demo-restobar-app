@@ -1,5 +1,6 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.CascadeType;
@@ -40,7 +41,7 @@ public class RestoTable {
 	private Employee employee;
 	
 	@Column(name="total_table_price")
-	private Double totalTablePrice;
+	private BigDecimal totalTablePrice;
 	
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
 	@JoinTable(name="table_orders_junction", joinColumns = @JoinColumn(name="resto_table_id"), inverseJoinColumns = @JoinColumn(name="table_order_id"))

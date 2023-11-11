@@ -100,6 +100,12 @@ public class RestoTableController {
 		restoTableOrderService.deleteOderById(id);
 		return new ResponseEntity<String>("La orden se elimino con exito", HttpStatus.OK);
 	}
+	@GetMapping("/all_orders_by_restotable_id/{id}")
+	ResponseEntity<List<RestoTableOrderDto>> findOrdersByRestoTableId(@PathVariable("id")Long id){
+		List<RestoTableOrder> orders =restoTableOrderService.findByRestoTablesId(id);
+		List<RestoTableOrderDto> ordersDto = RestoTableOrderMapper.INSTANCE.toOrdersDto(orders);
+		return new ResponseEntity<List<RestoTableOrderDto>>(ordersDto,HttpStatus.OK);
+	}
 	
 	
 }

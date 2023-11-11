@@ -8,16 +8,17 @@ import com.lord.arbam.models.ProductPrice;
 import com.lord.arbam.repositories.ProductPriceRepository;
 import com.lord.arbam.services.ProductPriceService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductPriceServiceImpl implements ProductPriceService {
 
 	
 	@Autowired
 	private final ProductPriceRepository productPriceRepository;
 	
-	public ProductPriceServiceImpl(ProductPriceRepository productPriceRepository) {
-		this.productPriceRepository = productPriceRepository;
-	}
+
 
 	@Override
 	public ProductPrice save(ProductPrice price) {

@@ -1,5 +1,7 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,9 +28,9 @@ public class ProductPrice {
 	
 	
 	@Column(name="product_price",nullable = false)
-	private Double price;
+	private BigDecimal price;
 	
-	public ProductPrice(Double price) {
+	public ProductPrice(BigDecimal price) {
 		super();
 		this.price = price;
 	}

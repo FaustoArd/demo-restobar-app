@@ -1,5 +1,7 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +34,7 @@ public class RestoTableClosed {
 	private String employeeName;
 	
 	@Column(name="total_table_price")
-	private Double totalPrice;
+	private BigDecimal totalPrice;
 	
 	@Column(name="payment_method")
 	private String paymentMethod;

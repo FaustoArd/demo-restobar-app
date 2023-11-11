@@ -3,6 +3,9 @@ package com.lord.arbam;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -57,11 +60,11 @@ public class ProductUpdateStockTest {
 		
 	
 		Product grandeMuza = Product.builder().productName("Grande Muza").category(pCategory1)
-				.productPrice(new ProductPrice(400.00)).build();
+				.productPrice(new ProductPrice(new BigDecimal(400.00))).build();
 		Product savedGrandeMuza = productService.saveProduct(grandeMuza);
 		
 		Product grandeCebolla = Product.builder().productName("Grande Cebolla").category(pCategory1)
-				.productPrice(new ProductPrice(600.00)).build();
+				.productPrice(new ProductPrice(new BigDecimal(400.00))).build();
 		Product savedGrandeCebolla = productService.saveProduct(grandeCebolla);
 		
 		IngredientCategory salsaDeTomate = IngredientCategory.builder().categoryName("Salsa de tomate").build();

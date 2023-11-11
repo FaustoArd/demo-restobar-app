@@ -5,13 +5,14 @@ import com.lord.arbam.models.Product;
 import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.models.ProductPrice;
 import com.lord.arbam.models.ProductStock;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-09T00:41:39-0400",
+    date = "2023-11-11T09:28:55-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class ProductMapperImpl implements ProductMapper {
@@ -149,7 +150,7 @@ public class ProductMapperImpl implements ProductMapper {
         return productStock1;
     }
 
-    private Double productProductPricePrice(Product product) {
+    private BigDecimal productProductPricePrice(Product product) {
         if ( product == null ) {
             return null;
         }
@@ -157,7 +158,7 @@ public class ProductMapperImpl implements ProductMapper {
         if ( productPrice == null ) {
             return null;
         }
-        Double price = productPrice.getPrice();
+        BigDecimal price = productPrice.getPrice();
         if ( price == null ) {
             return null;
         }
