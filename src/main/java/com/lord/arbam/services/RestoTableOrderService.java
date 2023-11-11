@@ -14,6 +14,6 @@ public interface RestoTableOrderService {
 	
 	public void deleteOderById(Long id);
 	
-	List<RestoTableOrder> findByRestoTablesId(Long id);
+	
 
 }

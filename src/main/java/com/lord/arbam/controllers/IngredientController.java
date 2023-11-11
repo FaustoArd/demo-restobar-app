@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.lord.arbam.dtos.IngredientDto;
 import com.lord.arbam.mappers.IngredientMapper;
 import com.lord.arbam.models.Ingredient;
 import com.lord.arbam.models.IngredientCategory;
-import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.services.IngredientCategoryService;
 import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.ProductCategoryService;
+
 
 import lombok.RequiredArgsConstructor;
 

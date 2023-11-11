@@ -75,7 +75,7 @@ public class ArbamApplication {
 			ingredientCategoryService.saveCategory(ingredientCategory2);
 
 			
-			Product product1 = Product.builder().productName("Grande Muza").category(pCategory1)
+			Product product1 = Product.builder().productName("Grande Muzza").category(pCategory1)
 					.productPrice(new ProductPrice(new BigDecimal(1500.00))).build();
 			Product savedProduct1 = productService.saveProduct(product1);
 
@@ -83,16 +83,20 @@ public class ArbamApplication {
 					.productPrice(new ProductPrice(new BigDecimal(1800.00))).build();
 			Product savedProduct2 = productService.saveProduct(product2);
 			
-			Product product3 = Product.builder().productName("Cerveza heineken").category(pCategory3).productPrice(new ProductPrice(new BigDecimal(1700.00))).build();
+			Product product3 = Product.builder().productName("Cerveza heineken").category(pCategory3)
+					.productPrice(new ProductPrice(new BigDecimal(1700.00))).build();
 			Product savedProduct3 = productService.saveProduct(product3);
 			
-			Product product4 = Product.builder().productName("Cerveza Brahma").category(pCategory3).productPrice(new ProductPrice(new BigDecimal(2500.00))).build();
+			Product product4 = Product.builder().productName("Cerveza Brahma").category(pCategory3)
+					.productPrice(new ProductPrice(new BigDecimal(2500.00))).build();
 			Product savedProduct4 = productService.saveProduct(product4);
 			
-			Product product5 = Product.builder().productName("Pollo a la cartunia").category(pCategory2).productPrice(new ProductPrice(new BigDecimal(2800.00))).build();
+			Product product5 = Product.builder().productName("Pollo a la cartunia").category(pCategory2)
+					.productPrice(new ProductPrice(new BigDecimal(2800.00))).build();
 			Product savedProduct5 = productService.saveProduct(product5);
 			
-			Product product6 = Product.builder().productName("Pollo al horno").category(pCategory2).productPrice(new ProductPrice(new BigDecimal(2400.00))).build();
+			Product product6 = Product.builder().productName("Pollo al horno").category(pCategory2)
+					.productPrice(new ProductPrice(new BigDecimal(2400.00))).build();
 			Product savedProduct6 = productService.saveProduct(product6);
 
 			IngredientCategory ingredientCategory3 = IngredientCategory.builder().categoryName("Especias").build();

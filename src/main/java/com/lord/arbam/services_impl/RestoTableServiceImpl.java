@@ -26,9 +26,6 @@ public class RestoTableServiceImpl implements RestoTableService {
 	private final RestoTableRepository restoTableRepository;
 	
 	@Autowired
-	private final RestoTableOrderService restoTableOrderService;
-	
-	@Autowired
 	private final EmployeeService employeeService;
 	
 	
@@ -53,25 +50,11 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return restoTableRepository.save(newRestotable);
 	}
 
-	@Override
-	public RestoTable addOrderToRestotable(RestoTable restoTable) {
-		RestoTableOrder order = restoTableOrderService.findOrderById(restoTable.getTableOrder().getId());
-		restoTable.setTableOrder(order);
-		return restoTableRepository.save(restoTable);
-	}
+	
 
 	@Override
 	public RestoTable updateRestoTablePrice(RestoTable restoTable) {
-		BigDecimal totalTablePrice = new BigDecimal(0.00);
-		
-		List<RestoTableOrder> orders = restoTableOrderService.findByRestoTablesId(restoTable.getId());
-		ListIterator<RestoTableOrder> ordersIt = orders.listIterator();
-		while(ordersIt.hasNext()) {
-			totalTablePrice.add(ordersIt.next().getTotalOrderPrice());
-			
-		}
-		restoTable.setTotalTablePrice(totalTablePrice);
-		return restoTableRepository.save(restoTable);
+		return null;
 	}
 
 	@Override

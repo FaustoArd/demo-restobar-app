@@ -66,25 +66,6 @@ public class RestoTableController {
 		return new ResponseEntity<RestoTableDto>(createdTableDto,HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/create_order")
-	ResponseEntity<RestoTableOrderDto> createOrder(@RequestBody RestoTableOrderDto restoTableOrderDto){
-		log.info("Create new Order");
-		RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(restoTableOrderDto);
-		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
-		RestoTableOrderDto  createdOrderDto = RestoTableOrderMapper.INSTANCE.toOrderDto(createdOrder);
-		return new ResponseEntity<RestoTableOrderDto>(createdOrderDto,HttpStatus.CREATED);
-	}
-	
-	@PostMapping("/add_order")
-	ResponseEntity<RestoTableDto> addOrderToRestoTable(@RequestBody RestoTableDto restoTableDto){
-		log.info("Add order to RestoTable");
-		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
-		RestoTable updatedTable = restoTableService.addOrderToRestotable(table);
-		RestoTable updatedTablePrice = restoTableService.updateRestoTablePrice(updatedTable);
-		RestoTableDto updatedTablePriceDto = RestoTableMapper.INSTANCE.toRestotableDto(updatedTablePrice);
-		return new ResponseEntity<RestoTableDto>(updatedTablePriceDto,HttpStatus.CREATED);
-	}
-	
 	@PutMapping("/update_table_price")
 	ResponseEntity<RestoTableDto> updateRestoTablePrice(@RequestBody RestoTableDto restoTableDto){
 		log.info("Update table price");
@@ -102,9 +83,7 @@ public class RestoTableController {
 	}
 	@GetMapping("/all_orders_by_restotable_id/{id}")
 	ResponseEntity<List<RestoTableOrderDto>> findOrdersByRestoTableId(@PathVariable("id")Long id){
-		List<RestoTableOrder> orders =restoTableOrderService.findByRestoTablesId(id);
-		List<RestoTableOrderDto> ordersDto = RestoTableOrderMapper.INSTANCE.toOrdersDto(orders);
-		return new ResponseEntity<List<RestoTableOrderDto>>(ordersDto,HttpStatus.OK);
+		return null;
 	}
 	
 	

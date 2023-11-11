@@ -2,6 +2,7 @@ package com.lord.arbam.mappers;
 
 import com.lord.arbam.dtos.RestoTableOrderDto;
 import com.lord.arbam.models.Product;
+import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-11T09:28:55-0400",
+    date = "2023-11-11T17:20:35-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
@@ -23,6 +24,7 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
         RestoTableOrder.RestoTableOrderBuilder restoTableOrder = RestoTableOrder.builder();
 
         restoTableOrder.product( restoTableOrderDtoToProduct( restoTableOrderDto ) );
+        restoTableOrder.restoTable( restoTableOrderDtoToRestoTable( restoTableOrderDto ) );
         restoTableOrder.id( restoTableOrderDto.getId() );
         restoTableOrder.productQuantity( restoTableOrderDto.getProductQuantity() );
         restoTableOrder.totalOrderPrice( restoTableOrderDto.getTotalOrderPrice() );
@@ -40,6 +42,7 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
 
         restoTableOrderDto.setProductId( restoTableOrderProductId( restoTableOrder ) );
         restoTableOrderDto.setProductName( restoTableOrderProductProductName( restoTableOrder ) );
+        restoTableOrderDto.setRestoTableId( restoTableOrderRestoTableId( restoTableOrder ) );
         restoTableOrderDto.setId( restoTableOrder.getId() );
         restoTableOrderDto.setProductQuantity( restoTableOrder.getProductQuantity() );
         restoTableOrderDto.setTotalOrderPrice( restoTableOrder.getTotalOrderPrice() );
@@ -74,6 +77,18 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
         return product.build();
     }
 
+    protected RestoTable restoTableOrderDtoToRestoTable(RestoTableOrderDto restoTableOrderDto) {
+        if ( restoTableOrderDto == null ) {
+            return null;
+        }
+
+        RestoTable.RestoTableBuilder restoTable = RestoTable.builder();
+
+        restoTable.id( restoTableOrderDto.getRestoTableId() );
+
+        return restoTable.build();
+    }
+
     private Long restoTableOrderProductId(RestoTableOrder restoTableOrder) {
         if ( restoTableOrder == null ) {
             return null;
@@ -102,5 +117,20 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
             return null;
         }
         return productName;
+    }
+
+    private Long restoTableOrderRestoTableId(RestoTableOrder restoTableOrder) {
+        if ( restoTableOrder == null ) {
+            return null;
+        }
+        RestoTable restoTable = restoTableOrder.getRestoTable();
+        if ( restoTable == null ) {
+            return null;
+        }
+        Long id = restoTable.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
     }
 }

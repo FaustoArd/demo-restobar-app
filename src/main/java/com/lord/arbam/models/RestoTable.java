@@ -2,6 +2,8 @@ package com.lord.arbam.models;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Set;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,7 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +36,7 @@ public class RestoTable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NonNull
+	
 	@Column(name="table_number")
 	private Integer tableNumber;
 	
@@ -43,9 +47,8 @@ public class RestoTable {
 	@Column(name="total_table_price")
 	private BigDecimal totalTablePrice;
 	
-	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-	@JoinTable(name="table_orders_junction", joinColumns = @JoinColumn(name="resto_table_id"), inverseJoinColumns = @JoinColumn(name="table_order_id"))
-	private RestoTableOrder tableOrder;
+	@OneToMany(mappedBy = "restoTable")
+	private Set<RestoTableOrder> tableOrders;
 	
 	@DateTimeFormat
 	@Column(name="close_time")

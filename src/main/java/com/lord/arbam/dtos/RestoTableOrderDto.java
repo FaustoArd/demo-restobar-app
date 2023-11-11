@@ -17,6 +17,8 @@ public class RestoTableOrderDto {
 	
 	private Integer productQuantity;
 	
+	private Long restoTableId;
+	
 	private BigDecimal totalOrderPrice;
 	
 	

@@ -20,8 +20,6 @@ public class RestoTableDto {
 	
 	private BigDecimal totalTablePrice;
 	
-	private Long tableOrderId;
-	
 	private Calendar closeTime;
 	
 	private boolean open;

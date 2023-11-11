@@ -74,5 +74,6 @@ public class RestoBarControllerTest {
 				.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.employeeName", is("Carla")))
 				.andExpect(jsonPath("$.open", is(true)));
 	}
+	
 
 }

@@ -12,8 +12,6 @@ public interface RestoTableService {
 	
 	public RestoTable createRestoTable(RestoTable restoTable);
 	
-	public RestoTable addOrderToRestotable(RestoTable restoTable);
-	
 	public RestoTable updateRestoTablePrice(RestoTable restoTable);
 	
 	public RestoTable closeRestoTable(RestoTable restoTable);

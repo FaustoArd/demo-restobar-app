@@ -16,11 +16,12 @@ public interface RestoTableOrderMapper {
 	
 	@Mapping(target="product.id", source="productId")
 	@Mapping(target="product.productName", source="productName")
-	@Mapping(target="restoTables", ignore = true)
+	@Mapping(target="restoTable.id", source="restoTableId")
 	public RestoTableOrder toOrder(RestoTableOrderDto restoTableOrderDto);
 	
 	@Mapping(target="productId", source="product.id")
 	@Mapping(target="productName", source="product.productName")
+	@Mapping(target="restoTableId", source="restoTable.id")
 	public RestoTableOrderDto toOrderDto(RestoTableOrder restoTableOrder);
 	
 	public List<RestoTableOrderDto> toOrdersDto(List<RestoTableOrder> orders);
