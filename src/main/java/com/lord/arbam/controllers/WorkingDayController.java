@@ -1,0 +1,41 @@
+package com.lord.arbam.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.lord.arbam.dtos.WorkingDayDto;
+import com.lord.arbam.mappers.WorkingDayMapper;
+import com.lord.arbam.models.WorkingDay;
+import com.lord.arbam.services.WorkingDayService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/v1/arbam/working_days")
+@RequiredArgsConstructor
+public class WorkingDayController {
+	
+	@Autowired
+	private final WorkingDayService workingDayService;
+
+	@PostMapping("/")
+	ResponseEntity<WorkingDayDto> saveWorkingDay(@RequestBody WorkingDayDto workingDayDto){
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		WorkingDay savedWorkingDay = workingDayService.save(workingDay);
+		WorkingDayDto savedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(savedWorkingDay);
+		return new ResponseEntity<WorkingDayDto>(savedWorkingDayDto,HttpStatus.CREATED);
+	}
+	@PutMapping("/")
+	ResponseEntity<WorkingDayDto> updateWorkingDay(@RequestBody WorkingDayDto workingDayDto){
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		WorkingDay updatedWorkingDay = workingDayService.save(workingDay);
+		WorkingDayDto updatedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(updatedWorkingDay);
+		return new ResponseEntity<WorkingDayDto>(updatedWorkingDayDto,HttpStatus.CREATED);
+	}
+}
