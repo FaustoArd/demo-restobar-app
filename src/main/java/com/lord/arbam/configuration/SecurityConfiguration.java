@@ -63,6 +63,7 @@ public class SecurityConfiguration {
 		
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth ->{
 			auth.requestMatchers("/api/v1/arbam/authentication/**").permitAll();
+			auth.requestMatchers("/api/v1/arbam/users/**").hasAnyRole("USER");
 			auth.requestMatchers("/api/v1/arbam/ingredients/**").hasAnyRole("USER");
 			auth.requestMatchers("/api/v1/arbam/products/**").hasAnyRole("USER");
 			auth.requestMatchers("/api/v1/arbam/resto_tables/**").hasAnyRole("USER");

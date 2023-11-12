@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 
 import com.lord.arbam.dtos.LoginResponseDto;
 import com.lord.arbam.dtos.RegistrationDto;
+import com.lord.arbam.dtos.UserDto;
 import com.lord.arbam.models.User;
 
 @Mapper
@@ -28,6 +29,9 @@ public interface UserMapper {
 	@Mapping(target = "enabled", ignore = true)
 	@Mapping(target="authorities", ignore = true)
 	public User LoginDtoToUser(LoginResponseDto LoginDto);
+	
+	
+	public UserDto toUserDto(User user);
 	
 	
 	

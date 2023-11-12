@@ -2,12 +2,13 @@ package com.lord.arbam.mappers;
 
 import com.lord.arbam.dtos.LoginResponseDto;
 import com.lord.arbam.dtos.RegistrationDto;
+import com.lord.arbam.dtos.UserDto;
 import com.lord.arbam.models.User;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-11T17:20:35-0400",
+    date = "2023-11-12T12:57:50-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -58,5 +59,22 @@ public class UserMapperImpl implements UserMapper {
         user.username( LoginDto.getUsername() );
 
         return user.build();
+    }
+
+    @Override
+    public UserDto toUserDto(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+
+        userDto.setEmail( user.getEmail() );
+        userDto.setId( user.getId() );
+        userDto.setLastname( user.getLastname() );
+        userDto.setName( user.getName() );
+        userDto.setUsername( user.getUsername() );
+
+        return userDto;
     }
 }

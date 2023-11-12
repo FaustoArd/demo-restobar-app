@@ -42,7 +42,12 @@ public class RestoTableController {
 	
 	
 
-	
+	@GetMapping("/{id}")
+	ResponseEntity<RestoTableDto> findRestoTableById(@PathVariable("id")Long id){
+		RestoTable table = restoTableService.findRestoTableById(id);
+		RestoTableDto tableDto = RestoTableMapper.INSTANCE.toRestotableDto(table);
+		return new ResponseEntity<RestoTableDto>(tableDto,HttpStatus.OK);
+	}
 	
 	@GetMapping("/all")
 	ResponseEntity<List<RestoTableDto>> findAll(){
@@ -57,24 +62,24 @@ public class RestoTableController {
 		return new ResponseEntity<List<RestoTableDto>>(tablesDto,HttpStatus.OK);
 	}
 	
-	@PostMapping("/new_table")
-	ResponseEntity<RestoTableDto> createNewTable(@RequestBody RestoTableDto restoTableDto){
+	@PostMapping("/open_table")
+	ResponseEntity<RestoTableDto> openRestoTable(@RequestBody RestoTableDto restoTableDto){
 		log.info("Create new Table");
 		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
-		RestoTable createdTable = restoTableService.createRestoTable(table);
+		RestoTable createdTable = restoTableService.openRestoTable(table);
 		RestoTableDto createdTableDto = RestoTableMapper.INSTANCE.toRestotableDto(createdTable);
 		return new ResponseEntity<RestoTableDto>(createdTableDto,HttpStatus.CREATED);
 	}
-	
-	@PutMapping("/update_table_price")
-	ResponseEntity<RestoTableDto> updateRestoTablePrice(@RequestBody RestoTableDto restoTableDto){
-		log.info("Update table price");
-		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
-		RestoTable udpatedTable = restoTableService.updateRestoTablePrice(table);
-		RestoTableDto updatedTableDto = RestoTableMapper.INSTANCE.toRestotableDto(udpatedTable);
+	@PutMapping("/update_price/{id}")
+	ResponseEntity<RestoTableDto> udpateRestoTablePrice(@PathVariable("id")Long id){
+		RestoTable table = restoTableService.findRestoTableById(id);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTable(table);
+		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+		RestoTableDto updatedTableDto = RestoTableMapper.INSTANCE.toRestotableDto(updatedTable);
 		return new ResponseEntity<RestoTableDto>(updatedTableDto,HttpStatus.OK);
 	}
 	
+
 	@DeleteMapping("/delete_order")
 	ResponseEntity<String> deleteOrder(@PathVariable("id") Long id){
 		log.info("Delete order from table");

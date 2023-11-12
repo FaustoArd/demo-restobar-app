@@ -28,8 +28,6 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Autowired
 	private final EmployeeService employeeService;
 	
-	
-
 	@Override
 	public RestoTable findRestoTableById(Long id) {
 		return restoTableRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("No se encontro la mesa. RestoTableServiceImpl.findRestoTableById"));
@@ -41,21 +39,25 @@ public class RestoTableServiceImpl implements RestoTableService {
 	}
 
 	@Override
-	public RestoTable createRestoTable(RestoTable restoTable) {
+	public RestoTable openRestoTable(RestoTable restoTable) {
 		RestoTable newRestotable = findRestoTableById(restoTable.getId());
 		Employee employee = employeeService.findEmployeeById(restoTable.getEmployee().getId());
 		newRestotable.setEmployee(employee);
 		newRestotable.setTableNumber(restoTable.getTableNumber());
 		newRestotable.setOpen(true);
+		newRestotable.setTotalTablePrice(new BigDecimal(0));
 		return restoTableRepository.save(newRestotable);
 	}
-
 	
-
 	@Override
-	public RestoTable updateRestoTablePrice(RestoTable restoTable) {
-		return null;
+	public RestoTable updateRestoTableTotalPrice(RestoTable restoTable, List<RestoTableOrder> orders) {
+		ListIterator<RestoTableOrder> ordersIt = orders.listIterator();
+		ordersIt.forEachRemaining(order ->{
+			restoTable.setTotalTablePrice(restoTable.getTotalTablePrice().add(order.getTotalOrderPrice()));
+		});
+		return restoTableRepository.save(restoTable);
 	}
+	
 
 	@Override
 	public RestoTable closeRestoTable(RestoTable restoTable) {
@@ -67,5 +69,12 @@ public class RestoTableServiceImpl implements RestoTableService {
 	public List<RestoTable> findAllByOrderByIdAsc() {
 		return(List<RestoTable>)restoTableRepository.findAllByOrderByIdAsc();
 	}
+
+	@Override
+	public RestoTable saveRestoTable(RestoTable restoTable) {
+		return restoTableRepository.save(restoTable);
+	}
+
+	
 
 }

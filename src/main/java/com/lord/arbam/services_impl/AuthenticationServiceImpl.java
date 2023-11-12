@@ -74,6 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			String jwtToken = jwtTokenService.generateJwt(auth);
 			User loggedUser = userService.findByUsername(user.getUsername());
 			LoginResponseDto loginDto = new LoginResponseDto();
+			loginDto.setId(loggedUser.getId());
 			loginDto.setUsername(loggedUser.getUsername());
 			loginDto.setJwtToken(jwtToken);
 			log.info("Login complete. User: " + loggedUser.getUsername());

@@ -1,7 +1,10 @@
 package com.lord.arbam.services_impl;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.lord.arbam.exceptions.ItemNotFoundException;
@@ -44,6 +47,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 				.totalOrderPrice(
 						product.getProductPrice().getPrice().multiply(new BigDecimal(order.getProductQuantity())))
 				.build();
+		
 		return restoTableOrderRepository.save(newOrder);
 	}
 
@@ -60,6 +64,11 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 			throw new ItemNotFoundException("No se encontro la orden, RestoTableOrderServiceImpl.deleteOderById");
 		}
 
+	}
+
+	@Override
+	public List<RestoTableOrder> findAllByRestoTable(RestoTable restoTable) {
+		return (List<RestoTableOrder>)restoTableOrderRepository.findAllByRestoTable(restoTable);
 	}
 
 	

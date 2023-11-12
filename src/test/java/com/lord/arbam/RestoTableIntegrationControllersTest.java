@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class RestoBarControllerTest {
+public class RestoTableIntegrationControllersTest {
 
 	@Autowired
 	private MockMvc mockMvc;
