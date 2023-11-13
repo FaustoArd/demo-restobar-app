@@ -18,6 +18,8 @@ public class RestoTableDto {
 	
 	private BigDecimal totalTablePrice;
 	
+	private String paymentMethod;
+	
 	private boolean open;
 
 }

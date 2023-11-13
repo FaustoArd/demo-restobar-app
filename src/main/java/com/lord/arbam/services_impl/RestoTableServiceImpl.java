@@ -10,9 +10,11 @@ import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.ValueAlreadyExistException;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.RestoTable;
+import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.services.EmployeeService;
+import com.lord.arbam.services.RestoTableClosedService;
 import com.lord.arbam.services.RestoTableService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +27,9 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Autowired
 	private final EmployeeService employeeService;
+	
+	@Autowired
+	private final RestoTableClosedService restoTableClosedService;
 	
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -66,9 +71,19 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Override
 	public RestoTable closeRestoTable(RestoTable restoTable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		RestoTable findedTable = findRestoTableById(restoTable.getId());
+		RestoTableClosed tableClosed = RestoTableClosed.builder()
+				.tableNumber(findedTable.getTableNumber())
+				.employeeName(findedTable.getEmployee().getEmployeeName())
+				.totalPrice(findedTable.getTotalTablePrice())
+				.paymentMethod(findedTable.getPaymentMethod()).build();
+		restoTableClosedService.saveRestoTableClosed(tableClosed);
+		findedTable.setEmployee(null);
+		findedTable.setOpen(false);
+		findedTable.setPaymentMethod(null);
+		findedTable.setTotalTablePrice(null);
+		return restoTableRepository.save(findedTable);
+				}
 
 	@Override
 	public List<RestoTable> findAllByOrderByIdAsc() {

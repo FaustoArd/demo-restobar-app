@@ -43,7 +43,7 @@ public class RestoTable {
 	@Column(name="table_number")
 	private Integer tableNumber;
 	
-	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
 	@JoinColumn(name="employee_id", referencedColumnName = "id")
 	private Employee employee;
 	
@@ -52,6 +52,9 @@ public class RestoTable {
 	
 	@OneToMany(mappedBy = "restoTable")
 	private Set<RestoTableOrder> tableOrders;
+	
+	@Column(name="payment_method")
+	private String paymentMethod;
 	
 	@Column(name="open")
 	private boolean open;

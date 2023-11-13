@@ -60,9 +60,8 @@ public class RestoTableIntegrationServicesTest {
 	}
 	
 	
-	/**One order per product is created,if user attemp to add a product already ordered,the existing order will be updated **/
+	/**One order per product is created,if user attempt to add a product already ordered,the existing product order will be updated **/
 	//Product id1: name="Grande Muzza",price=1500.00
-	//Product id2: name="Grande Cebolla", price=1800.00
 	@Test
 	@Order(2)
 	void whenCreateNewOrder_MustReturnOrder() {
@@ -75,6 +74,8 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(createdOrder.getTotalOrderPrice().doubleValue(), 3000.00);
 	
 		}
+	
+	//Product id2: name="Grande Cebolla", price=1800.00
 	@Test
 	@Order(3)
 	void createNewOrder() {
@@ -98,7 +99,7 @@ public class RestoTableIntegrationServicesTest {
 	
 	@Test
 	@Order(5)
-	void whenUpdateRestoTablePrice_MustReturnRestotable() {
+	void whenUpdateRestoTablePrice_MustReturnRestotableUpdatedTotalPrice() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
@@ -126,7 +127,7 @@ public class RestoTableIntegrationServicesTest {
 	}
 	@Test
 	@Order(8)
-	void updateAgainOrderWithProductId2L() {
+	void updateAgainOrderWithProductId2() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
 		RestoTableOrder order = RestoTableOrder.builder().product(product).restoTable(table).productQuantity(3).build();
@@ -135,6 +136,25 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(orders.size(), 2);
 		assertEquals(updatedOrder.getProduct().getProductName(), "Grande Cebolla");
 		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 12600.00);
+		
+	}
+	@Test
+	@Order(9)
+	void checkAgainForRestoTableTotalPrice() {
+		RestoTable table = restoTableService.findRestoTableById(1L);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
+		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 15600.00);
+	}
+	@Test
+	@Order(10)
+	void whenDeleteOrderbyId_RestoTableTotalPriceMustBeUpdated() {
+		restoTableOrderService.deleteOderById(1L);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
+		RestoTable table = restoTableService.findRestoTableById(1L);
+		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+		assertEquals(orders.size(), 1);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 12600.00);
 		
 	}
 	
