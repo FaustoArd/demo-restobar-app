@@ -73,7 +73,7 @@ public class RestoTableController {
 	@PutMapping("/update_price/{id}")
 	ResponseEntity<RestoTableDto> udpateRestoTablePrice(@PathVariable("id")Long id){
 		RestoTable table = restoTableService.findRestoTableById(id);
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTable(table);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(id);
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
 		RestoTableDto updatedTableDto = RestoTableMapper.INSTANCE.toRestotableDto(updatedTable);
 		return new ResponseEntity<RestoTableDto>(updatedTableDto,HttpStatus.OK);

@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.NegativeNumberException;
+import com.lord.arbam.exceptions.ProductOutOfStockException;
+import com.lord.arbam.exceptions.ValueAlreadyExistException;
 
 @ControllerAdvice
 public class HandleAppException extends ResponseEntityExceptionHandler {
@@ -26,6 +28,15 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	ResponseEntity<String> handleAuthentication(AuthenticationException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(ProductOutOfStockException.class)
+	ResponseEntity<String> handleOutOfStock(ProductOutOfStockException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(ValueAlreadyExistException.class)
+	ResponseEntity<String> handleValueAlreadyExist(ValueAlreadyExistException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 
 }

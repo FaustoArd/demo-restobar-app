@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.lord.arbam.dtos.RestoTableOrderDto;
 import com.lord.arbam.mappers.RestoTableOrderMapper;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
+import com.lord.arbam.services.ProductStockService;
 import com.lord.arbam.services.RestoTableOrderService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,18 +33,22 @@ public class RestoTableOrderController {
 	@Autowired
 	private final RestoTableOrderService restoTableOrderService;
 	
+	@Autowired
+	private final ProductStockService productStockService;
+	
 	@PostMapping("/create_order")
 	ResponseEntity<RestoTableOrderDto> createOrder(@RequestBody RestoTableOrderDto restoTableOrderDto){
 		log.info("Create new Order");
+		productStockService.subTractStock(restoTableOrderDto.getProductQuantity(), restoTableOrderDto.getProductId());
 		RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(restoTableOrderDto);
 		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
 		RestoTableOrderDto  createdOrderDto = RestoTableOrderMapper.INSTANCE.toOrderDto(createdOrder);
 		return new ResponseEntity<RestoTableOrderDto>(createdOrderDto,HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/all_by_restotable")
-	ResponseEntity<List<RestoTableOrderDto>> findAllOrdersByRestoTable(@RequestBody RestoTable restoTable){
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTable(restoTable);
+	@GetMapping("/all_by_restotable/{restoTableId}")
+	ResponseEntity<List<RestoTableOrderDto>> findAllOrdersByRestoTable(@PathVariable("restoTableId")Long restoTableId){
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(restoTableId);
 		List<RestoTableOrderDto> ordersDto = RestoTableOrderMapper.INSTANCE.toOrdersDto(orders);
 		return new ResponseEntity<List<RestoTableOrderDto>>(ordersDto,HttpStatus.OK);
 	}

@@ -5,6 +5,9 @@ import java.util.Calendar;
 import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,10 +52,6 @@ public class RestoTable {
 	
 	@OneToMany(mappedBy = "restoTable")
 	private Set<RestoTableOrder> tableOrders;
-	
-	@DateTimeFormat
-	@Column(name="close_time")
-	private Calendar closeTime;
 	
 	@Column(name="open")
 	private boolean open;

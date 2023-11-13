@@ -9,5 +9,7 @@ public interface ProductPriceService {
 	public ProductPrice findById(Long id);
 	
 	public ProductPrice updatePrice(ProductPrice price);
+	
+	public ProductPrice findByProductId(Long id);
 
 }

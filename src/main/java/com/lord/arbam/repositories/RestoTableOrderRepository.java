@@ -10,6 +10,8 @@ import com.lord.arbam.models.RestoTableOrder;
 
 public interface RestoTableOrderRepository extends JpaRepository<RestoTableOrder, Long>{
 	
-	public List<RestoTableOrder> findAllByRestoTable(RestoTable restoTable);
+	public List<RestoTableOrder> findAllByRestoTableId(Long id);
+	
+	Optional<RestoTableOrder> findByRestoTableIdAndProductId(Long restoTableId, Long productId);
 
 }

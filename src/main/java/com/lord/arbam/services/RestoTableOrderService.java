@@ -11,11 +11,13 @@ public interface RestoTableOrderService {
 	
 	public RestoTableOrder createOrder(RestoTableOrder order);
 	
+	public RestoTableOrder updateOrder(RestoTableOrder existingOrder,Integer productQuantity);
+	
 	public List<RestoTableOrder> findAllOrders();
 	
 	public void deleteOderById(Long id);
 	
-	public List<RestoTableOrder> findAllByRestoTable(RestoTable restoTable);
+	public List<RestoTableOrder> findAllByRestoTableId(Long restoTableId);
 	
 	
 

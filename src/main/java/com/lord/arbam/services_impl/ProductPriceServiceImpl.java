@@ -37,5 +37,10 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 		updatedPrice.setPrice(price.getPrice());
 		return productPriceRepository.save(price);
 	}
+
+	@Override
+	public ProductPrice findByProductId(Long id) {
+		return productPriceRepository.findByProductId(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el precio"));
+	}
 }
 

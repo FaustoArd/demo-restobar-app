@@ -59,6 +59,8 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(returnedTable.getTotalTablePrice().intValue(), 0);
 	}
 	
+	
+	/**One order per product is created,if user attemp to add a product already ordered,the existing order will be updated **/
 	//Product id1: name="Grande Muzza",price=1500.00
 	//Product id2: name="Grande Cebolla", price=1800.00
 	@Test
@@ -70,7 +72,7 @@ public class RestoTableIntegrationServicesTest {
 		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
 		assertTrue(createdOrder.getId()!=null);
 		assertEquals(createdOrder.getProduct().getProductName(), "Grande Muzza");
-		assertEquals(createdOrder.getTotalOrderPrice().intValue(), 3000);
+		assertEquals(createdOrder.getTotalOrderPrice().doubleValue(), 3000.00);
 	
 		}
 	@Test
@@ -82,25 +84,58 @@ public class RestoTableIntegrationServicesTest {
 		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
 		assertTrue(createdOrder.getId()!=null);
 		assertEquals(createdOrder.getProduct().getProductName(), "Grande Cebolla");
-		assertEquals(createdOrder.getTotalOrderPrice().intValue(), 1800);
+		assertEquals(createdOrder.getTotalOrderPrice().doubleValue(), 1800.00);
 		
 	}
 	@Test
 	@Order(4)
 	void checkRestoTableOrders() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTable(table);
-		assertEquals(orders.get(0).getTotalOrderPrice().intValue(), 3000);
-		assertEquals(orders.get(1).getTotalOrderPrice().intValue(), 1800);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
+		assertEquals(orders.get(0).getTotalOrderPrice().doubleValue(), 3000.00);
+		assertEquals(orders.get(1).getTotalOrderPrice().doubleValue(), 1800.00);
 	}
 	
 	@Test
 	@Order(5)
 	void whenUpdateRestoTablePrice_MustReturnRestotable() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTable(table);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
-		assertEquals(updatedTable.getTotalTablePrice().intValue(), 4800);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 4800.00);
+	}
+	@Test
+	@Order(6)
+	void whenTryToCreateExistingRestoTableOrder_MustResturnUpdatedRestoTableOrder() {
+		Product product = Product.builder().id(2L).build();
+		RestoTable table = RestoTable.builder().id(1L).build();
+		RestoTableOrder order = RestoTableOrder.builder().product(product).restoTable(table).productQuantity(3).build();
+		RestoTableOrder updatedOrder = restoTableOrderService.createOrder(order);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
+		assertEquals(orders.size(), 2);
+		assertEquals(updatedOrder.getProduct().getProductName(), "Grande Cebolla");
+		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 7200.00);
+	}
+	@Test
+	@Order(7)
+	void checkForRestoTableTotalPrice() {
+		RestoTable table = restoTableService.findRestoTableById(1L);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
+		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 10200.00);
+	}
+	@Test
+	@Order(8)
+	void updateAgainOrderWithProductId2L() {
+		Product product = Product.builder().id(2L).build();
+		RestoTable table = RestoTable.builder().id(1L).build();
+		RestoTableOrder order = RestoTableOrder.builder().product(product).restoTable(table).productQuantity(3).build();
+		RestoTableOrder updatedOrder = restoTableOrderService.createOrder(order);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
+		assertEquals(orders.size(), 2);
+		assertEquals(updatedOrder.getProduct().getProductName(), "Grande Cebolla");
+		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 12600.00);
+		
 	}
 	
 }

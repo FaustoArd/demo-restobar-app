@@ -3,19 +3,17 @@ package com.lord.arbam.services_impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.lord.arbam.exceptions.ItemNotFoundException;
+import com.lord.arbam.exceptions.ValueAlreadyExistException;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -40,6 +38,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Override
 	public RestoTable openRestoTable(RestoTable restoTable) {
+		Optional<RestoTable> existingTableNumber = findByTableNumber(restoTable.getTableNumber());
+		if(existingTableNumber.isPresent()) {
+			throw new ValueAlreadyExistException("El numero de mesa ya existe");
+		}else {
 		RestoTable newRestotable = findRestoTableById(restoTable.getId());
 		Employee employee = employeeService.findEmployeeById(restoTable.getEmployee().getId());
 		newRestotable.setEmployee(employee);
@@ -47,14 +49,17 @@ public class RestoTableServiceImpl implements RestoTableService {
 		newRestotable.setOpen(true);
 		newRestotable.setTotalTablePrice(new BigDecimal(0));
 		return restoTableRepository.save(newRestotable);
+		}
 	}
 	
 	@Override
 	public RestoTable updateRestoTableTotalPrice(RestoTable restoTable, List<RestoTableOrder> orders) {
 		ListIterator<RestoTableOrder> ordersIt = orders.listIterator();
-		ordersIt.forEachRemaining(order ->{
-			restoTable.setTotalTablePrice(restoTable.getTotalTablePrice().add(order.getTotalOrderPrice()));
-		});
+		Double updatedPrice = 0.00;
+		while(ordersIt.hasNext()) {
+			updatedPrice += ordersIt.next().getTotalOrderPrice().doubleValue();
+		}
+		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
 		return restoTableRepository.save(restoTable);
 	}
 	
@@ -73,6 +78,11 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Override
 	public RestoTable saveRestoTable(RestoTable restoTable) {
 		return restoTableRepository.save(restoTable);
+	}
+
+	@Override
+	public Optional<RestoTable> findByTableNumber(Integer tableNumber) {
+		return restoTableRepository.findByTableNumber(tableNumber);
 	}
 
 	
