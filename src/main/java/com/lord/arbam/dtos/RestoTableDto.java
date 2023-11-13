@@ -1,8 +1,6 @@
 package com.lord.arbam.dtos;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +17,6 @@ public class RestoTableDto {
 	private String employeeName;
 	
 	private BigDecimal totalTablePrice;
-	
-	private Calendar closeTime;
 	
 	private boolean open;
 
