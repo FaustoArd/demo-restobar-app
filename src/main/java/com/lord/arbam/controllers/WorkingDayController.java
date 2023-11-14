@@ -33,7 +33,7 @@ public class WorkingDayController {
 	}
 	@PutMapping("/")
 	ResponseEntity<WorkingDayDto> updateWorkingDay(@RequestBody WorkingDayDto workingDayDto){
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		WorkingDay updatedWorkingDay = workingDayService.updateWorkingDay(workingDay);
 		WorkingDayDto updatedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(updatedWorkingDay);
 		return new ResponseEntity<WorkingDayDto>(updatedWorkingDayDto,HttpStatus.CREATED);
