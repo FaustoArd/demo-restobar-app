@@ -6,12 +6,12 @@ import com.lord.arbam.models.RestoTableClosed;
 
 public interface RestoTableClosedService {
 	
-	public List<RestoTableClosed> findAllRestoTablesClosed();
+	public List<RestoTableClosed> findAllTablesClosed();
 	
-	public RestoTableClosed findRestoTableClosedById(Long id);
+	public RestoTableClosed findTableClosedById(Long id);
 	
-	public RestoTableClosed saveRestoTableClosed(RestoTableClosed restoTableClosed);
+	public RestoTableClosed saveTableClosed(RestoTableClosed restoTableClosed);
 	
-	public void deleteRestoTableClosedById(Long id);
+	public void deleteTableClosedById(Long id);
 
 }

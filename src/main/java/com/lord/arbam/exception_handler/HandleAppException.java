@@ -32,7 +32,7 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(ProductOutOfStockException.class)
 	ResponseEntity<String> handleOutOfStock(ProductOutOfStockException ex){
-		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.EXPECTATION_FAILED);
 	}
 	@ExceptionHandler(ValueAlreadyExistException.class)
 	ResponseEntity<String> handleValueAlreadyExist(ValueAlreadyExistException ex){

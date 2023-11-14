@@ -23,17 +23,17 @@ public class ProductStockServiceImpl implements ProductStockService {
 	
 
 	@Override
-	public ProductStock saveProductStock(ProductStock productStock) {
+	public ProductStock saveStock(ProductStock productStock) {
 	return productStockRepository.save(productStock);
 	}
 
 	@Override
-	public ProductStock findProductStockById(Long id) {
+	public ProductStock findStockById(Long id) {
 		return productStockRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el stock. ProductStockServiceImpl.findById"));
 	}
 
 	@Override
-	public ProductStock updateProductStock(ProductStock stock, Long  productId) {
+	public ProductStock updateStock(ProductStock stock, Long  productId) {
 		
 		Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
 		if(stockResult.isPresent()) {

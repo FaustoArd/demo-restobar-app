@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.lord.arbam.exceptions.ItemNotFoundException;
@@ -21,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class RestoTableServiceImpl implements RestoTableService {
+	
+	private static final Logger log = LoggerFactory.getLogger(RestoTableServiceImpl.class);
 	
 	@Autowired
 	private final RestoTableRepository restoTableRepository;
@@ -45,6 +50,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	public RestoTable openRestoTable(RestoTable restoTable) {
 		Optional<RestoTable> existingTableNumber = findByTableNumber(restoTable.getTableNumber());
 		if(existingTableNumber.isPresent()) {
+			log.error("No se puede abrir la mesa, el numero ingresado ya existe");
 			throw new ValueAlreadyExistException("El numero de mesa ya existe");
 		}else {
 		RestoTable newRestotable = findRestoTableById(restoTable.getId());
@@ -53,6 +59,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		newRestotable.setTableNumber(restoTable.getTableNumber());
 		newRestotable.setOpen(true);
 		newRestotable.setTotalTablePrice(new BigDecimal(0));
+		log.info("Mesa creada con exito. Numero:" + newRestotable.getTableNumber());
 		return restoTableRepository.save(newRestotable);
 		}
 	}
@@ -65,6 +72,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 			updatedPrice += ordersIt.next().getTotalOrderPrice().doubleValue();
 		}
 		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
+		log.info("Precio Total de la mesa actualizado:");
 		return restoTableRepository.save(restoTable);
 	}
 	
@@ -77,11 +85,12 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.employeeName(findedTable.getEmployee().getEmployeeName())
 				.totalPrice(findedTable.getTotalTablePrice())
 				.paymentMethod(findedTable.getPaymentMethod()).build();
-		restoTableClosedService.saveRestoTableClosed(tableClosed);
+		restoTableClosedService.saveTableClosed(tableClosed);
 		findedTable.setEmployee(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
+		log.info("Mesa numero: " + restoTable.getTableNumber() + " fue cerrada");
 		return restoTableRepository.save(findedTable);
 				}
 

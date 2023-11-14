@@ -4,11 +4,11 @@ import com.lord.arbam.models.ProductStock;
 
 public interface ProductStockService {
 	
-	public ProductStock saveProductStock(ProductStock productStock);
+	public ProductStock saveStock(ProductStock productStock);
 	
-	public ProductStock findProductStockById(Long id);
+	public ProductStock findStockById(Long id);
 	
-	public ProductStock updateProductStock(ProductStock stock, Long  productId);
+	public ProductStock updateStock(ProductStock stock, Long  productId);
 	
 	public ProductStock findStockByProductId(Long productId);
 	

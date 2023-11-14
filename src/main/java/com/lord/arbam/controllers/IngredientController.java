@@ -34,7 +34,7 @@ public class IngredientController {
 	@PostMapping("/")
 	ResponseEntity<IngredientDto> saveIngredient(@RequestBody IngredientDto ingredientDto){
 		Ingredient ingredient = IngredientMapper.INSTANCE.toIngredient(ingredientDto);
-		IngredientCategory category = categoryService.findById(ingredient.getIngredientCategory().getId());
+		IngredientCategory category = categoryService.findCategoryById(ingredient.getIngredientCategory().getId());
 		Ingredient savedIngredient = ingredientService.saveIngredient(category,ingredient);
 		IngredientDto savedIngredientDto = IngredientMapper.INSTANCE.toIngredientDto(savedIngredient);
 		return new ResponseEntity<IngredientDto>(savedIngredientDto,HttpStatus.CREATED);
@@ -42,7 +42,7 @@ public class IngredientController {
 	@PutMapping("/")
 	ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto ingredientDto){
 		Ingredient ingredient = IngredientMapper.INSTANCE.toIngredient(ingredientDto);
-		IngredientCategory category = categoryService.findById(ingredient.getIngredientCategory().getId());
+		IngredientCategory category = categoryService.findCategoryById(ingredient.getIngredientCategory().getId());
 		Ingredient savedIngredient = ingredientService.updateIngredient(category,ingredient);
 		IngredientDto savedIngredientDto = IngredientMapper.INSTANCE.toIngredientDto(savedIngredient);
 		return new ResponseEntity<IngredientDto>(savedIngredientDto,HttpStatus.OK);

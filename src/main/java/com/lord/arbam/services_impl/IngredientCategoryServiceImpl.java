@@ -23,7 +23,7 @@ public class IngredientCategoryServiceImpl implements IngredientCategoryService 
 	}
 
 	@Override
-	public IngredientCategory findById(Long id) {
+	public IngredientCategory findCategoryById(Long id) {
 		return ingredientCategoryRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro la categoria del ingrediente"));
 	}
 

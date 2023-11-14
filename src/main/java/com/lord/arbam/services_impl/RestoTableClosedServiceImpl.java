@@ -19,18 +19,18 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	private final RestoTableClosedRepository restoTableClosedRepository;
 
 	@Override
-	public RestoTableClosed findRestoTableClosedById(Long id) {
+	public RestoTableClosed findTableClosedById(Long id) {
 		return restoTableClosedRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
 				"No se encontraron datos de la mesa cerrada. RestoTableClosedServiceImpl.findRestoTableClosedById"));
 	}
 
 	@Override
-	public RestoTableClosed saveRestoTableClosed(RestoTableClosed restoTableClosed) {
+	public RestoTableClosed saveTableClosed(RestoTableClosed restoTableClosed) {
 		return restoTableClosedRepository.save(restoTableClosed);
 	}
 
 	@Override
-	public void deleteRestoTableClosedById(Long id) {
+	public void deleteTableClosedById(Long id) {
 		if (restoTableClosedRepository.existsById(id)) {
 			restoTableClosedRepository.deleteById(id);
 		} else {
@@ -40,7 +40,7 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	}
 
 	@Override
-	public List<RestoTableClosed> findAllRestoTablesClosed() {
+	public List<RestoTableClosed> findAllTablesClosed() {
 		return (List<RestoTableClosed>) restoTableClosedRepository.findAll();
 	}
 

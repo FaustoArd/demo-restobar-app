@@ -1,12 +1,10 @@
 package com.lord.arbam.controllers;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +18,7 @@ import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.services.ProductStockService;
 import com.lord.arbam.services.RestoTableOrderService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,17 +27,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RestoTableOrderController {
 	
-	private static final Logger log = LoggerFactory.getLogger(RestoTableOrderController.class);
+	
 	
 	@Autowired
 	private final RestoTableOrderService restoTableOrderService;
+	
+	private final Gson gson = new Gson();
 	
 	@Autowired
 	private final ProductStockService productStockService;
 	
 	@PostMapping("/create_order")
 	ResponseEntity<RestoTableOrderDto> createOrder(@RequestBody RestoTableOrderDto restoTableOrderDto){
-		log.info("Create new Order");
+		
 		productStockService.subTractStock(restoTableOrderDto.getProductQuantity(), restoTableOrderDto.getProductId());
 		RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(restoTableOrderDto);
 		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
@@ -51,6 +52,13 @@ public class RestoTableOrderController {
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(restoTableId);
 		List<RestoTableOrderDto> ordersDto = RestoTableOrderMapper.INSTANCE.toOrdersDto(orders);
 		return new ResponseEntity<List<RestoTableOrderDto>>(ordersDto,HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id}")
+	ResponseEntity<String> deleteOrderById(@PathVariable("id")Long id){
+		
+		restoTableOrderService.deleteOderById(id);
+		return new ResponseEntity<String>(gson.toJson("La orden fue eliminada con exito"),HttpStatus.OK);
 	}
 
 }

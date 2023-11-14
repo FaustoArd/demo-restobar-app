@@ -25,18 +25,30 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	}
 
 	@Override
-	public WorkingDay findById(Long id) {
+	public WorkingDay findWorkingDayById(Long id) {
 	return workingDayRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 	}
+	
+	@Override
+	public WorkingDay startWorkingDay(WorkingDay workingDay) {
+		
+		/*WorkingDay newWorkingDay = WorkingDay.builder()
+				.totalStartCash(workingDay.getTotalStartCash())
+				.*/
+		return null;
+	}
+
 
 	@Override
-	public WorkingDay save(WorkingDay workingDay) {
+	public WorkingDay updateWorkingDay(WorkingDay workingDay) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+
 	@Override
-	public WorkingDay update(WorkingDay workingDay) {
+	public WorkingDay closeWorkingDay(WorkingDay workingDay) {
 		// TODO Auto-generated method stub
 		return null;
 	}

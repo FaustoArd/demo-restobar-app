@@ -21,12 +21,12 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 
 
 	@Override
-	public ProductPrice save(ProductPrice price) {
+	public ProductPrice savePrice(ProductPrice price) {
 	return productPriceRepository.save(price);
 	}
 
 	@Override
-	public ProductPrice findById(Long id) {
+	public ProductPrice findPriceById(Long id) {
 		return productPriceRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("No se encontro el precio. ProductPriceServiceImpl.findById"));
 	}
 

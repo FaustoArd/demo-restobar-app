@@ -157,5 +157,15 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 12600.00);
 		
 	}
+	@Test
+	@Order(11)
+	void whenDeleteLastOrder_RestoTablePriceMustBeZero() {
+		restoTableOrderService.deleteOderById(2L);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
+		RestoTable table = restoTableService.findRestoTableById(1L);
+		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+		assertEquals(orders.size(), 0);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(),0);
+	}
 	
 }

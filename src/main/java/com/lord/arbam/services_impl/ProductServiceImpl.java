@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
 	public Product saveProduct(Product product) {
 		ProductCategory category = productCategoryService.findCategoryById(product.getCategory().getId());
 				
-		ProductPrice price = productPriceService.save(new ProductPrice(product.getProductPrice().getPrice()));
+		ProductPrice price = productPriceService.savePrice(new ProductPrice(product.getProductPrice().getPrice()));
 
 		Product newProduct = Product.builder().category(category).productName(product.getProductName())
 				.productPrice(price).mixed(false).build();
@@ -64,10 +64,10 @@ public class ProductServiceImpl implements ProductService {
 				
 
 		return productRepository.findById(product.getId()).map(p -> {
-			ProductPrice price = productPriceService.findById(p.getProductPrice().getId());
+			ProductPrice price = productPriceService.findPriceById(p.getProductPrice().getId());
 					
 			price.setPrice(product.getProductPrice().getPrice());
-			ProductPrice updatedPrice = productPriceService.save(price);
+			ProductPrice updatedPrice = productPriceService.savePrice(price);
 			p.setId(product.getId());
 			p.setProductName(product.getProductName());
 			p.setCategory(category);
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
 		if (stock.getProductStock() < 0) {
 			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
 		} else {
-			ProductStock savedStock = productStockService.updateProductStock(stock, product.getId());
+			ProductStock savedStock = productStockService.updateStock(stock, product.getId());
 			product.setProductStock(savedStock);
 			Product savedProduct = productRepository.save(product);
 			if (savedProduct.isMixed()) {

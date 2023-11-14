@@ -8,10 +8,12 @@ public interface WorkingDayService {
 	
 	public List<WorkingDay> findAll();
 	
-	public WorkingDay findById(Long id);
+	public WorkingDay findWorkingDayById(Long id);
 	
-	public WorkingDay save(WorkingDay workingDay);
+	public WorkingDay startWorkingDay(WorkingDay workingDay);
 	
-	public WorkingDay update(WorkingDay workingDay);
+	public WorkingDay updateWorkingDay(WorkingDay workingDay);
+	
+	public WorkingDay closeWorkingDay(WorkingDay workingDay);
 
 }

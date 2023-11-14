@@ -5,7 +5,7 @@ import com.lord.arbam.models.User;
 
 public interface AuthenticationService {
 
-	public User registerUser(User user);
+	public User register(User user);
 	
-	public LoginResponseDto loginUser(User user);
+	public LoginResponseDto login(User user);
 }

@@ -55,8 +55,13 @@ public class ArbamApplication {
 			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,AuthenticationService authService) {
 		return args -> {
 			
-			Role role = Role.builder().authority("USER").build();
-			roleRepository.save(role);
+			//Role role = Role.builder().authority("USER").build();
+			
+			
+			
+			//User user =  User.builder().name("carlos").lastname("mede").username("car").email("car@mail.com").password("123").build();
+			//User savedUser = 
+			
 			//User user = User.builder().name("Carlos").lastname("Marino").username("car").email("car@gmail.com").password("1234").build();
 			//authService.registerUser(user);
 			

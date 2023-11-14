@@ -6,6 +6,6 @@ public interface IngredientCategoryService {
 	
 	public IngredientCategory saveCategory(IngredientCategory ingredientCategory);
 	
-	public IngredientCategory findById(Long id);
+	public IngredientCategory findCategoryById(Long id);
 
 }

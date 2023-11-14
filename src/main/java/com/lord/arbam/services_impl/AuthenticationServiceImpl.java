@@ -48,11 +48,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 
 	@Override
-	public User registerUser(User user)  {
+	public User register(User user)  {
 		log.info("Register new user");
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
-		Role userRole = roleRepository.findByAuthority("USER").get();
-		Set<Role> authorities = new HashSet<>();
+		Role userRole = roleRepository.save(Role.builder().authority("USER").build());
+		Set<Role> authorities = new HashSet<Role>();
 		authorities.add(userRole);
 		User newUser = User.builder()
 				.name(user.getName())
@@ -62,12 +62,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				.email(user.getEmail())
 				.password(encodedPassword)
 				.authorities(authorities).build();
-		User savedUser = userService.saveUser(newUser);
-		return savedUser;
+		return  userService.saveUser(newUser);
+		
 		}
 
 	@Override
-	public LoginResponseDto loginUser(User user)throws AuthenticationException {
+	public LoginResponseDto login(User user)throws AuthenticationException {
 		try {
 			Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 			

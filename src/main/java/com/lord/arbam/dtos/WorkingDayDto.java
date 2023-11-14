@@ -1,6 +1,7 @@
 package com.lord.arbam.dtos;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,11 @@ public class WorkingDayDto {
 
 	private BigDecimal totalTransf;
 	
+	private String cashierName;
 	
-	private BigDecimal totalEmployeeSalary;
+	private Set<Long> employeeId;
+	
+	private BigDecimal totalWaitressSalary;
+	
+	private BigDecimal totalCashierSalary;
 }

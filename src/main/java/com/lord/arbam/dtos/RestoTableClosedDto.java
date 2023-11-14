@@ -19,5 +19,7 @@ public class RestoTableClosedDto {
 	
 	private String paymentMethod;
 	
+	private Long workingDayId;
+	
 
 }
