@@ -13,5 +13,9 @@ public interface EmployeeService {
 	public List<Employee> findAllEmployees();
 	
 	public void deleteEmployeeById(Long id);
+	
+	public List<Employee> findAllById(List<Long> ids);
+	
+	
 
 }

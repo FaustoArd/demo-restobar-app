@@ -36,7 +36,7 @@ public class RestoTableOrder {
 	@Column(name="total_order_price")
 	private BigDecimal totalOrderPrice;
 	
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name="product_id", referencedColumnName = "id")
 	private Product product;
 	

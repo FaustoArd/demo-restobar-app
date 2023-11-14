@@ -1,6 +1,7 @@
 package com.lord.arbam.models;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -53,7 +54,7 @@ public class WorkingDay {
 	@JoinTable(name="waitress_working_day_junction", joinColumns = 
 	@JoinColumn(name="working_day_id", referencedColumnName = "id"), inverseJoinColumns =
 	@JoinColumn(name="waitress_id", referencedColumnName = "id"))
-	private Set<Employee> waitresses;
+	private List<Employee> waitresses;
 	
 	@Column(name="cashierName")
 	private String cashierName;

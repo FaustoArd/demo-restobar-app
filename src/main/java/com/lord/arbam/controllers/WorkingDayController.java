@@ -26,7 +26,7 @@ public class WorkingDayController {
 
 	@PostMapping("/")
 	ResponseEntity<WorkingDayDto> startWorkingDay(@RequestBody WorkingDayDto workingDayDto){
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		WorkingDay savedWorkingDay = workingDayService.startWorkingDay(workingDay);
 		WorkingDayDto savedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(savedWorkingDay);
 		return new ResponseEntity<WorkingDayDto>(savedWorkingDayDto,HttpStatus.CREATED);

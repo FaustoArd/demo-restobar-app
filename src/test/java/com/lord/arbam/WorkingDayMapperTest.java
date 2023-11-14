@@ -1,7 +1,10 @@
 package com.lord.arbam;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -16,14 +19,14 @@ public class WorkingDayMapperTest {
 
 	@Test
 	void whenToWorkingDayMethodIsCalled_MustReturnWorkingDayObject() {
-		Set<Long> employeesId = new HashSet<>();
+		List<Long> employeesId = new ArrayList<>();
 		employeesId.add(1L);
 		employeesId.add(3L);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
 		workingDayDto.setTotalStartCash(4500.00);
 		workingDayDto.setEmployeeId(employeesId);
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		Optional<Employee> emp1 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 1L).findAny();
 		Optional<Employee> emp2 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 3L).findAny();
 		assertEquals(workingDay.getCashierName(), "Leticia");
