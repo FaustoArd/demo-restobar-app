@@ -33,7 +33,7 @@ public class WorkingDay {
 	private Long id;
 	
 	@Column(name="total_start_cash")
-	private Double totalStartCash;
+	private BigDecimal totalStartCash;
 	
 	@Column(name="total_working_day")
 	private BigDecimal totalWorkingDay;
@@ -64,6 +64,11 @@ public class WorkingDay {
 	
 	@Column(name="total_cashier_salary")
 	private BigDecimal totalCashierSalary;
+	
+	@Column(name="day_started")
+	private boolean dayStarted;
+	
+	
 	
 
 }

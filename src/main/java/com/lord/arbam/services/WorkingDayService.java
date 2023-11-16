@@ -14,6 +14,8 @@ public interface WorkingDayService {
 	
 	public WorkingDay updateWorkingDay(WorkingDay workingDay);
 	
-	public WorkingDay closeWorkingDay(WorkingDay workingDay);
+	public WorkingDay closeWorkingDay(Long workingDayId);
+	
+	
 
 }

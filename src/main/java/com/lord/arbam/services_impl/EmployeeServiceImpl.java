@@ -59,6 +59,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<Employee> findAllById(List<Long> ids) {
 		return (List<Employee>)employeeRepository.findAllById(ids);
 	}
+
+	@Override
+	public List<Employee> findByEmployeeJobJobRole(String jobRole) {
+		return (List<Employee>)employeeRepository.findByEmployeeJobJobRole(jobRole);
+	}
 	
 }
 

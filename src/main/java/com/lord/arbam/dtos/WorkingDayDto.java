@@ -13,29 +13,27 @@ public class WorkingDayDto {
 	
 	private Long id;
 	
-
-	private Double totalStartCash;
-	
+	private BigDecimal totalStartCash;
 	
 	private BigDecimal totalWorkingDay;
 	
-	
 	private BigDecimal totalPostEmployeeSalary;
-	
 	
 	private BigDecimal totalCash;
 	
-
 	private BigDecimal totalDebit;
 	
-
 	private BigDecimal totalTransf;
 	
 	private String cashierName;
 	
-	private List<Long> employeeId;
+	private List<Long> employeesId;
 	
 	private BigDecimal totalWaitressSalary;
 	
 	private BigDecimal totalCashierSalary;
+	
+	private boolean dayStarted;
+	
+	
 }

@@ -16,6 +16,8 @@ public interface EmployeeService {
 	
 	public List<Employee> findAllById(List<Long> ids);
 	
+	List<Employee> findByEmployeeJobJobRole(String jobRole);
+	
 	
 
 }

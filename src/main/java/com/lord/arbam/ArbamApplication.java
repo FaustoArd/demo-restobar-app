@@ -129,17 +129,33 @@ public class ArbamApplication {
 			Product findedProduct3 = productService.findProductById(3L);
 			ProductStock stock3 = new ProductStock(30);
 			Product savedProductstocked3 = productService.createProductStock(findedProduct3, stock3) ;
-			EmployeeJob empJob = EmployeeJob.builder().jobRole("Mesero/a").build();
-			EmployeeJob savedEmpJob = employeeJobRepository.save(empJob); 
 			
-			Employee emp1 = Employee.builder().employeeName("Carla").employeeJob(savedEmpJob).build();
+			EmployeeJob meseroJob = EmployeeJob.builder().jobRole("Mesera").build();
+			EmployeeJob savedMeseroJob = employeeJobRepository.save(meseroJob); 
+			
+			EmployeeJob cajeroJob = EmployeeJob.builder().jobRole("Cajera").build(); 
+			EmployeeJob savedCajeroJob = employeeJobRepository.save(cajeroJob); 
+			
+			EmployeeJob bacheroJob = EmployeeJob.builder().jobRole("Bachero").build(); 
+			EmployeeJob savedBacheroJob = employeeJobRepository.save(bacheroJob); 
+			
+			EmployeeJob cocineroJob = EmployeeJob.builder().jobRole("Cocinero").build(); 
+			EmployeeJob savedCocineroJob = employeeJobRepository.save(cocineroJob);
+			
+			Employee emp1 = Employee.builder().employeeName("Carla").employeeJob(savedMeseroJob).build();
 			Employee savedEmp1 =  employeeService.saveEmployee(emp1);
 			
-			Employee emp2 = Employee.builder().employeeName("Marina").employeeJob(savedEmpJob).build();
+			Employee emp2 = Employee.builder().employeeName("Marina").employeeJob(savedMeseroJob).build();
 			Employee savedEmp2 =  employeeService.saveEmployee(emp2);
 			
-			Employee emp3 = Employee.builder().employeeName("Silvana").employeeJob(savedEmpJob).build();
+			Employee emp3 = Employee.builder().employeeName("Silvana").employeeJob(savedMeseroJob).build();
 			Employee savedEmp3 =  employeeService.saveEmployee(emp3);
+			
+			Employee emp4 = Employee.builder().employeeName("Mirta").employeeJob(savedCajeroJob).build();
+			Employee savedEmp4 =  employeeService.saveEmployee(emp4);
+			
+			Employee emp5 = Employee.builder().employeeName("Susana").employeeJob(savedBacheroJob).build();
+			Employee savedEmp5 =  employeeService.saveEmployee(emp5);
 			
 			ArrayList<RestoTable> tables = new ArrayList<RestoTable>();
 			for(int i = 1; i<31;i++) {

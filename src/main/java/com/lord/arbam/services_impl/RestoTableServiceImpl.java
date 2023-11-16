@@ -78,8 +78,8 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 
 	@Override
-	public RestoTable closeRestoTable(RestoTable restoTable) {
-		RestoTable findedTable = findRestoTableById(restoTable.getId());
+	public RestoTable closeRestoTable(Long restoTableId) {
+		RestoTable findedTable = findRestoTableById(restoTableId);
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
 				.employeeName(findedTable.getEmployee().getEmployeeName())
@@ -87,10 +87,11 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.paymentMethod(findedTable.getPaymentMethod()).build();
 		restoTableClosedService.saveTableClosed(tableClosed);
 		findedTable.setEmployee(null);
+		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
-		log.info("Mesa numero: " + restoTable.getTableNumber() + " fue cerrada");
+		log.info("Mesa numero: " + findedTable.getTableNumber() + " fue cerrada");
 		return restoTableRepository.save(findedTable);
 				}
 

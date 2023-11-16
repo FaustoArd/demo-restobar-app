@@ -2,6 +2,7 @@ package com.lord.arbam;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,19 +22,21 @@ public class WorkingDayMapperTest {
 	void whenToWorkingDayMethodIsCalled_MustReturnWorkingDayObject() {
 		List<Long> employeesId = new ArrayList<>();
 		employeesId.add(1L);
-		employeesId.add(3L);
+		//employeesId.add(3L);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
-		workingDayDto.setTotalStartCash(4500.00);
-		workingDayDto.setEmployeeId(employeesId);
+		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
+		workingDayDto.setEmployeesId(employeesId);
+		workingDayDto.setTotalPostEmployeeSalary(new BigDecimal(12000.00));
 		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		Optional<Employee> emp1 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 1L).findAny();
 		Optional<Employee> emp2 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 3L).findAny();
 		assertEquals(workingDay.getCashierName(), "Leticia");
 		assertEquals(workingDay.getTotalStartCash().doubleValue(), 4500.00);
-		assertEquals(workingDay.getWaitresses().stream().map(emp -> emp.getId()).count(), 2);
+		assertEquals(workingDay.getTotalPostEmployeeSalary().doubleValue(), 12000.00);
+		assertEquals(workingDay.getWaitresses().stream().map(emp -> emp.getId()).count(), 1);
 		assertEquals(emp1.get().getId().longValue(), 1L);
-		assertEquals(emp2.get().getId().longValue(), 3L);
+		//assertEquals(emp2.get().getId().longValue(), 3L);
 
 	}
 

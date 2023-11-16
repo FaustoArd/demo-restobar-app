@@ -62,7 +62,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 		Optional<RestoTableOrder> existingOrder = restoTableOrderRepository
 				.findByRestoTableIdAndProductId(order.getRestoTable().getId(), order.getProduct().getId());
 		if(existingOrder.isPresent()) {
-			log.info("orden existente actualizada");
+			log.info("orden existente,actualizando...");
 		return  updateOrder(existingOrder.get(), order.getProductQuantity());
 		}
 		Product product = productService.findProductById(order.getProduct().getId());
@@ -82,6 +82,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 		ProductPrice price = productPriceService.findByProductId(existingOrder.getProduct().getId());
 		existingOrder.setProductQuantity(existingOrder.getProductQuantity()+productquantity);
 		existingOrder.setTotalOrderPrice(price.getPrice().multiply(new BigDecimal(existingOrder.getProductQuantity())));
+		log.info("orden actualizada.");
 		return restoTableOrderRepository.save(existingOrder);
 				
 	}

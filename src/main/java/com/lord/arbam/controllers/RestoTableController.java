@@ -24,6 +24,7 @@ import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RestoTableController {
 	
-	private static final Logger log = LoggerFactory.getLogger(RestoTableController.class);
+	private  final Gson gson = new Gson();
 	
 	@Autowired
 	private final RestoTableService restoTableService;
@@ -64,7 +65,6 @@ public class RestoTableController {
 	
 	@PostMapping("/open_table")
 	ResponseEntity<RestoTableDto> openRestoTable(@RequestBody RestoTableDto restoTableDto){
-		log.info("Create new Table");
 		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
 		RestoTable createdTable = restoTableService.openRestoTable(table);
 		RestoTableDto createdTableDto = RestoTableMapper.INSTANCE.toRestotableDto(createdTable);
@@ -82,10 +82,15 @@ public class RestoTableController {
 
 	@DeleteMapping("/delete_order")
 	ResponseEntity<String> deleteOrder(@PathVariable("id") Long id){
-		log.info("Delete order from table");
 		restoTableOrderService.deleteOderById(id);
-		return new ResponseEntity<String>("La orden se elimino con exito", HttpStatus.OK);
+		return new ResponseEntity<String>(gson.toJson("La orden se elimino con exito"), HttpStatus.OK);
 	}
+	@GetMapping("/close/{id}")
+	ResponseEntity<String> closeTable(@PathVariable("id")Long id){
+		restoTableService.closeRestoTable(id);
+		return new ResponseEntity<String>(gson.toJson("La mesa fue cerrada con exito"),HttpStatus.OK);
+	}
+	
 	@GetMapping("/all_orders_by_restotable_id/{id}")
 	ResponseEntity<List<RestoTableOrderDto>> findOrdersByRestoTableId(@PathVariable("id")Long id){
 		return null;

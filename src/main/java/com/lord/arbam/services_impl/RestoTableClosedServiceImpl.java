@@ -21,7 +21,7 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	@Override
 	public RestoTableClosed findTableClosedById(Long id) {
 		return restoTableClosedRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
-				"No se encontraron datos de la mesa cerrada. RestoTableClosedServiceImpl.findRestoTableClosedById"));
+				"No se enconto la mesa cerrada"));
 	}
 
 	@Override
@@ -35,13 +35,18 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 			restoTableClosedRepository.deleteById(id);
 		} else {
 			throw new ItemNotFoundException(
-					"No se encontro la mesa cerrada. RestoTableClosedServiceImpl.findRestoTableClosedById");
+					"No se encontro la mesa cerrada");
 		}
 	}
 
 	@Override
 	public List<RestoTableClosed> findAllTablesClosed() {
 		return (List<RestoTableClosed>) restoTableClosedRepository.findAll();
+	}
+
+	@Override
+	public List<RestoTableClosed> findAllByWorkingDayId(Long id) {
+		return (List<RestoTableClosed>)restoTableClosedRepository.findAllByWorkingDayId(id);
 	}
 
 }

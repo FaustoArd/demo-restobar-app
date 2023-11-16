@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.lord.arbam.exceptions.EmployeeNotSelectedException;
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.NegativeNumberException;
 import com.lord.arbam.exceptions.ProductOutOfStockException;
@@ -36,6 +37,10 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	}
 	@ExceptionHandler(ValueAlreadyExistException.class)
 	ResponseEntity<String> handleValueAlreadyExist(ValueAlreadyExistException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(EmployeeNotSelectedException.class)
+	ResponseEntity<String> handleEmployeeNotSelected(EmployeeNotSelectedException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 
