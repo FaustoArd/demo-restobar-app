@@ -1,6 +1,7 @@
 package com.lord.arbam.mappers;
 
 import com.lord.arbam.dtos.WorkingDayDto;
+import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.WorkingDay;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,37 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-16T23:13:43-0400",
+    date = "2023-11-17T15:49:56-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
-public class WorkingDayMapperImpl extends WorkingDayMapper {
+public class WorkingDayMapperImpl implements WorkingDayMapper {
+
+    @Override
+    public WorkingDay toWorkingDayStart(WorkingDayDto workingDayDto) {
+        if ( workingDayDto == null ) {
+            return null;
+        }
+
+        WorkingDay.WorkingDayBuilder workingDay = WorkingDay.builder();
+
+        workingDay.cashierName( workingDayDto.getCashierName() );
+        workingDay.dayStarted( workingDayDto.isDayStarted() );
+        workingDay.id( workingDayDto.getId() );
+        workingDay.totalCash( workingDayDto.getTotalCash() );
+        workingDay.totalCashierSalary( workingDayDto.getTotalCashierSalary() );
+        workingDay.totalDebit( workingDayDto.getTotalDebit() );
+        workingDay.totalPostEmployeeSalary( workingDayDto.getTotalPostEmployeeSalary() );
+        workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
+        workingDay.totalTransf( workingDayDto.getTotalTransf() );
+        workingDay.totalWaitressSalary( workingDayDto.getTotalWaitressSalary() );
+        workingDay.totalWorkingDay( workingDayDto.getTotalWorkingDay() );
+        List<Employee> list = workingDayDto.getWaitresses();
+        if ( list != null ) {
+            workingDay.waitresses( new ArrayList<Employee>( list ) );
+        }
+
+        return workingDay.build();
+    }
 
     @Override
     public WorkingDayDto toWorkingDayDto(WorkingDay workingDay) {
@@ -32,6 +60,10 @@ public class WorkingDayMapperImpl extends WorkingDayMapper {
         workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
         workingDayDto.setTotalWaitressSalary( workingDay.getTotalWaitressSalary() );
         workingDayDto.setTotalWorkingDay( workingDay.getTotalWorkingDay() );
+        List<Employee> list = workingDay.getWaitresses();
+        if ( list != null ) {
+            workingDayDto.setWaitresses( new ArrayList<Employee>( list ) );
+        }
 
         return workingDayDto;
     }

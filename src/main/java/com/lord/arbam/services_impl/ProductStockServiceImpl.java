@@ -29,7 +29,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
 	@Override
 	public ProductStock findStockById(Long id) {
-		return productStockRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el stock. ProductStockServiceImpl.findById"));
+		return productStockRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el stock"));
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 	@Override
 	public ProductStock findStockByProductId(Long id) {
 		return productStockRepository.findStockByProductId(id)
-				.orElseThrow(()-> new ItemNotFoundException("No se encontro el stock. ProductStockServiceImpl.findStockByProductId"));
+				.orElseThrow(()-> new ItemNotFoundException("No se encontro el stock"));
 	}
 
 	@Transactional

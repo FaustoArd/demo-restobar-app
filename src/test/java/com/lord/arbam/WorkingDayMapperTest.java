@@ -29,7 +29,7 @@ public class WorkingDayMapperTest {
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
 		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
-		workingDayDto.setEmployeesId(employeesId);
+		workingDayDto.setWaitresses(employeesId);
 		workingDayDto.setTotalPostEmployeeSalary(new BigDecimal(12000.00));
 		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		Optional<Employee> emp1 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 1L).findAny();

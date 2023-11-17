@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +39,7 @@ import com.lord.arbam.services.WorkingDayService;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 public class WorkingDayServiceTest {
 	
 	@Autowired
@@ -47,6 +50,8 @@ public class WorkingDayServiceTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	private Long workingDayId;
 	
 	@Test
 	@BeforeEach
@@ -92,10 +97,12 @@ public class WorkingDayServiceTest {
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Miguel");
 		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
-		workingDayDto.setEmployeesId(empsId);
+		workingDayDto.setWaitresses(empsId);
 		WorkingDay day = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
 		WorkingDay startedWorkingDay = workingDayService.startWorkingDay(day);
+		this.workingDayId = startedWorkingDay.getId();
 		assertTrue(startedWorkingDay.getId()!=null);
+		assertTrue(startedWorkingDay.isDayStarted());
 		assertEquals(startedWorkingDay.getCashierName(),"Miguel");
 		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(),4500.00);
 		assertEquals(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent(),true);
@@ -116,22 +123,15 @@ public class WorkingDayServiceTest {
 		assertEquals(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent(), false);
 		
 	}
-	
-	/*@Test
+	@Test
 	@Order(3)
-	void WhenStartWorkingDayMethodIsCalledWithoutSelectingWaitresses_MustThrowException()throws Exception {
+	void isWorkingDayStartedMethodTest() {
+		boolean result = workingDayService.isWorkingDayStarted(workingDayId);
+		assertTrue(result);
 		
-		RuntimeException exception = Assertions.assertThrows(EmployeeNotSelectedException.class, ()->{
-			WorkingDayDto workingDayDto = new WorkingDayDto();
-			workingDayDto.setCashierName("Miguel");
-			workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
-			workingDayDto.setTotalPostEmployeeSalary(new BigDecimal(12500.00));
-			WorkingDay day = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
-			workingDayService.startWorkingDay(day);
-		},"Exception not throw");
-		
-		assertTrue(exception.getMessage().equals("Se debe seleccionar al menos una mesera"));
-	}*/
+	}
+	
+	
 	
 	
 }

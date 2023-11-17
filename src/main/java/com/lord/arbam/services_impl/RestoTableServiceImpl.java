@@ -80,9 +80,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Override
 	public RestoTable closeRestoTable(Long restoTableId) {
 		RestoTable findedTable = findRestoTableById(restoTableId);
+		Employee emp = employeeService.findEmployeeById(findedTable.getEmployee().getId());
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
-				.employeeName(findedTable.getEmployee().getEmployeeName())
+				.employeeName(emp.getEmployeeName())
 				.totalPrice(findedTable.getTotalTablePrice())
 				.paymentMethod(findedTable.getPaymentMethod()).build();
 		restoTableClosedService.saveTableClosed(tableClosed);

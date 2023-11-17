@@ -70,4 +70,8 @@ public class WorkingDayController {
 		WorkingDayDto dayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(day);
 		return new ResponseEntity<WorkingDayDto>(dayDto,HttpStatus.OK);
 	}
+	@GetMapping("/is_started")
+	ResponseEntity<Boolean> isDayStarted(@RequestParam Long workingDayId) {
+		return new ResponseEntity<Boolean>(workingDayService.isWorkingDayStarted(workingDayId),HttpStatus.OK);
+	}
 }

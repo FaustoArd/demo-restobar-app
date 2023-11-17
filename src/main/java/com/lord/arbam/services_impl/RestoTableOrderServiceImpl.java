@@ -54,7 +54,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 	@Override
 	public RestoTableOrder findOrderById(Long id) {
 		return restoTableOrderRepository.findById(id).orElseThrow(
-				() -> new ItemNotFoundException("No se encontro la orden. RestoTableOrderServiceImpl.findOrderById"));
+				() -> new ItemNotFoundException("No se encontro la orden"));
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 			restoTableOrderRepository.deleteById(id);
 		} else {
 			log.error("La orden a eliminar no existe. id:" + id);
-			throw new ItemNotFoundException("No se encontro la orden, RestoTableOrderServiceImpl.deleteOderById");
+			throw new ItemNotFoundException("No se encontro la orden");
 		}
 
 	}

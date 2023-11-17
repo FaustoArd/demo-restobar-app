@@ -29,7 +29,7 @@ public class WorkingDayDto {
 	
 	private String cashierName;
 	
-	private List<Employee> employeesId;
+	private List<Employee> waitresses;
 	
 	private BigDecimal totalWaitressSalary;
 	

@@ -1,23 +1,21 @@
 package com.lord.arbam.services_impl;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.lord.arbam.exceptions.EmployeeNotSelectedException;
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.WorkingDay;
+import com.lord.arbam.repositories.RestoTableClosedRepository;
 import com.lord.arbam.repositories.WorkingDayRepository;
 import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.RestoTableClosedService;
+
 import com.lord.arbam.services.WorkingDayService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	private final EmployeeService employeeService;
 
 	@Autowired
-	private final RestoTableClosedService restoTableClosedService;
+	private final RestoTableClosedRepository restoTableClosedRepository;
 
 	@Override
 	public List<WorkingDay> findAll() {
@@ -59,7 +57,9 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public WorkingDay startWorkingDay(WorkingDay workingDay){
 		
 		WorkingDay newWorkingDay= WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
-				.totalStartCash(workingDay.getTotalStartCash()).waitresses(workingDay.getWaitresses()).build();
+				.totalStartCash(workingDay.getTotalStartCash()).waitresses(workingDay.getWaitresses())
+				.totalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary())
+				.totalCashierSalary(workingDay.getTotalCashierSalary()).build();
 		return workingDayRepository.save(newWorkingDay);
 	
 		
@@ -70,19 +70,25 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	@Override
 	public WorkingDay updateWorkingDay(WorkingDay workingDay) {
 		log.info("Updating working day. WorkingDayServiceImpl.updateWorkingDay");
-		List<Employee> waitresses = employeeService
-				.findAllById(workingDay.getWaitresses().stream().map(w -> w.getId()).toList());
-		WorkingDay updatedWorkingDay = WorkingDay.builder().id(workingDay.getId())
-				.cashierName(workingDay.getCashierName()).totalStartCash(workingDay.getTotalStartCash())
-				.totalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary()).waitresses(waitresses).build();
-		return workingDayRepository.save(updatedWorkingDay);
+		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
+			wd.setTotalStartCash(workingDay.getTotalStartCash());
+			wd.setCashierName(workingDay.getCashierName());
+			wd.setTotalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary());
+			wd.setWaitresses(workingDay.getWaitresses());
+			return workingDayRepository.save(wd);
+		}).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 	}
 
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
 		log.info("Closing working day. WorkingDayServiceImpl.closeWorkingDay");
-		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
-
+		WorkingDay workingDay = findWorkingDayById(workingDayId);
+		List<RestoTableClosed> findedRTC = restoTableClosedRepository.findAll();
+		findedRTC.forEach(f -> {
+			f.setWorkingDay(workingDay);
+		});
+		restoTableClosedRepository.saveAll(findedRTC);
+		List<RestoTableClosed> tablesClosed = restoTableClosedRepository.findAllByWorkingDayId(workingDayId);
 		ListIterator<RestoTableClosed> tablesClosedIt = tablesClosed.listIterator();
 		Double totalCashResult = 0.00;
 		while (tablesClosedIt.hasNext()) {
@@ -105,6 +111,11 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		 workingDay.setWaitresses(emps);
 		return workingDayRepository.save(workingDay);
 		
+	}
+
+	@Override
+	public boolean isWorkingDayStarted(Long workingDayId) {
+		return workingDayRepository.findById(workingDayId).isPresent();
 	}
 
 	

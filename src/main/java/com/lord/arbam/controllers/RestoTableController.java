@@ -82,11 +82,7 @@ public class RestoTableController {
 	}
 	
 
-	@DeleteMapping("/delete_order")
-	ResponseEntity<String> deleteOrder(@PathVariable("id") Long id){
-		restoTableOrderService.deleteOderById(id);
-		return new ResponseEntity<String>(gson.toJson("La orden se elimino con exito"), HttpStatus.OK);
-	}
+	
 	@GetMapping("/close/{id}")
 	ResponseEntity<String> closeTable(@PathVariable("id")Long id){
 		restoTableService.closeRestoTable(id);

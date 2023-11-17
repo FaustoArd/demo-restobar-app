@@ -20,6 +20,6 @@ public interface WorkingDayService {
 	
 	public WorkingDay deleteWaitressById(Long waitressId,Long workingDayId);
 	
-	
+	public boolean isWorkingDayStarted(Long workingDayId);
 
 }
