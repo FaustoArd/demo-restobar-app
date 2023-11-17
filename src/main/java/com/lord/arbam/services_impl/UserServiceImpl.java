@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public User saveUser(User user) {
-		return userRepository.save(user);
+		return userRepository.saveAndFlush(user);
 	}
 
 	@Override

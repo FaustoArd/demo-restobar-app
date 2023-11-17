@@ -3,12 +3,14 @@ package com.lord.arbam.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lord.arbam.dtos.WorkingDayDto;
@@ -25,6 +27,12 @@ public class WorkingDayController {
 	
 	@Autowired
 	private final WorkingDayService workingDayService;
+	
+	@PostMapping("/init")
+	ResponseEntity<Long> initWorkingDay(){
+		Long workingDayId = workingDayService.initWorkingDay();
+		return new ResponseEntity<Long>(workingDayId,HttpStatus.CREATED);
+	}
 	
 	@GetMapping("/{id}")
 	ResponseEntity<WorkingDayDto> findWorkingDayById(@PathVariable("id")Long id){
@@ -54,5 +62,12 @@ public class WorkingDayController {
 		WorkingDay workingDay = workingDayService.closeWorkingDay(id);
 		WorkingDayDto workingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(workingDay);
 		return new ResponseEntity<WorkingDayDto>(workingDayDto,HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/waitress")
+	ResponseEntity<WorkingDayDto> deleteWaitressById(@RequestParam Long waitressId,@RequestParam Long workingDayId){
+		WorkingDay day = workingDayService.deleteWaitressById(waitressId, workingDayId);
+		WorkingDayDto dayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(day);
+		return new ResponseEntity<WorkingDayDto>(dayDto,HttpStatus.OK);
 	}
 }

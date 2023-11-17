@@ -20,8 +20,11 @@ public class WorkingDayMapperTest {
 
 	@Test
 	void whenToWorkingDayMethodIsCalled_MustReturnWorkingDayObject() {
-		List<Long> employeesId = new ArrayList<>();
-		employeesId.add(1L);
+		List<Employee> employeesId = new ArrayList<>();
+		Employee waitress = Employee.builder().id(1L).build();
+		Employee waitress2 = Employee.builder().id(3L).build();
+		employeesId.add(waitress);
+		employeesId.add(waitress2);
 		//employeesId.add(3L);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
@@ -34,9 +37,9 @@ public class WorkingDayMapperTest {
 		assertEquals(workingDay.getCashierName(), "Leticia");
 		assertEquals(workingDay.getTotalStartCash().doubleValue(), 4500.00);
 		assertEquals(workingDay.getTotalPostEmployeeSalary().doubleValue(), 12000.00);
-		assertEquals(workingDay.getWaitresses().stream().map(emp -> emp.getId()).count(), 1);
+		assertEquals(workingDay.getWaitresses().stream().map(emp -> emp.getId()).count(), 2);
 		assertEquals(emp1.get().getId().longValue(), 1L);
-		//assertEquals(emp2.get().getId().longValue(), 3L);
+		assertEquals(emp2.get().getId().longValue(), 3L);
 
 	}
 

@@ -1,5 +1,6 @@
 package com.lord.arbam.services_impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lord.arbam.exceptions.ItemNotFoundException;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IngredientCategoryServiceImpl implements IngredientCategoryService {
 	
+	@Autowired
 	private final IngredientCategoryRepository ingredientCategoryRepository;
 	
 

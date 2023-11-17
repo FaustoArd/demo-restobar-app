@@ -57,7 +57,7 @@ public class ProductServiceTest {
 
 	private Product product;
 	
-	private ProductCategory newCategory;
+	
 	
 	
 
@@ -73,7 +73,7 @@ public class ProductServiceTest {
 		expTime.set(2023, 11,23);
 		ProductDto productDto = new ProductDto();
 		productDto.setProductName("Pizza Muzarella");
-		productDto.setCategoryId(1L);
+		productDto.setCategoryId(savedCategory.getId());
 		productDto.setProductPrice(new BigDecimal(3000.00));
 		productDto.setProductStock(50);
 		product = new Product();
@@ -87,12 +87,6 @@ public class ProductServiceTest {
 		assertEquals(savedProduct.getProductStock().getProductStock(), savedStock.getProductStock());
 	}
 
-	@Test
-	@Order(2)
-	void createNewProduct() throws Exception {
 	
-	
-
-	}
 
 }

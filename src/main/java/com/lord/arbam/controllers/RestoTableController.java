@@ -65,7 +65,9 @@ public class RestoTableController {
 	
 	@PostMapping("/open_table")
 	ResponseEntity<RestoTableDto> openRestoTable(@RequestBody RestoTableDto restoTableDto){
+		
 		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
+		System.err.println(table.getId());
 		RestoTable createdTable = restoTableService.openRestoTable(table);
 		RestoTableDto createdTableDto = RestoTableMapper.INSTANCE.toRestotableDto(createdTable);
 		return new ResponseEntity<RestoTableDto>(createdTableDto,HttpStatus.CREATED);

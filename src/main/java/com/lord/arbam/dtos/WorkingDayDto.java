@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
+import com.lord.arbam.models.Employee;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +29,7 @@ public class WorkingDayDto {
 	
 	private String cashierName;
 	
-	private List<Long> employeesId;
+	private List<Employee> employeesId;
 	
 	private BigDecimal totalWaitressSalary;
 	

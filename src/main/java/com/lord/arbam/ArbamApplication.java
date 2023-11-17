@@ -11,6 +11,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.models.ProductMix;
 import com.lord.arbam.models.ProductPrice;
@@ -22,6 +24,7 @@ import com.lord.arbam.models.User;
 import com.lord.arbam.repositories.EmployeeJobRepository;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.repositories.RoleRepository;
+import com.lord.arbam.repositories.UserRepository;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.EmployeeJob;
 import com.lord.arbam.models.Ingredient;
@@ -38,6 +41,7 @@ import com.lord.arbam.services.ProductService;
 import com.lord.arbam.services.ProductStockService;
 import com.lord.arbam.services.RestoTableOrderService;
 import com.lord.arbam.services.RestoTableService;
+import com.lord.arbam.services.UserService;
 
 @SpringBootApplication
 public class ArbamApplication {
@@ -52,10 +56,27 @@ public class ArbamApplication {
 			ProductStockService productStockService, ProductPriceService productPriceService,
 			ProductMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
-			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,AuthenticationService authService) {
+			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,
+			AuthenticationService authService, PasswordEncoder encoder,UserService userService) {
 		return args -> {
 			
-			//Role role = Role.builder().authority("USER").build();
+			Role role = Role.builder().authority("USER").build();
+			User user = User.builder().name("carlos").lastname("rodo").email("car@gmail.om").username("car").build();
+			String encodedPassword = encoder.encode("123");
+			Role userRole = roleRepository.save(Role.builder().authority("ADMIN").build());
+			Set<Role> authorities = new HashSet<Role>();
+			authorities.add(userRole);
+			User newUser = User.builder()
+					.name(user.getName())
+					.username(user.getUsername())
+					.lastname(user.getLastname())
+					.enabled(true)
+					.email(user.getEmail())
+					.password(encodedPassword)
+					.authorities(authorities).build();
+			 userService.saveUser(newUser);
+			
+			
 			
 			
 			

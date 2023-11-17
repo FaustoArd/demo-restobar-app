@@ -1,8 +1,10 @@
 package com.lord.arbam.services_impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +47,23 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return workingDayRepository.findById(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
 	}
+	
+	@Override
+	public Long initWorkingDay() {
+		WorkingDay day = WorkingDay.builder().dayStarted(true).build();
+		WorkingDay newWorkingDay =  workingDayRepository.save(day);
+		return newWorkingDay.getId();
+	}
 
 	@Override
 	public WorkingDay startWorkingDay(WorkingDay workingDay){
-		log.info("Starting working day. WorkingDayServiceImpl.startWorkingDay");
-		List<Employee> waitresses = employeeService
-				.findAllById(workingDay.getWaitresses().stream().map(w -> w.getId()).toList());
-		WorkingDay newWorkingDay = WorkingDay.builder().cashierName(workingDay.getCashierName())
-				.totalStartCash(workingDay.getTotalStartCash())
-				.totalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary()).waitresses(waitresses).dayStarted(true).build();
+		
+		WorkingDay newWorkingDay= WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
+				.totalStartCash(workingDay.getTotalStartCash()).waitresses(workingDay.getWaitresses()).build();
 		return workingDayRepository.save(newWorkingDay);
+	
+		
+	
 
 	}
 
@@ -81,12 +90,23 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		}
 		System.out.println(totalCashResult);
 		BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
-		return workingDayRepository.findById(workingDayId).map(m -> {
-			m.setId(workingDayId);
-			m.setTotalCash(totalCashDecimal);
-			return workingDayRepository.save(m);
+		return workingDayRepository.findById(workingDayId).map(wd -> {
+			wd.setId(workingDayId);
+			wd.setTotalCash(totalCashDecimal);
+			return workingDayRepository.save(wd);
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
 
 	}
+
+	@Override
+	public WorkingDay deleteWaitressById(Long waitressId,Long workingDayId) {
+		WorkingDay workingDay = findWorkingDayById(workingDayId);
+		 List<Employee> emps =  workingDay.getWaitresses().stream().filter(waitress -> waitress.getId()!=waitressId).map(ws -> ws).collect(Collectors.toList());
+		 workingDay.setWaitresses(emps);
+		return workingDayRepository.save(workingDay);
+		
+	}
+
+	
 
 }

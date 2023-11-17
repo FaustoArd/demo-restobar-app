@@ -113,6 +113,7 @@ public class ProductUpdateStockTest {
 		Product falseProduct = productService.findProductById(2L);
 		
 		assertTrue(trueProduct.isMixed());
+		assertEquals(trueProduct.getProductPrice().getPrice().doubleValue(), 400.00);
 		assertFalse(falseProduct.isMixed());
 	}
 }

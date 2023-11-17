@@ -61,9 +61,9 @@ public class User implements UserDetails {
 	@Column(name="enabled")
 	private boolean enabled;
 	
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JoinTable(name="user_role_junction", joinColumns = @JoinColumn(name="user_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
+	@ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+	@JoinTable(name="user_role_junction", joinColumns = { @JoinColumn(name="user_id", referencedColumnName = "id")},
+	inverseJoinColumns = {@JoinColumn(name="role_id", referencedColumnName = "id")})
 	private Set<Role> authorities;
 
 	@Override

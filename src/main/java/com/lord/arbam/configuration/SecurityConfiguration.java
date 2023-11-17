@@ -63,14 +63,14 @@ public class SecurityConfiguration {
 		
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth ->{
 			auth.requestMatchers("/api/v1/arbam/authentication/**").permitAll();
-			auth.requestMatchers("/api/v1/arbam/users/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/ingredients/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/products/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/product_stock/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/resto_tables/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/orders/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/employees/**").hasAnyRole("USER");
-			auth.requestMatchers("/api/v1/arbam/working_days/**").hasAnyRole("USER");
+			auth.requestMatchers("/api/v1/arbam/users/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/ingredients/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/products/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/product_stock/**").hasAnyRole("USER","ADMIN");;
+			auth.requestMatchers("/api/v1/arbam/resto_tables/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/orders/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/employees/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/working_days/**").hasAnyRole("USER","ADMIN");
 			auth.anyRequest().authenticated();
 		});
 		http.oauth2ResourceServer(oauth ->{

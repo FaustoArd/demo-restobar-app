@@ -11,6 +11,7 @@ import com.lord.arbam.models.Ingredient;
 import com.lord.arbam.models.IngredientCategory;
 import com.lord.arbam.models.ProductMix;
 import com.lord.arbam.repositories.IngredientRepository;
+import com.lord.arbam.repositories.ProductMixRepository;
 import com.lord.arbam.services.IngredientService;
 import com.lord.arbam.services.ProductMixService;
 
@@ -24,7 +25,7 @@ public class IngredientServiceImpl implements IngredientService {
 	private final IngredientRepository ingredientRepository;
 
 	@Autowired
-	private final ProductMixService productMixService;
+	private final ProductMixRepository productMixRepository;
 
 	
 
@@ -70,7 +71,7 @@ public class IngredientServiceImpl implements IngredientService {
 	@Transactional
 	@Override
 	public void updateIngredientAmount(Integer stockCreated, Long productId) {
-		List<ProductMix> mixes = productMixService.findByProductId(productId);
+		List<ProductMix> mixes = productMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
 		ListIterator<ProductMix> it = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		it.forEachRemaining(mix -> {

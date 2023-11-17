@@ -2,7 +2,6 @@ package com.lord.arbam.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
@@ -23,13 +22,10 @@ public abstract class WorkingDayMapper {
 			return null;
 		}
 		try {
-			List<Employee> waitresses = new ArrayList<>();
-			workingDayDto.getEmployeesId().forEach(waitress -> {
-				waitresses.add(new Employee(waitress));
-				});
+			//List<Employee> employees = workingDayDto.getEmployeesId().stream().map(e -> e).collect(Collectors.toList());
 			WorkingDay workingDay = WorkingDay.builder().id(workingDayDto.getId())
 					.totalStartCash(workingDayDto.getTotalStartCash())
-					.cashierName(workingDayDto.getCashierName()).waitresses(waitresses)
+					.cashierName(workingDayDto.getCashierName())
 					.totalPostEmployeeSalary(workingDayDto.getTotalPostEmployeeSalary()).build();
 			
 			return workingDay;
