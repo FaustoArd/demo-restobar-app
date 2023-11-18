@@ -87,12 +87,13 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.totalPrice(findedTable.getTotalTablePrice())
 				.paymentMethod(findedTable.getPaymentMethod()).build();
 		restoTableClosedService.saveTableClosed(tableClosed);
+		log.info("Cerrando mesa numero: " + findedTable.getTableNumber());
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
-		log.info("Cerrando mesa numero: " + findedTable.getTableNumber());
+		
 		return restoTableRepository.save(findedTable);
 				}
 
