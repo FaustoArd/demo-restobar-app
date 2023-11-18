@@ -60,7 +60,7 @@ public class ProductMixServiceImpl implements ProductMixService {
 	@Override
 	public List<ProductMix> findByProductId(Long id) {
 		return (List<ProductMix>) productMixRepository.findByProductId(id).orElseThrow(() -> new ItemNotFoundException(
-				"No se encontro la mezcla de productos. ProductMixServiceImpl.findByProductId "));
+				"No se encontro la receta."));
 	}
 
 }

@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.notNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,14 +30,15 @@ public class AuthenticationServiceTest {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private RoleRepository roleRepository;
 	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Test
 	void testRegister() {
 		
-		RuntimeException exception = Assertions.assertThrows(PersistentObjectException.class,()->{
 			Role adminRole = Role.builder().authority("ADMIN").build();
 			Role admin = roleRepository.save(adminRole);
 			Set<Role> roles = new HashSet<>();
@@ -42,13 +46,11 @@ public class AuthenticationServiceTest {
 			String encodedPass = passwordEncoder.encode("123");
 			User user = User.builder().name("Cholo").username("car").lastname("moro").email("car@gmail.com").authorities(roles).password(encodedPass).enabled(true).build();
 			User savedUser = userService.saveUser(user);
-		},"exception not throw");
-		
-		assertTrue(exception.getMessage().equals("detached entity passed to persist: com.lord.arbam.models.Role"));
-	
-		
-		
-	}
+			assertEquals(savedUser.getName(), "Cholo");
+			assertTrue(savedUser.getPassword()!=null);
+			assertEquals(savedUser.getAuthorities().stream().filter(r -> r.getAuthority()=="ADMIN").findFirst().get(),admin);
+			assertTrue(savedUser.isEnabled());
+		}
 
 	
 	

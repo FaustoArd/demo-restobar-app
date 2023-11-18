@@ -25,7 +25,6 @@ public class WorkingDayMapperTest {
 		Employee waitress2 = Employee.builder().id(3L).build();
 		employeesId.add(waitress);
 		employeesId.add(waitress2);
-		//employeesId.add(3L);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
 		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
