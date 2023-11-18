@@ -30,9 +30,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	private final WorkingDayRepository workingDayRepository;
 
 	@Autowired
-	private final EmployeeService employeeService;
-
-	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
 
 	@Override

@@ -7,19 +7,16 @@ import org.springframework.stereotype.Service;
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.repositories.ProductCategoryRepository;
-import com.lord.arbam.services.ProductCategoryService;
+import com.lord.arbam.services.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProductCategoryServiceImpl implements ProductCategoryService {
+public class  ProductCategoryServiceImpl implements CategoryService<ProductCategory> {
 
 	@Autowired
 	private final ProductCategoryRepository productCategoryRepository;
-
-	
-	
 
 	@Override
 	public ProductCategory findCategoryById(Long id) {
@@ -34,18 +31,27 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
 	@Override
 	public ProductCategory updateCategory(ProductCategory category) {
-		// TODO Auto-generated method stub
-		return null;
+		return productCategoryRepository.findById(category.getId()).map(cat -> {
+			cat.setCategoryName(category.getCategoryName());
+			return productCategoryRepository.save(cat);
+		}).orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
 	}
 
 	@Override
 	public void deleteCategoryById(Long id) {
-		// TODO Auto-generated method stub
+		if (productCategoryRepository.existsById(id)) {
+			productCategoryRepository.deleteById(id);
+		} else {
+			throw new ItemNotFoundException("No se encontro la categoria");
+		}
 
+		
 	}
 
 	@Override
 	public List<ProductCategory> findAllCategories() {
-		return (List<ProductCategory>)productCategoryRepository.findAll();
+		return (List<ProductCategory>) productCategoryRepository.findAll();
 	}
+
+	
 }

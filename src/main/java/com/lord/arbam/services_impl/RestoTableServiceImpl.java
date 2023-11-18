@@ -59,7 +59,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		newRestotable.setTableNumber(restoTable.getTableNumber());
 		newRestotable.setOpen(true);
 		newRestotable.setTotalTablePrice(new BigDecimal(0));
-		log.info("Mesa creada con exito. Numero:" + newRestotable.getTableNumber());
+		log.info("Abriendo mesa Numero:" + newRestotable.getTableNumber());
 		return restoTableRepository.save(newRestotable);
 		}
 	}
@@ -72,7 +72,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 			updatedPrice += ordersIt.next().getTotalOrderPrice().doubleValue();
 		}
 		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
-		log.info("Precio Total de la mesa actualizado:");
+		log.info("Actualizando precio :");
 		return restoTableRepository.save(restoTable);
 	}
 	
@@ -92,7 +92,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
-		log.info("Mesa numero: " + findedTable.getTableNumber() + " fue cerrada");
+		log.info("Cerrando mesa numero: " + findedTable.getTableNumber());
 		return restoTableRepository.save(findedTable);
 				}
 

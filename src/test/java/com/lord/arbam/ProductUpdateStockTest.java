@@ -20,9 +20,8 @@ import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.models.ProductMix;
 import com.lord.arbam.models.ProductPrice;
 import com.lord.arbam.models.ProductStock;
-import com.lord.arbam.services.IngredientCategoryService;
 import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.ProductCategoryService;
+import com.lord.arbam.services.CategoryService;
 import com.lord.arbam.services.ProductMixService;
 import com.lord.arbam.services.ProductService;
 import com.lord.arbam.services.ProductStockService;
@@ -39,10 +38,10 @@ public class ProductUpdateStockTest {
 	private ProductStockService productStockService;
 	
 	@Autowired
-	private ProductCategoryService productCategoryService;
+	private CategoryService<ProductCategory> productCategoryService;
 	
 	@Autowired
-	private IngredientCategoryService ingredientCategoryService;
+	private CategoryService<IngredientCategory> ingredientCategoryService;
 
 	@Autowired
 	private ProductMixService productMixService;

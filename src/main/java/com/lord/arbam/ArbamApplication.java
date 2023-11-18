@@ -32,9 +32,8 @@ import com.lord.arbam.models.IngredientCategory;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.services.AuthenticationService;
 import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.IngredientCategoryService;
 import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.ProductCategoryService;
+import com.lord.arbam.services.CategoryService;
 import com.lord.arbam.services.ProductMixService;
 import com.lord.arbam.services.ProductPriceService;
 import com.lord.arbam.services.ProductService;
@@ -51,8 +50,8 @@ public class ArbamApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(ProductService productService, ProductCategoryService categoryService,
-			IngredientCategoryService ingredientCategoryService, IngredientService ingredientService,
+	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
+			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
 			ProductMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
@@ -88,12 +87,12 @@ public class ArbamApplication {
 			
 
 			ProductCategory pCategory1 = ProductCategory.builder().categoryName("Pizza").build();
-			categoryService.saveCategory(pCategory1);
+			productCategoryService.saveCategory(pCategory1);
 			ProductCategory pCategory2 = ProductCategory.builder().categoryName("Pollo").build();
-			categoryService.saveCategory(pCategory2);
+			productCategoryService.saveCategory(pCategory2);
 			
 			ProductCategory pCategory3 = ProductCategory.builder().categoryName("Cerveza").build();
-			categoryService.saveCategory(pCategory3);
+			productCategoryService.saveCategory(pCategory3);
 
 			IngredientCategory ingredientCategory1 = IngredientCategory.builder().categoryName("Salsa de tomate").build();
 			ingredientCategoryService.saveCategory(ingredientCategory1);

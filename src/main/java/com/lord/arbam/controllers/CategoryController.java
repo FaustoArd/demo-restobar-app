@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lord.arbam.dtos.ProductCategoryDto;
 import com.lord.arbam.mappers.CategoryMapper;
 import com.lord.arbam.models.ProductCategory;
-import com.lord.arbam.services.ProductCategoryService;
-
+import com.lord.arbam.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
 	
 	@Autowired
-	private final ProductCategoryService productCategoryService;
+	private final CategoryService<ProductCategory> productCategoryService;
 	
 	@GetMapping("/all")
 	ResponseEntity<List<ProductCategoryDto>> findAllCategories(){

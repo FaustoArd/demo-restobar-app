@@ -12,7 +12,7 @@ import com.lord.arbam.dtos.IngredientDto;
 import com.lord.arbam.mappers.IngredientMapper;
 import com.lord.arbam.models.Ingredient;
 import com.lord.arbam.models.IngredientCategory;
-import com.lord.arbam.services.IngredientCategoryService;
+import com.lord.arbam.services.CategoryService;
 import com.lord.arbam.services.IngredientService;
 
 
@@ -27,7 +27,7 @@ public class IngredientController {
 	private final IngredientService ingredientService;
 	
 	@Autowired
-	private final IngredientCategoryService categoryService;
+	private final CategoryService<IngredientCategory> categoryService;
 
 	
 	
