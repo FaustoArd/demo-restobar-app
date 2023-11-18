@@ -66,6 +66,7 @@ public class SecurityConfiguration {
 			auth.requestMatchers("/api/v1/arbam/users/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/ingredients/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/products/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/categories/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/product_stock/**").hasAnyRole("USER","ADMIN");;
 			auth.requestMatchers("/api/v1/arbam/resto_tables/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/orders/**").hasAnyRole("USER","ADMIN");

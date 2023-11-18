@@ -32,7 +32,7 @@ public class RestoTableOrderController {
 	@Autowired
 	private final RestoTableOrderService restoTableOrderService;
 	
-	private final Gson gson = new Gson();
+	private static Gson gson = new Gson();
 	
 	@Autowired
 	private final ProductStockService productStockService;
