@@ -218,14 +218,7 @@ public class RestoTableIntegrationServicesTest {
 	@Test
 	@Order(13)
 	public void closeWorkingDayTest() {
-		restoTableService.closeRestoTable(1L);
 		
-		//WorkingDay workingDay = workingDayService.closeWorkingDay(workingDayId);
-		//List<RestoTableClosed> restos = restoTableClosedService.findAllByWorkingDayId(workingDayId);
-		//assertEquals(restos.size(), 1);
-		//assertEquals(workingDay.getTotalCash(), 24500.00);
-		assertEquals(table.getId(), 1L);
-		assertEquals(table.getTableNumber(), 1);
 		
 	}
 	

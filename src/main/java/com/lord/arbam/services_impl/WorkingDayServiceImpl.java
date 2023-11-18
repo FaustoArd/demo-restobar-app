@@ -78,13 +78,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
-		log.info("Closing working day. WorkingDayServiceImpl.closeWorkingDay");
-		WorkingDay workingDay = findWorkingDayById(workingDayId);
-		List<RestoTableClosed> findedRTC = restoTableClosedRepository.findAll();
-		findedRTC.forEach(f -> {
-			f.setWorkingDay(workingDay);
-		});
-		restoTableClosedRepository.saveAll(findedRTC);
+		log.info("Finalizando el dea de trabajo. WorkingDayServiceImpl.closeWorkingDay");
 		List<RestoTableClosed> tablesClosed = restoTableClosedRepository.findAllByWorkingDayId(workingDayId);
 		ListIterator<RestoTableClosed> tablesClosedIt = tablesClosed.listIterator();
 		Double totalCashResult = 0.00;

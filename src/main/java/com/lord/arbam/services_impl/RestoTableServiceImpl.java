@@ -9,13 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.ValueAlreadyExistException;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.RestoTableOrder;
+import com.lord.arbam.models.WorkingDay;
 import com.lord.arbam.repositories.RestoTableRepository;
+import com.lord.arbam.repositories.WorkingDayRepository;
 import com.lord.arbam.services.EmployeeService;
 import com.lord.arbam.services.RestoTableClosedService;
 import com.lord.arbam.services.RestoTableService;
@@ -35,6 +39,9 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Autowired
 	private final RestoTableClosedService restoTableClosedService;
+	
+	@Autowired
+	private final WorkingDayRepository workingDayRepository;
 	
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -77,25 +84,27 @@ public class RestoTableServiceImpl implements RestoTableService {
 	}
 	
 
+	@Transactional
 	@Override
-	public RestoTable closeRestoTable(Long restoTableId) {
-		RestoTable findedTable = findRestoTableById(restoTableId);
-		Employee emp = employeeService.findEmployeeById(findedTable.getEmployee().getId());
+	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId) {
+	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
+		Employee employee = employeeService.findEmployeeById(findedTable.getEmployee().getId());
+		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
-				.employeeName(emp.getEmployeeName())
+				.employeeName(employee.getEmployeeName())
 				.totalPrice(findedTable.getTotalTablePrice())
-				.paymentMethod(findedTable.getPaymentMethod()).build();
+				.paymentMethod(findedTable.getPaymentMethod())
+				.workingDay(workingDay).build();
 		restoTableClosedService.saveTableClosed(tableClosed);
-		log.info("Cerrando mesa numero: " + findedTable.getTableNumber());
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
-		
 		return restoTableRepository.save(findedTable);
-				}
+	
+	}
 
 	@Override
 	public List<RestoTable> findAllByOrderByIdAsc() {
