@@ -21,6 +21,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.Product;
@@ -28,6 +30,7 @@ import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.models.WorkingDay;
+import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.services.EmployeeService;
 import com.lord.arbam.services.ProductService;
 import com.lord.arbam.services.RestoTableClosedService;
@@ -36,10 +39,13 @@ import com.lord.arbam.services.RestoTableService;
 import com.lord.arbam.services.WorkingDayService;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application.properties")
+@ContextConfiguration(classes = com.lord.arbam.ArbamApplication.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class RestoTableIntegrationServicesTest {
+	
+	
 	
 	@Autowired
 	private RestoTableService restoTableService;
@@ -167,6 +173,7 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 12600.00);
 		
 	}
+	
 	@Test
 	@Order(10)
 	void checkAgainForRestoTableTotalPrice() {
@@ -175,6 +182,7 @@ public class RestoTableIntegrationServicesTest {
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
 		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 15600.00);
 	}
+	
 	@Test
 	@Order(11)
 	void whenDeleteOrderbyId_RestoTableTotalPriceMustBeUpdated() {
@@ -186,23 +194,13 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 12600.00);
 		
 	}
-	/*@Test
-	@Order(12)
-	void whenDeleteLastOrder_RestoTablePriceMustBeZero() {
-		restoTableOrderService.deleteOderById(2L);
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
-		RestoTable table = restoTableService.findRestoTableById(1L);
-		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
-		assertEquals(orders.size(), 0);
-		assertEquals(updatedTable.getTotalTablePrice().doubleValue(),0);
-	}*/
 	
 	//Product id3:"Cerveza heineken" price : 1700.00
 	@Test
 	@Order(12)
 	void updateAgainOrderWithProductId3() {
-		Product product = Product.builder().id(3L).build();
-		RestoTable table = RestoTable.builder().id(1L).build();
+		Product product = productService.findProductById(3L);
+		RestoTable table = restoTableService.findRestoTableById(1L);
 		RestoTableOrder order = RestoTableOrder.builder().product(product).restoTable(table).productQuantity(7).build();
 		RestoTableOrder updatedOrder = restoTableOrderService.createOrder(order);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
@@ -213,13 +211,35 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 24500.00);
 		}
 	
-	
-	
 	@Test
 	@Order(13)
-	public void closeWorkingDayTest() {
+	public void closeRestoTableTest() {
+		RestoTable table = restoTableService.findRestoTableById(1L);
+		RestoTable closedTable =  restoTableService.closeRestoTable(1L, workingDayId);
+		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
+		
+		assertEquals(table.getTotalTablePrice().doubleValue(), 24500.00);
+		assertEquals(table.getEmployee().getId(), 1L);
+		
+		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber()==1)
+				.findFirst().get().getTotalPrice().doubleValue(),24500.00 );
+		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber()==1)
+				.findFirst().get().getEmployeeName(),"Carla" );
+		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber()==1)
+				.findFirst().get().getWorkingDay().getId(),1 );
+		
+		
+		assertEquals(closedTable.getId(), table.getId());
+		assertEquals(closedTable.getEmployee(), null);
+		assertEquals(closedTable.getPaymentMethod(), null);
+		assertEquals(closedTable.getTableNumber(), null);
+		assertEquals(closedTable.getTotalTablePrice(), null);
 		
 		
 	}
+	
+	
+	
+	
 	
 }

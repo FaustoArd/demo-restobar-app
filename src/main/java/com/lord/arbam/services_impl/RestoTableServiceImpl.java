@@ -4,13 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.ValueAlreadyExistException;
 import com.lord.arbam.models.Employee;
@@ -18,11 +17,13 @@ import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.models.WorkingDay;
+import com.lord.arbam.repositories.EmployeeRepository;
+import com.lord.arbam.repositories.RestoTableClosedRepository;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.repositories.WorkingDayRepository;
-import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.RestoTableClosedService;
 import com.lord.arbam.services.RestoTableService;
+
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,10 +36,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 	private final RestoTableRepository restoTableRepository;
 	
 	@Autowired
-	private final EmployeeService employeeService;
+	private final EmployeeRepository employeeRepository;
 	
 	@Autowired
-	private final RestoTableClosedService restoTableClosedService;
+	private final RestoTableClosedRepository restoTableClosedRepository;
 	
 	@Autowired
 	private final WorkingDayRepository workingDayRepository;
@@ -61,7 +62,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 			throw new ValueAlreadyExistException("El numero de mesa ya existe");
 		}else {
 		RestoTable newRestotable = findRestoTableById(restoTable.getId());
-		Employee employee = employeeService.findEmployeeById(restoTable.getEmployee().getId());
+		Employee employee = employeeRepository.findById(restoTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		newRestotable.setEmployee(employee);
 		newRestotable.setTableNumber(restoTable.getTableNumber());
 		newRestotable.setOpen(true);
@@ -88,7 +89,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Override
 	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId) {
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
-		Employee employee = employeeService.findEmployeeById(findedTable.getEmployee().getId());
+		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
@@ -96,7 +97,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.totalPrice(findedTable.getTotalTablePrice())
 				.paymentMethod(findedTable.getPaymentMethod())
 				.workingDay(workingDay).build();
-		restoTableClosedService.saveTableClosed(tableClosed);
+		restoTableClosedRepository.save(tableClosed);
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);

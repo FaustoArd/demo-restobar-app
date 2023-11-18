@@ -41,7 +41,7 @@ public class RestoTable {
 	@Column(name="total_table_price")
 	private BigDecimal totalTablePrice;
 	
-	@OneToMany(mappedBy = "restoTable")
+	@OneToMany( mappedBy = "restoTable")
 	private Set<RestoTableOrder> tableOrders;
 	
 	@Column(name="payment_method")

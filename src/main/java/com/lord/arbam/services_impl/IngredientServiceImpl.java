@@ -13,7 +13,6 @@ import com.lord.arbam.models.ProductMix;
 import com.lord.arbam.repositories.IngredientRepository;
 import com.lord.arbam.repositories.ProductMixRepository;
 import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.ProductMixService;
 
 import lombok.RequiredArgsConstructor;
 
