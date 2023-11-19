@@ -47,8 +47,17 @@ public class WorkingDay {
 	@Column(name="total_debit")
 	private BigDecimal totalDebit;
 	
+	@Column(name="total_credit")
+	private BigDecimal totalCredit;
+	
+	@Column(name="total_total_mp")
+	private BigDecimal totalMP;
+	
 	@Column(name="total_transf")
 	private BigDecimal totalTransf;
+	
+	@Column(name="total_employee_salary")
+	private BigDecimal totalEmployeeSalary;
 	
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	@JoinTable(name="waitress_working_day_junction", joinColumns = 
@@ -58,21 +67,6 @@ public class WorkingDay {
 	
 	@Column(name="cashierName")
 	private String cashierName;
-	
-	@Column(name="total_waitress_salary")
-	private BigDecimal totalWaitressSalary;
-	
-	@Column(name="total_cashier_salary")
-	private BigDecimal totalCashierSalary;
-	
-	@Column(name="total_chef_salary")
-	private BigDecimal totalChefSalary;
-	
-	@Column(name="total_helper_salary")
-	private BigDecimal totalHelperSalary;
-	
-	@Column(name="total_dish_washer_salary")
-	private BigDecimal totalDishWasherSalary;
 	
 	@Column(name="day_started")
 	private boolean dayStarted;

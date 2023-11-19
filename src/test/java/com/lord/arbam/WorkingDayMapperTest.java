@@ -28,15 +28,13 @@ public class WorkingDayMapperTest {
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Leticia");
 		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
-		workingDayDto.setWaitresses(employeesId);
-		workingDayDto.setTotalWaitressSalary(new BigDecimal(12000.00));
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
-		Optional<Employee> emp1 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 1L).findAny();
-		Optional<Employee> emp2 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 3L).findAny();
+		workingDayDto.setEmployees(employeesId);
+	WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
+		Optional<Employee> emp1 = workingDay.getEmployees().stream().filter(emp -> emp.getId() == 1L).findAny();
+		Optional<Employee> emp2 = workingDay.getEmployees().stream().filter(emp -> emp.getId() == 3L).findAny();
 		assertEquals(workingDay.getCashierName(), "Leticia");
 		assertEquals(workingDay.getTotalStartCash().doubleValue(), 4500.00);
-		assertEquals(workingDay.getTotalWaitressSalary().doubleValue(), 12000.00);
-		assertEquals(workingDay.getWaitresses().stream().map(emp -> emp.getId()).count(), 2);
+		assertEquals(workingDay.getEmployees().stream().map(emp -> emp.getId()).count(), 2);
 		assertEquals(emp1.get().getId().longValue(), 1L);
 		assertEquals(emp2.get().getId().longValue(), 3L);
 

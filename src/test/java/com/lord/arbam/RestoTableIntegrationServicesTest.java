@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.isNotNull;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -66,23 +67,22 @@ public class RestoTableIntegrationServicesTest {
 
 	private Long workingDayId;
 
+	
 	@Test
 	@Order(1)
 	public void WorkingDayStartTest() {
 		List<Employee> emps = new ArrayList<>();
 		emps.add(new Employee(1L));
 		emps.add(new Employee(3L));
+		emps.add(new Employee(5L));
 
-		WorkingDay workingDay = WorkingDay.builder().cashierName("Mirta").totalStartCash(new BigDecimal(5000.00))
-				.totalWaitressSalary(new BigDecimal(10000.00)).totalCashierSalary(new BigDecimal(4000.00))
-				.waitresses(emps).build();
+		WorkingDay workingDay = WorkingDay.builder().totalStartCash(new BigDecimal(5000.00))
+				.employees(emps).build();
 		WorkingDay startedWorkingDay = workingDayService.startWorkingDay(workingDay);
 		this.workingDayId = startedWorkingDay.getId();
 		assertTrue(startedWorkingDay.isDayStarted());
-		assertEquals(startedWorkingDay.getCashierName(), "Mirta");
 		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(), 5000.00);
-		assertEquals(startedWorkingDay.getTotalCashierSalary().doubleValue(), 4000.00);
-		assertEquals(startedWorkingDay.getTotalWaitressSalary().doubleValue(), 10000.00);
+		
 	}
 
 	// table id : 1
@@ -93,7 +93,7 @@ public class RestoTableIntegrationServicesTest {
 		RestoTable table = RestoTable.builder().id(1L).employee(emp).tableNumber(1).build();
 		RestoTable returnedTable = restoTableService.openRestoTable(table);
 		assertEquals(returnedTable.getId(), 1);
-		assertEquals(returnedTable.getEmployee().getEmployeeName(), "Carla");
+		assertEquals(returnedTable.getEmployee().getEmployeeName(), "Carla Mesera");
 		assertTrue(returnedTable.isOpen());
 		assertEquals(returnedTable.getTotalTablePrice().intValue(), 0);
 	}
@@ -160,7 +160,7 @@ public class RestoTableIntegrationServicesTest {
 		RestoTable table = RestoTable.builder().id(2L).employee(emp).tableNumber(8).build();
 		RestoTable returnedTable = restoTableService.openRestoTable(table);
 		assertEquals(returnedTable.getId(), 2);
-		assertEquals(returnedTable.getEmployee().getEmployeeName(), "Silvana");
+		assertEquals(returnedTable.getEmployee().getEmployeeName(), "Silvana Mesera");
 		assertTrue(returnedTable.isOpen());
 		assertEquals(returnedTable.getTotalTablePrice().intValue(), 0);
 	}
@@ -297,7 +297,7 @@ public class RestoTableIntegrationServicesTest {
 				.doubleValue(), 24500.00);
 		assertEquals(
 				restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getEmployeeName(),
-				"Carla");
+				"Carla Mesera");
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getWorkingDay()
 				.getId(), 1);
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getPaymentMethod(), "Efectivo");
@@ -324,18 +324,19 @@ public class RestoTableIntegrationServicesTest {
 		List<Employee> ids = new ArrayList<>();
 		ids.add(new Employee(2L));
 		ids.add(new Employee(1L));
-		day.setWaitresses(ids);
-		day.setTotalDishWasherSalary(new BigDecimal(6600.00));
-		day.setTotalChefSalary(new BigDecimal(7000.00));
-		day.setTotalHelperSalary(new BigDecimal(3500.00));
+		ids.add(new Employee(3L));
+		ids.add(new Employee(4L));
+		ids.add(new Employee(5L));
+		day.setEmployees(ids);
 		day.setTotalStartCash(new BigDecimal(10000.00));
 		WorkingDay updatedDay = workingDayService.updateWorkingDay(day);
 		assertEquals(updatedDay.getId(), workingDayId);
-		assertEquals(day.getWaitresses().size(), 2);
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId() == 2L).findFirst().isPresent());
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId() == 1L).findFirst().isPresent());
-		assertEquals(updatedDay.getTotalChefSalary().doubleValue(), 7000.00);
-		assertEquals(day.getTotalHelperSalary().doubleValue(), 3500.00);
+		assertEquals(updatedDay.getEmployees().size(), 5);
+		assertEquals(updatedDay.getEmployees().stream().filter(emp -> emp.getEmployeeJob().getJobRole().matches("Mesera")).count(), 3);
+		assertEquals(updatedDay.getEmployees().stream().filter(emp -> emp.getEmployeeJob().getJobRole().matches("Bachero")).count(), 1);
+		assertEquals(updatedDay.getEmployees().stream().filter(emp -> emp.getEmployeeJob().getJobRole().matches("Cajera")).count(), 1);
+		assertTrue(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 2L).findFirst().isPresent());
+		assertTrue(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 1L).findFirst().isPresent());
 		assertEquals(updatedDay.getTotalStartCash().doubleValue(), 10000.00);
 
 	}
@@ -346,16 +347,14 @@ public class RestoTableIntegrationServicesTest {
 		RestoTable table = restoTableService.findRestoTableById(2L);
 		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,"Tajeta de debito");
 		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
-		
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
 				.doubleValue(), 14400.00);
 		assertEquals(
 				tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getEmployeeName(),
-				"Silvana");
+				"Silvana Mesera");
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getWorkingDay()
 				.getId(), 1);
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getPaymentMethod(),"Tajeta de debito");
-
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
 		assertEquals(closedTable.getPaymentMethod(), null);
@@ -371,13 +370,9 @@ public class RestoTableIntegrationServicesTest {
 	void closeWorkingDay() {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
 		assertEquals(day.getId(), workingDayId);
-		assertEquals(day.getTotalCashierSalary().doubleValue(), 4000.00);
-		assertEquals(day.getTotalWaitressSalary().doubleValue(), 10000.00);
-		assertEquals(day.getTotalChefSalary().doubleValue(), 7000.00);
-		assertEquals(day.getTotalDishWasherSalary().doubleValue(), 6600.00);
-		assertEquals(day.getTotalHelperSalary().doubleValue(), 3500);
 		assertEquals(day.getTotalCash().doubleValue(),  38900.00);
-		assertEquals(day.getTotalCashDiscounted().doubleValue(), 7800.00);
+		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 27000.00);
+		assertEquals(day.getTotalCashDiscounted().doubleValue(), 11900.00);
 	}
 	
 

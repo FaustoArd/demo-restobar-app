@@ -177,19 +177,19 @@ public class ArbamApplication {
 			EmployeeJob cocineroJob = EmployeeJob.builder().jobRole("Cocinero").employeeSalary(new BigDecimal(6500)).build(); 
 			EmployeeJob savedCocineroJob = employeeJobRepository.save(cocineroJob);
 			
-			Employee emp1 = Employee.builder().employeeName("Carla").employeeJob(savedMeseroJob).build();
+			Employee emp1 = Employee.builder().employeeName("Carla Mesera").employeeJob(savedMeseroJob).build();
 			Employee savedEmp1 =  employeeService.saveEmployee(emp1);
 			
-			Employee emp2 = Employee.builder().employeeName("Marina").employeeJob(savedMeseroJob).build();
+			Employee emp2 = Employee.builder().employeeName("Marina Mesera").employeeJob(savedMeseroJob).build();
 			Employee savedEmp2 =  employeeService.saveEmployee(emp2);
 			
-			Employee emp3 = Employee.builder().employeeName("Silvana").employeeJob(savedMeseroJob).build();
+			Employee emp3 = Employee.builder().employeeName("Silvana Mesera").employeeJob(savedMeseroJob).build();
 			Employee savedEmp3 =  employeeService.saveEmployee(emp3);
 			
-			Employee emp4 = Employee.builder().employeeName("Mirta").employeeJob(savedCajeroJob).build();
+			Employee emp4 = Employee.builder().employeeName("Mirta Cajera").employeeJob(savedCajeroJob).build();
 			Employee savedEmp4 =  employeeService.saveEmployee(emp4);
 			
-			Employee emp5 = Employee.builder().employeeName("Susana").employeeJob(savedBacheroJob).build();
+			Employee emp5 = Employee.builder().employeeName("Susana Bachera").employeeJob(savedBacheroJob).build();
 			Employee savedEmp5 =  employeeService.saveEmployee(emp5);
 			
 			ArrayList<RestoTable> tables = new ArrayList<RestoTable>();

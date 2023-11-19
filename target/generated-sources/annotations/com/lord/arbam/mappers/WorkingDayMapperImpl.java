@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-19T16:27:37-0400",
+    date = "2023-11-19T18:49:28-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
@@ -24,22 +24,20 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         workingDay.cashierName( workingDayDto.getCashierName() );
         workingDay.dayStarted( workingDayDto.isDayStarted() );
+        List<Employee> list = workingDayDto.getEmployees();
+        if ( list != null ) {
+            workingDay.employees( new ArrayList<Employee>( list ) );
+        }
         workingDay.id( workingDayDto.getId() );
         workingDay.totalCash( workingDayDto.getTotalCash() );
         workingDay.totalCashDiscounted( workingDayDto.getTotalCashDiscounted() );
-        workingDay.totalCashierSalary( workingDayDto.getTotalCashierSalary() );
-        workingDay.totalChefSalary( workingDayDto.getTotalChefSalary() );
+        workingDay.totalCredit( workingDayDto.getTotalCredit() );
         workingDay.totalDebit( workingDayDto.getTotalDebit() );
-        workingDay.totalDishWasherSalary( workingDayDto.getTotalDishWasherSalary() );
-        workingDay.totalHelperSalary( workingDayDto.getTotalHelperSalary() );
+        workingDay.totalEmployeeSalary( workingDayDto.getTotalEmployeeSalary() );
+        workingDay.totalMP( workingDayDto.getTotalMP() );
         workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
         workingDay.totalTransf( workingDayDto.getTotalTransf() );
-        workingDay.totalWaitressSalary( workingDayDto.getTotalWaitressSalary() );
         workingDay.totalWorkingDay( workingDayDto.getTotalWorkingDay() );
-        List<Employee> list = workingDayDto.getWaitresses();
-        if ( list != null ) {
-            workingDay.waitresses( new ArrayList<Employee>( list ) );
-        }
 
         return workingDay.build();
     }
@@ -54,22 +52,20 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         workingDayDto.setCashierName( workingDay.getCashierName() );
         workingDayDto.setDayStarted( workingDay.isDayStarted() );
+        List<Employee> list = workingDay.getEmployees();
+        if ( list != null ) {
+            workingDayDto.setEmployees( new ArrayList<Employee>( list ) );
+        }
         workingDayDto.setId( workingDay.getId() );
         workingDayDto.setTotalCash( workingDay.getTotalCash() );
         workingDayDto.setTotalCashDiscounted( workingDay.getTotalCashDiscounted() );
-        workingDayDto.setTotalCashierSalary( workingDay.getTotalCashierSalary() );
-        workingDayDto.setTotalChefSalary( workingDay.getTotalChefSalary() );
+        workingDayDto.setTotalCredit( workingDay.getTotalCredit() );
         workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
-        workingDayDto.setTotalDishWasherSalary( workingDay.getTotalDishWasherSalary() );
-        workingDayDto.setTotalHelperSalary( workingDay.getTotalHelperSalary() );
+        workingDayDto.setTotalEmployeeSalary( workingDay.getTotalEmployeeSalary() );
+        workingDayDto.setTotalMP( workingDay.getTotalMP() );
         workingDayDto.setTotalStartCash( workingDay.getTotalStartCash() );
         workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
-        workingDayDto.setTotalWaitressSalary( workingDay.getTotalWaitressSalary() );
         workingDayDto.setTotalWorkingDay( workingDay.getTotalWorkingDay() );
-        List<Employee> list = workingDay.getWaitresses();
-        if ( list != null ) {
-            workingDayDto.setWaitresses( new ArrayList<Employee>( list ) );
-        }
 
         return workingDayDto;
     }

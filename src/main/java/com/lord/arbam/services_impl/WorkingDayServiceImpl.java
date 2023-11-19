@@ -1,9 +1,13 @@
 package com.lord.arbam.services_impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +37,9 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	@Autowired
 	private final EmployeeRepository employeeRepository;
 	
-	private BigDecimal totalResult;
+	private BigDecimal totalCashCollectResult;
+	
+	private BigDecimal totalEmployeeSalaryCollectResult;
 
 	@Override
 	public List<WorkingDay> findAll() {
@@ -62,7 +68,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public WorkingDay updateWorkingDay(WorkingDay workingDay) {
 		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
 			wd.setTotalStartCash(workingDay.getTotalStartCash());
-		
 			wd.setEmployees(workingDay.getEmployees());
 			log.info("Actualizando working day. WorkingDayServiceImpl.updateWorkingDay");
 			return workingDayRepository.save(wd);
@@ -79,11 +84,13 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		while (tablesClosedIt.hasNext()) {
 			totalCashResult += tablesClosedIt.next().getTotalPrice().doubleValue();
 		}
-		//BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
-		totalResult = new BigDecimal(totalCashResult);
+		totalCashCollectResult = new BigDecimal(totalCashResult);
 		log.info("Restando el pago a los empleados");
 		return workingDayRepository.findById(workingDayId).map(wDay ->{
-			wDay.setTotalCash(totalResult);
+		double result =  wDay.getEmployees().stream().mapToDouble(emp -> emp.getEmployeeJob().getEmployeeSalary().doubleValue()).sum();
+			wDay.setTotalEmployeeSalary(new BigDecimal(result));
+			wDay.setTotalCash(totalCashCollectResult);
+			wDay.setTotalCashDiscounted(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()));
 		return workingDayRepository.save(wDay);
 		}).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 		

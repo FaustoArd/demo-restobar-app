@@ -85,11 +85,8 @@ public class WorkingDayServiceTest {
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Miguel");
 		workingDayDto.setTotalStartCash(new BigDecimal(10000.00));
-		workingDayDto.setWaitresses(empsId);
-		workingDayDto.setTotalCashierSalary(new BigDecimal(4000.00));
-		workingDayDto.setTotalChefSalary(new BigDecimal(5000.00));
-		workingDayDto.setTotalDishWasherSalary(new BigDecimal(4000.00));
-		workingDayDto.setTotalHelperSalary(new BigDecimal(3500.00));
+		workingDayDto.setEmployees(empsId);
+	
 		
 		WorkingDay day = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
 		WorkingDay startedWorkingDay = workingDayService.startWorkingDay(day);
@@ -98,13 +95,9 @@ public class WorkingDayServiceTest {
 		assertTrue(startedWorkingDay.isDayStarted());
 		assertEquals(startedWorkingDay.getCashierName(),"Miguel");
 		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(),10000.00);
-		assertEquals(startedWorkingDay.getTotalCashierSalary().doubleValue(),4000.00);
-		assertEquals(startedWorkingDay.getTotalChefSalary().doubleValue(),5000.00);
-		assertEquals(startedWorkingDay.getTotalDishWasherSalary().doubleValue(),4000.00);
-		assertEquals(startedWorkingDay.getTotalHelperSalary().doubleValue(),3500.00);
-		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
-		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
-		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertTrue(startedWorkingDay.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
+		assertTrue(startedWorkingDay.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
+		assertTrue(startedWorkingDay.getEmployees().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
 		
 		
 	}
@@ -114,10 +107,10 @@ public class WorkingDayServiceTest {
 		long waitressId = 2L;
 		long workingDayId = 1L;
 		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
-		assertEquals(day.getWaitresses().size(), 2);
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertEquals(day.getEmployees().size(), 2);
+		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
+		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
 		
 	}
 	@Test
@@ -126,10 +119,10 @@ public class WorkingDayServiceTest {
 		long waitressId = 1L;
 		long workingDayId = 1L;
 		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
-		assertEquals(day.getWaitresses().size(), 1);
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertEquals(day.getEmployees().size(), 1);
+		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
 		
 	}
 	@Test
@@ -138,10 +131,10 @@ public class WorkingDayServiceTest {
 		long waitressId = 3L;
 		long workingDayId = 1L;
 		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
-		assertEquals(day.getWaitresses().size(), 0);
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
-		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertEquals(day.getEmployees().size(), 0);
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
+		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
 		
 	}
 	
@@ -162,15 +155,12 @@ public class WorkingDayServiceTest {
 		List<Employee> ids = new ArrayList<>();
 		ids.add(new Employee(2L));
 		ids.add(new Employee(1L));
-		day.setWaitresses(ids);
-		day.setTotalDishWasherSalary(new BigDecimal(6600.00));
-		day.setTotalChefSalary(new BigDecimal(7000.00));
+		day.setEmployees(ids);
+		
 		WorkingDay updatedDay = workingDayService.updateWorkingDay(day);
-		assertEquals(day.getWaitresses().size(), 2);
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
-		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
-		assertEquals(updatedDay.getTotalChefSalary().doubleValue(), 7000.00);
-		assertEquals(day.getTotalHelperSalary().doubleValue(), 3500.00);
+		assertEquals(day.getEmployees().size(), 2);
+		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
 		assertEquals(updatedDay.getTotalStartCash().doubleValue(), 10000.00);
 		
 	}
