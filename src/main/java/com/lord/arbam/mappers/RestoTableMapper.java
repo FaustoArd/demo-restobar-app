@@ -6,7 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import com.lord.arbam.dtos.PaymentMethodDto;
 import com.lord.arbam.dtos.RestoTableDto;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.RestoTable;
 
 @Mapper
@@ -27,5 +29,7 @@ public interface RestoTableMapper {
 	@Mapping(target="employeeName", source="employee.employeeName")
 	@Mapping(target="tableOrders",ignore=true)
 	public List<RestoTableDto> toRestoTablesDto(List<RestoTable> restoTables);
+	
+	public List<PaymentMethodDto> toPaymentMethodsDto(List<PaymentMethod> methods);
 
 }

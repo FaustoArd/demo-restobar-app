@@ -1,7 +1,9 @@
 package com.lord.arbam.mappers;
 
+import com.lord.arbam.dtos.PaymentMethodDto;
 import com.lord.arbam.dtos.RestoTableDto;
 import com.lord.arbam.models.Employee;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.RestoTable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-18T13:41:02-0400",
+    date = "2023-11-19T14:25:03-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class RestoTableMapperImpl implements RestoTableMapper {
@@ -65,6 +67,20 @@ public class RestoTableMapperImpl implements RestoTableMapper {
         return list;
     }
 
+    @Override
+    public List<PaymentMethodDto> toPaymentMethodsDto(List<PaymentMethod> methods) {
+        if ( methods == null ) {
+            return null;
+        }
+
+        List<PaymentMethodDto> list = new ArrayList<PaymentMethodDto>( methods.size() );
+        for ( PaymentMethod paymentMethod : methods ) {
+            list.add( paymentMethodToPaymentMethodDto( paymentMethod ) );
+        }
+
+        return list;
+    }
+
     protected Employee restoTableDtoToEmployee(RestoTableDto restoTableDto) {
         if ( restoTableDto == null ) {
             return null;
@@ -106,5 +122,18 @@ public class RestoTableMapperImpl implements RestoTableMapper {
             return null;
         }
         return employeeName;
+    }
+
+    protected PaymentMethodDto paymentMethodToPaymentMethodDto(PaymentMethod paymentMethod) {
+        if ( paymentMethod == null ) {
+            return null;
+        }
+
+        PaymentMethodDto paymentMethodDto = new PaymentMethodDto();
+
+        paymentMethodDto.setId( paymentMethod.getId() );
+        paymentMethodDto.setPaymentMethod( paymentMethod.getPaymentMethod() );
+
+        return paymentMethodDto;
     }
 }

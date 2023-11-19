@@ -22,6 +22,7 @@ import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.models.Role;
 import com.lord.arbam.models.User;
 import com.lord.arbam.repositories.EmployeeJobRepository;
+import com.lord.arbam.repositories.PaymentMethodRepository;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.repositories.RoleRepository;
 import com.lord.arbam.repositories.UserRepository;
@@ -29,6 +30,7 @@ import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.EmployeeJob;
 import com.lord.arbam.models.Ingredient;
 import com.lord.arbam.models.IngredientCategory;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.services.AuthenticationService;
 import com.lord.arbam.services.EmployeeService;
@@ -56,7 +58,7 @@ public class ArbamApplication {
 			ProductMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
 			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,
-			AuthenticationService authService, PasswordEncoder encoder,UserService userService) {
+			AuthenticationService authService, PasswordEncoder encoder,UserService userService,PaymentMethodRepository paymentMethodRepository) {
 		return args -> {
 			
 			Role role = Role.builder().authority("USER").build();
@@ -85,6 +87,19 @@ public class ArbamApplication {
 			//User user = User.builder().name("Carlos").lastname("Marino").username("car").email("car@gmail.com").password("1234").build();
 			//authService.registerUser(user);
 			
+			 
+			 PaymentMethod p1 = PaymentMethod.builder().paymentMethod("Efectivo").build();
+			 PaymentMethod p2 = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
+			 PaymentMethod p3 = PaymentMethod.builder().paymentMethod("Transferencia").build();
+			 PaymentMethod p4 = PaymentMethod.builder().paymentMethod("Mercado pago").build();
+			 PaymentMethod p5 = PaymentMethod.builder().paymentMethod("Tarjeta de credito").build();
+			 List<PaymentMethod> payments = new ArrayList<>();
+			 payments.add(p1);
+			 payments.add(p2);
+			 payments.add(p3);
+			 payments.add(p4);
+			 payments.add(p5);
+			 paymentMethodRepository.saveAll(payments);
 
 			ProductCategory pCategory1 = ProductCategory.builder().categoryName("Pizza").build();
 			productCategoryService.saveCategory(pCategory1);

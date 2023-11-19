@@ -41,6 +41,9 @@ public class WorkingDay {
 	@Column(name="total_cash")
 	private BigDecimal totalCash;
 	
+	@Column(name="total_cash_discounted")
+	private BigDecimal totalCashDiscounted;
+	
 	@Column(name="total_debit")
 	private BigDecimal totalDebit;
 	

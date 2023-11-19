@@ -89,10 +89,16 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			totalCashResult += tablesClosedIt.next().getTotalPrice().doubleValue();
 		}
 		BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
+		log.info("Restando el pago a los empleados");
 		return workingDayRepository.findById(workingDayId).map(wd -> {
+			totalCashDecimal.subtract(wd.getTotalCashierSalary());
+			totalCashDecimal.subtract(wd.getTotalChefSalary());
+			totalCashDecimal.subtract(wd.getTotalDishWasherSalary());
+			totalCashDecimal.subtract(wd.getTotalWaitressSalary());
+			totalCashDecimal.subtract(wd.getTotalHelperSalary());
 			wd.setId(workingDayId);
 			wd.setTotalCash(totalCashDecimal);
-			log.info(" en la base de datos");
+			log.info("Guardando en la base de datos");
 			return workingDayRepository.save(wd);
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
 

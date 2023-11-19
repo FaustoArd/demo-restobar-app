@@ -287,7 +287,7 @@ public class RestoTableIntegrationServicesTest {
 	@Order(17)
 	public void closeRestoTable1Test() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
-		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId);
+		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,"Efectivo");
 		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 
 		assertEquals(table.getTotalTablePrice().doubleValue(), 24500.00);
@@ -300,6 +300,7 @@ public class RestoTableIntegrationServicesTest {
 				"Carla");
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getWorkingDay()
 				.getId(), 1);
+		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getPaymentMethod(), "Efectivo");
 
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
@@ -343,8 +344,9 @@ public class RestoTableIntegrationServicesTest {
 	@Order(20)
 	void closeRestoTable8Test() {
 		RestoTable table = restoTableService.findRestoTableById(2L);
-		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId);
+		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,"Tajeta de debito");
 		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
+		
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
 				.doubleValue(), 14400.00);
 		assertEquals(
@@ -352,12 +354,14 @@ public class RestoTableIntegrationServicesTest {
 				"Silvana");
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getWorkingDay()
 				.getId(), 1);
+		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getPaymentMethod(),"Tajeta de debito");
 
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
 		assertEquals(closedTable.getPaymentMethod(), null);
 		assertEquals(closedTable.getTableNumber(), null);
 		assertEquals(closedTable.getTotalTablePrice(), null);
+		assertEquals(closedTable.getPaymentMethod(),null);
 	}
 
 	//total Table N1 = 24500.00
@@ -367,6 +371,8 @@ public class RestoTableIntegrationServicesTest {
 	void closeWorkingDay() {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
 		assertEquals(day.getTotalCash().doubleValue(), 38900.00);
+		assertEquals(day.getTotalCash(), 7900.00);
 	}
+	
 
 }

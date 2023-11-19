@@ -21,6 +21,8 @@ public class WorkingDayDto {
 	private BigDecimal totalWorkingDay;
 
 	private BigDecimal totalCash;
+	
+	private BigDecimal totalCashDiscounted;
 
 	private BigDecimal totalDebit;
 

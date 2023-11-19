@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.exceptions.ValueAlreadyExistException;
 import com.lord.arbam.models.Employee;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableClosed;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.models.WorkingDay;
 import com.lord.arbam.repositories.EmployeeRepository;
+import com.lord.arbam.repositories.PaymentMethodRepository;
 import com.lord.arbam.repositories.RestoTableClosedRepository;
 import com.lord.arbam.repositories.RestoTableRepository;
 import com.lord.arbam.repositories.WorkingDayRepository;
@@ -42,6 +44,9 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Autowired
 	private final WorkingDayRepository workingDayRepository;
+	
+	@Autowired
+	private final PaymentMethodRepository paymentMethodRepository;
 	
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -86,7 +91,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Transactional
 	@Override
-	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId) {
+	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,String paymentMethod) {
 		log.info("Iniciando el cierre de mesa id:");
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
 		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
@@ -95,7 +100,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.tableNumber(findedTable.getTableNumber())
 				.employeeName(employee.getEmployeeName())
 				.totalPrice(findedTable.getTotalTablePrice())
-				.paymentMethod(findedTable.getPaymentMethod())
+				.paymentMethod(paymentMethod)
 				.workingDay(workingDay).build();
 		log.info("Generando backup de mesa");
 		restoTableClosedRepository.save(tableClosed);
@@ -122,6 +127,11 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Override
 	public Optional<RestoTable> findByTableNumber(Integer tableNumber) {
 		return restoTableRepository.findByTableNumber(tableNumber);
+	}
+	
+	@Override
+	public List<PaymentMethod> findAllPaymentMethods(){
+		return (List<PaymentMethod>)paymentMethodRepository.findAll();
 	}
 
 	

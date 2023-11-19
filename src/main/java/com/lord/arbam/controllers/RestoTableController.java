@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lord.arbam.dtos.PaymentMethodDto;
 import com.lord.arbam.dtos.RestoTableDto;
 import com.lord.arbam.dtos.RestoTableOrderDto;
 import com.lord.arbam.mappers.RestoTableMapper;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableOrder;
 import com.lord.arbam.services.RestoTableOrderService;
@@ -79,14 +82,22 @@ public class RestoTableController {
 
 	
 	@PutMapping("/close_table")
-	ResponseEntity<String> closeTable(@RequestParam("restoTableId")Long restoTableId,@RequestParam("workingDayId")Long workingDayId){
-		restoTableService.closeRestoTable(restoTableId,workingDayId);
+	ResponseEntity<String> closeTable(@RequestParam("restoTableId")
+	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestParam("paymentMethod")String paymentMethod){
+		restoTableService.closeRestoTable(restoTableId,workingDayId,paymentMethod);
 		return new ResponseEntity<String>(gson.toJson("La mesa fue cerrada con exito"),HttpStatus.OK);
 	}
 	
+	@GetMapping("/all_methods")
+	ResponseEntity<List<PaymentMethodDto>> findAllPaymentsMethods(){
+		List<PaymentMethod> methods = restoTableService.findAllPaymentMethods();
+		List<PaymentMethodDto> methodsDto = RestoTableMapper.INSTANCE.toPaymentMethodsDto(methods);
+		return new ResponseEntity<List<PaymentMethodDto>>(methodsDto,HttpStatus.OK);
+	}
+	
 	@GetMapping("/all_orders_by_restotable_id/{id}")
-	ResponseEntity<List<RestoTableOrderDto>> findOrdersByRestoTableId(@PathVariable("id")Long id){
-		return null;
+	ResponseEntity<String> findOrdersByRestoTableId(@PathVariable("id")Long id){
+		return new ResponseEntity<String>(gson.toJson("No implementado"), HttpStatus.NOT_IMPLEMENTED);
 	}
 	
 	
