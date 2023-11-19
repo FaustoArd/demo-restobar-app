@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.models.Product;
@@ -11,6 +12,7 @@ import com.lord.arbam.models.ProductMix;
 import com.lord.arbam.repositories.ProductMixRepository;
 import com.lord.arbam.repositories.ProductRepository;
 import com.lord.arbam.services.ProductMixService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +33,7 @@ public class ProductMixServiceImpl implements ProductMixService {
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro la mezcla de ingredientes"));
 	}
 
+	@Transactional
 	@Override
 	public ProductMix saveProductMix(ProductMix productMix) {
 		Product product = productRepository.findById(productMix.getProduct().getId()).orElseThrow(() -> new ItemNotFoundException("no se encontro el producto"));

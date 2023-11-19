@@ -133,10 +133,10 @@ public class ArbamApplication {
 			Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
 			Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
 			
-			/*ProductMix mix1 = ProductMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
+			ProductMix mix1 = ProductMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
 			productMixService.saveProductMix(mix1);
 			ProductMix mix2 = ProductMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
-			productMixService.saveProductMix(mix2);*/
+			productMixService.saveProductMix(mix2);
 			
 			Product product = productService.findProductById(1L);
 			ProductStock stock = new ProductStock(10);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.lord.arbam.dtos.ProductDto;
 import com.lord.arbam.mappers.ProductMapper;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.services.ProductService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +28,8 @@ public class ProductController {
 
 	@Autowired
 	private final ProductService productService;
+	
+	private static final Gson gson = new Gson();
 	
 	
 
@@ -62,5 +66,11 @@ public class ProductController {
 		Product updatedProduct = productService.updateProduct(product);
 		ProductDto updatedProductDto = ProductMapper.INSTANCE.toProductDto(updatedProduct);
 		return new ResponseEntity<ProductDto>(updatedProductDto, HttpStatus.OK);
+	}
+	@DeleteMapping("/{id}")
+	ResponseEntity<String> deleteProduct(@PathVariable("id")Long id){
+		Product findedProduct = productService.findProductById(id);
+		productService.deleteProductById(id);
+		return new ResponseEntity<String>(gson.toJson("Se elimino el producto:" + findedProduct.getProductName()),HttpStatus.OK);
 	}
 }

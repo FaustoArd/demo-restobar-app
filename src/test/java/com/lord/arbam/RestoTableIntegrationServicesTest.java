@@ -182,17 +182,6 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 2
 	@Test
 	@Order(9)
-	void whenUpdateRestoTablePriceRestoTable8_MustReturnRestotableUpdatedTotalPrice() {
-		RestoTable table = restoTableService.findRestoTableById(2L);
-		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
-		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
-		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 5400.00);
-	}
-	
-	
-	// table id : 2
-	@Test
-	@Order(10)
 	void whenTryToCreateExistingRestoTable8Order_MustResturnUpdatedRestoTableOrder() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(2L).build();
@@ -203,10 +192,20 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedOrder.getProduct().getProductName(), "Grande Cebolla");
 		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 14400.00);
 	}
+	// table id : 2
+		@Test
+		@Order(10)
+		void whenUpdateRestoTablePriceRestoTable8_MustReturnRestotableUpdatedTotalPrice() {
+			RestoTable table = restoTableService.findRestoTableById(2L);
+			List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
+			RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
+			assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 14400.00);
+		}
+	
 
 	// table id : 1
 	@Test
-	@Order(12)
+	@Order(11)
 	void whenTryToCreateExistingRestoTable1Order_MustResturnUpdatedRestoTableOrder() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -220,7 +219,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(13)
+	@Order(12)
 	void checkForRestoTableTotalPriceRestoTable1() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -230,7 +229,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(14)
+	@Order(13)
 	void updateAgainOrderWithProductId2RestoTable1() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -245,7 +244,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(15)
+	@Order(14)
 	void checkAgainForRestoTableTotalPriceRestoTable1() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -255,7 +254,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(16)
+	@Order(15)
 	void whenDeleteOrderbyIdRestoTable1_RestoTableTotalPriceMustBeUpdated() {
 		restoTableOrderService.deleteOderById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
@@ -269,7 +268,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// Product id3:"Cerveza heineken" price : 1700.00
 	@Test
-	@Order(17)
+	@Order(16)
 	void updateAgainOrderWithProductId3RestoTable1() {
 		Product product = productService.findProductById(3L);
 		RestoTable table = restoTableService.findRestoTableById(1L);
@@ -285,7 +284,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(18)
+	@Order(17)
 	public void closeRestoTable1Test() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId);
@@ -311,14 +310,14 @@ public class RestoTableIntegrationServicesTest {
 	}
 
 	@Test
-	@Order(19)
+	@Order(18)
 	void checkWorkingDayStatus() {
 		boolean result = this.workingDayService.isWorkingDayStarted(workingDayId);
 		assertTrue(result);
 	}
 
 	@Test
-	@Order(20)
+	@Order(19)
 	void updateWorkingDay() {
 		WorkingDay day = workingDayService.findWorkingDayById(workingDayId);
 		List<Employee> ids = new ArrayList<>();
@@ -339,12 +338,35 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(updatedDay.getTotalStartCash().doubleValue(), 10000.00);
 
 	}
+	
+	@Test
+	@Order(20)
+	void closeRestoTable8Test() {
+		RestoTable table = restoTableService.findRestoTableById(2L);
+		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId);
+		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
+		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
+				.doubleValue(), 14400.00);
+		assertEquals(
+				tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getEmployeeName(),
+				"Silvana");
+		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getWorkingDay()
+				.getId(), 1);
 
+		assertEquals(closedTable.getId(), table.getId());
+		assertEquals(closedTable.getEmployee(), null);
+		assertEquals(closedTable.getPaymentMethod(), null);
+		assertEquals(closedTable.getTableNumber(), null);
+		assertEquals(closedTable.getTotalTablePrice(), null);
+	}
+
+	//total Table N1 = 24500.00
+	//total Table N8 = 14400.00
 	@Test
 	@Order(21)
 	void closeWorkingDay() {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
-
+		assertEquals(day.getTotalCash().doubleValue(), 38900.00);
 	}
 
 }
