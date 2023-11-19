@@ -36,12 +36,6 @@ public class WorkingDayController {
 	
 	private static final Gson gson = new Gson();
 	
-	@PostMapping("/init")
-	ResponseEntity<Long> initWorkingDay(){
-		Long workingDayId = workingDayService.initWorkingDay();
-		return new ResponseEntity<Long>(workingDayId,HttpStatus.CREATED);
-	}
-	
 	@GetMapping("/{id}")
 	ResponseEntity<WorkingDayDto> findWorkingDayById(@PathVariable("id")Long id){
 		WorkingDay day = workingDayService.findWorkingDayById(id);

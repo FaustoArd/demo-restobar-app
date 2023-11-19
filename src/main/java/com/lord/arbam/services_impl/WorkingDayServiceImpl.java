@@ -45,13 +45,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	}
 
 	@Override
-	public Long initWorkingDay() {
-		WorkingDay day = WorkingDay.builder().dayStarted(true).build();
-		WorkingDay newWorkingDay = workingDayRepository.save(day);
-		return newWorkingDay.getId();
-	}
-
-	@Override
 	public WorkingDay startWorkingDay(WorkingDay workingDay) {
 
 		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())

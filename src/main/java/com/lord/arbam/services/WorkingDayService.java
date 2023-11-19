@@ -11,8 +11,6 @@ public interface WorkingDayService {
 	
 	public WorkingDay findWorkingDayById(Long id);
 	
-	public Long initWorkingDay();
-	
 	public WorkingDay startWorkingDay(WorkingDay workingDay);
 	
 	public WorkingDay updateWorkingDay(WorkingDay workingDay);
