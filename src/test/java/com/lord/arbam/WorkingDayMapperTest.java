@@ -30,7 +30,7 @@ public class WorkingDayMapperTest {
 		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
 		workingDayDto.setWaitresses(employeesId);
 		workingDayDto.setTotalPostEmployeeSalary(new BigDecimal(12000.00));
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
 		Optional<Employee> emp1 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 1L).findAny();
 		Optional<Employee> emp2 = workingDay.getWaitresses().stream().filter(emp -> emp.getId() == 3L).findAny();
 		assertEquals(workingDay.getCashierName(), "Leticia");

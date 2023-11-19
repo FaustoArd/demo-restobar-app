@@ -9,13 +9,13 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-18T13:41:02-0400",
+    date = "2023-11-18T18:26:50-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
 
     @Override
-    public WorkingDay toWorkingDayStart(WorkingDayDto workingDayDto) {
+    public WorkingDay toWorkingDay(WorkingDayDto workingDayDto) {
         if ( workingDayDto == null ) {
             return null;
         }

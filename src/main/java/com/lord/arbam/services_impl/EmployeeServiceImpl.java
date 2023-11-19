@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.lord.arbam.exceptions.ItemNotFoundException;
 import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.EmployeeJob;
+import com.lord.arbam.models.WorkingDay;
 import com.lord.arbam.repositories.EmployeeJobRepository;
 import com.lord.arbam.repositories.EmployeeRepository;
 import com.lord.arbam.services.EmployeeService;
@@ -64,6 +65,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<Employee> findByEmployeeJobJobRole(String jobRole) {
 		return (List<Employee>)employeeRepository.findByEmployeeJobJobRole(jobRole);
 	}
+
+	
+
+	
 	
 }
 

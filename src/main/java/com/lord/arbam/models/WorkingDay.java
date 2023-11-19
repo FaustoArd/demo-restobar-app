@@ -50,7 +50,7 @@ public class WorkingDay {
 	@Column(name="total_transf")
 	private BigDecimal totalTransf;
 	
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	@JoinTable(name="waitress_working_day_junction", joinColumns = 
 	@JoinColumn(name="working_day_id", referencedColumnName = "id"), inverseJoinColumns =
 	@JoinColumn(name="waitress_id", referencedColumnName = "id"))

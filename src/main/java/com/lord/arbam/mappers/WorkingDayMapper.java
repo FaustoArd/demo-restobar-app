@@ -12,7 +12,7 @@ public interface  WorkingDayMapper {
 
 	public static WorkingDayMapper INSTANCE = Mappers.getMapper(WorkingDayMapper.class);
 
-	public WorkingDay toWorkingDayStart(WorkingDayDto workingDayDto);
+	public WorkingDay toWorkingDay(WorkingDayDto workingDayDto);
 
 	
 	public  WorkingDayDto toWorkingDayDto(WorkingDay workingDay);

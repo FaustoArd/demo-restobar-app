@@ -237,6 +237,12 @@ public class RestoTableIntegrationServicesTest {
 		
 		
 	}
+	@Test
+	@Order(14)
+	void checkWorkingDayStatus() {
+		boolean result = this.workingDayService.isWorkingDayStarted(workingDayId);
+		assertTrue(result);
+	}
 	
 	
 	

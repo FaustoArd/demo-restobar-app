@@ -1,5 +1,7 @@
 package com.lord.arbam.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lord.arbam.dtos.EmployeeDto;
 import com.lord.arbam.dtos.WorkingDayDto;
+import com.lord.arbam.mappers.EmployeeMapper;
 import com.lord.arbam.mappers.WorkingDayMapper;
+import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.WorkingDay;
 import com.lord.arbam.services.WorkingDayService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +33,8 @@ public class WorkingDayController {
 	
 	@Autowired
 	private final WorkingDayService workingDayService;
+	
+	private static final Gson gson = new Gson();
 	
 	@PostMapping("/init")
 	ResponseEntity<Long> initWorkingDay(){
@@ -43,7 +51,7 @@ public class WorkingDayController {
 
 	@PostMapping("/")
 	ResponseEntity<WorkingDayDto> startWorkingDay(@RequestBody WorkingDayDto workingDayDto){
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
 		WorkingDay savedWorkingDay = workingDayService.startWorkingDay(workingDay);
 		WorkingDayDto savedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(savedWorkingDay);
 		return new ResponseEntity<WorkingDayDto>(savedWorkingDayDto,HttpStatus.CREATED);
@@ -51,10 +59,11 @@ public class WorkingDayController {
 	
 	@PutMapping("/")
 	ResponseEntity<WorkingDayDto> updateWorkingDay(@RequestBody WorkingDayDto workingDayDto){
-		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDayStart(workingDayDto);
+		
+		WorkingDay workingDay = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
 		WorkingDay updatedWorkingDay = workingDayService.updateWorkingDay(workingDay);
 		WorkingDayDto updatedWorkingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(updatedWorkingDay);
-		return new ResponseEntity<WorkingDayDto>(updatedWorkingDayDto,HttpStatus.CREATED);
+		return new ResponseEntity<WorkingDayDto>(updatedWorkingDayDto,HttpStatus.OK);
 	}
 	
 	@GetMapping("/close/{id}")
@@ -71,7 +80,13 @@ public class WorkingDayController {
 		return new ResponseEntity<WorkingDayDto>(dayDto,HttpStatus.OK);
 	}
 	@GetMapping("/is_started")
-	ResponseEntity<Boolean> isDayStarted(@RequestParam Long workingDayId) {
+	ResponseEntity<Boolean> isDayStarted(@RequestParam("workingDayId") Long workingDayId) {
 		return new ResponseEntity<Boolean>(workingDayService.isWorkingDayStarted(workingDayId),HttpStatus.OK);
+	}
+	@GetMapping("/find_waitresses")
+	ResponseEntity<List<EmployeeDto>> findCurrentWaitresses(@RequestParam Long workingDayId){
+		List<Employee> waitresses = workingDayService.findCurrentWaitressSelected(workingDayId);
+		List<EmployeeDto> waitressesDto = EmployeeMapper.INSTANCE.toEmployeesDto(waitresses);
+		return new ResponseEntity<List<EmployeeDto>>(waitressesDto,HttpStatus.OK);
 	}
 }

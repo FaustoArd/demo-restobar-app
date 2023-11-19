@@ -2,6 +2,7 @@ package com.lord.arbam.services;
 
 import java.util.List;
 
+import com.lord.arbam.models.Employee;
 import com.lord.arbam.models.WorkingDay;
 
 public interface WorkingDayService {
@@ -21,5 +22,9 @@ public interface WorkingDayService {
 	public WorkingDay deleteWaitressById(Long waitressId,Long workingDayId);
 	
 	public boolean isWorkingDayStarted(Long workingDayId);
+	
+	public List<Employee> findCurrentWaitressSelected(Long workingDayId);
+	
+	
 
 }
