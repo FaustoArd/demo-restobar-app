@@ -1,5 +1,7 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +35,8 @@ public class Employee {
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name="employee_job_id", referencedColumnName = "id")
 	private EmployeeJob employeeJob;
+	
+	
 	
 	public Employee(Long id) {
 		this.id = id;

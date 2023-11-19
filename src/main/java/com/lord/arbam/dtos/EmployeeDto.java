@@ -14,5 +14,7 @@ public class EmployeeDto {
 	private Long employeeJobId;
 	
 	private String employeeJob;
+	
+	private String employeeSalary;
 
 }
