@@ -13,5 +13,7 @@ public class EmployeeJobDto {
 	
 	private String jobRole;
 	
+	private BigDecimal employeeSalary;
+	
 	
 }

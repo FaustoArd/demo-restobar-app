@@ -54,7 +54,7 @@ public class WorkingDay {
 	@JoinTable(name="waitress_working_day_junction", joinColumns = 
 	@JoinColumn(name="working_day_id", referencedColumnName = "id"), inverseJoinColumns =
 	@JoinColumn(name="waitress_id", referencedColumnName = "id"))
-	private List<Employee> waitresses;
+	private List<Employee> employees;
 	
 	@Column(name="cashierName")
 	private String cashierName;

@@ -30,7 +30,7 @@ public class WorkingDayDto {
 
 	private String cashierName;
 
-	private List<Employee> waitresses;
+	private List<Employee> employees;
 
 	private BigDecimal totalWaitressSalary;
 

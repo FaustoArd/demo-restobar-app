@@ -51,12 +51,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
 				.totalStartCash(workingDay.getTotalStartCash())
-				.cashierName(workingDay.getCashierName())
-				.totalCashierSalary(workingDay.getTotalCashierSalary())
-				.totalWaitressSalary(workingDay.getTotalWaitressSalary())
-				.totalChefSalary(workingDay.getTotalChefSalary())
-				.totalHelperSalary(workingDay.getTotalHelperSalary())
-				.totalDishWasherSalary(workingDay.getTotalDishWasherSalary())
 				.waitresses(workingDay.getWaitresses()).build();
 				
 		log.info("Iniciando dia de trabajo");
@@ -68,12 +62,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public WorkingDay updateWorkingDay(WorkingDay workingDay) {
 		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
 			wd.setTotalStartCash(workingDay.getTotalStartCash());
-			wd.setCashierName(workingDay.getCashierName());
-			wd.setTotalCashierSalary(workingDay.getTotalCashierSalary());
-			wd.setTotalWaitressSalary(workingDay.getTotalWaitressSalary());
-			wd.setTotalChefSalary(workingDay.getTotalChefSalary());
-			wd.setTotalDishWasherSalary(workingDay.getTotalDishWasherSalary());
-			wd.setTotalHelperSalary(workingDay.getTotalHelperSalary());
+		
 			wd.setWaitresses(workingDay.getWaitresses());
 			log.info("Actualizando working day. WorkingDayServiceImpl.updateWorkingDay");
 			return workingDayRepository.save(wd);
@@ -95,14 +84,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		log.info("Restando el pago a los empleados");
 		return workingDayRepository.findById(workingDayId).map(wDay ->{
 			wDay.setTotalCash(totalResult);
-			wDay.setTotalCashDiscounted(totalResult);
-			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalCashierSalary()));
-			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalChefSalary()));
-			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalDishWasherSalary()));
-			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalHelperSalary()));
-			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalWaitressSalary()));
-			
-			return workingDayRepository.save(wDay);
+		return workingDayRepository.save(wDay);
 		}).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
 		
 	}

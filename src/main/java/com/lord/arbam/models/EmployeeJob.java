@@ -1,5 +1,7 @@
 package com.lord.arbam.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,5 +27,8 @@ public class EmployeeJob {
 	
 	@Column(name="job_role")
 	private String jobRole;
+	
+	@Column(name="employee_salary")
+	private BigDecimal employeeSalary;
 
 }

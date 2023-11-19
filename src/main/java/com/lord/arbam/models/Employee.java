@@ -36,8 +36,6 @@ public class Employee {
 	@JoinColumn(name="employee_job_id", referencedColumnName = "id")
 	private EmployeeJob employeeJob;
 	
-	
-	
 	public Employee(Long id) {
 		this.id = id;
 	}

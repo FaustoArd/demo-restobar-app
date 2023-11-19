@@ -15,17 +15,19 @@ public interface EmployeeMapper {
 	public static EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 	
 	@Mapping(target="employeeJob.jobRole", source="employeeJob")
-	@Mapping(target="employeeJob.salary", source="salary")
 	@Mapping(target="employeeJob.id", source="employeeJobId")
+	@Mapping(target="employeeJob.employeeSalary", source="employeeSalary")
 	public Employee toEmployee(EmployeeDto employeeDto);
 	
 	@Mapping(target="employeeJobId", source="employeeJob.id")
-	@Mapping(target = "salary", source = "employeeJob.salary")
+	@Mapping(target="employeeSalary", source="employeeJob.employeeSalary")
 	@Mapping(target="employeeJob", source="employeeJob.jobRole")
 	public EmployeeDto toEmployeeDto(Employee employee);
 	
 	@Mapping(target="employeeJobId", source="employeeJob.id")
-	@Mapping(target = "salary", source = "employeeJob.salary")
+	@Mapping(target="employeeSalary", source="employeeJob.employeeSalary")
 	@Mapping(target="employeeJob", source="employeeJob.jobRole")
 	public List<EmployeeDto> toEmployeesDto(List<Employee> employees);
+	
+	
 }
