@@ -38,9 +38,6 @@ public class WorkingDay {
 	@Column(name="total_working_day")
 	private BigDecimal totalWorkingDay;
 	
-	@Column(name="total_post_employee_salary")
-	private BigDecimal totalPostEmployeeSalary;
-	
 	@Column(name="total_cash")
 	private BigDecimal totalCash;
 	
@@ -64,6 +61,15 @@ public class WorkingDay {
 	
 	@Column(name="total_cashier_salary")
 	private BigDecimal totalCashierSalary;
+	
+	@Column(name="total_chef_salary")
+	private BigDecimal totalChefSalary;
+	
+	@Column(name="total_helper_salary")
+	private BigDecimal totalHelperSalary;
+	
+	@Column(name="total_dish_washer_salary")
+	private BigDecimal totalDishWasherSalary;
 	
 	@Column(name="day_started")
 	private boolean dayStarted;

@@ -11,6 +11,7 @@ import com.lord.arbam.models.WorkingDay;
 public interface  WorkingDayMapper {
 
 	public static WorkingDayMapper INSTANCE = Mappers.getMapper(WorkingDayMapper.class);
+	
 
 	public WorkingDay toWorkingDay(WorkingDayDto workingDayDto);
 

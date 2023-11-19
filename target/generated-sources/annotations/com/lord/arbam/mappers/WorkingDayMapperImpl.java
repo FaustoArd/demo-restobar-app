@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-18T18:26:50-0400",
+    date = "2023-11-19T02:36:57-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
@@ -27,8 +27,10 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         workingDay.id( workingDayDto.getId() );
         workingDay.totalCash( workingDayDto.getTotalCash() );
         workingDay.totalCashierSalary( workingDayDto.getTotalCashierSalary() );
+        workingDay.totalChefSalary( workingDayDto.getTotalChefSalary() );
         workingDay.totalDebit( workingDayDto.getTotalDebit() );
-        workingDay.totalPostEmployeeSalary( workingDayDto.getTotalPostEmployeeSalary() );
+        workingDay.totalDishWasherSalary( workingDayDto.getTotalDishWasherSalary() );
+        workingDay.totalHelperSalary( workingDayDto.getTotalHelperSalary() );
         workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
         workingDay.totalTransf( workingDayDto.getTotalTransf() );
         workingDay.totalWaitressSalary( workingDayDto.getTotalWaitressSalary() );
@@ -54,8 +56,10 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         workingDayDto.setId( workingDay.getId() );
         workingDayDto.setTotalCash( workingDay.getTotalCash() );
         workingDayDto.setTotalCashierSalary( workingDay.getTotalCashierSalary() );
+        workingDayDto.setTotalChefSalary( workingDay.getTotalChefSalary() );
         workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
-        workingDayDto.setTotalPostEmployeeSalary( workingDay.getTotalPostEmployeeSalary() );
+        workingDayDto.setTotalDishWasherSalary( workingDay.getTotalDishWasherSalary() );
+        workingDayDto.setTotalHelperSalary( workingDay.getTotalHelperSalary() );
         workingDayDto.setTotalStartCash( workingDay.getTotalStartCash() );
         workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
         workingDayDto.setTotalWaitressSalary( workingDay.getTotalWaitressSalary() );

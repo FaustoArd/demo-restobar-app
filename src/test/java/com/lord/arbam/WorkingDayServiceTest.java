@@ -84,15 +84,24 @@ public class WorkingDayServiceTest {
 		empsId.add(waitress3);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
 		workingDayDto.setCashierName("Miguel");
-		workingDayDto.setTotalStartCash(new BigDecimal(4500.00));
+		workingDayDto.setTotalStartCash(new BigDecimal(10000.00));
 		workingDayDto.setWaitresses(empsId);
+		workingDayDto.setTotalCashierSalary(new BigDecimal(4000.00));
+		workingDayDto.setTotalChefSalary(new BigDecimal(5000.00));
+		workingDayDto.setTotalDishWasherSalary(new BigDecimal(4000.00));
+		workingDayDto.setTotalHelperSalary(new BigDecimal(3500.00));
+		
 		WorkingDay day = WorkingDayMapper.INSTANCE.toWorkingDay(workingDayDto);
 		WorkingDay startedWorkingDay = workingDayService.startWorkingDay(day);
 		this.workingDayId = startedWorkingDay.getId();
 		assertTrue(startedWorkingDay.getId()!=null);
 		assertTrue(startedWorkingDay.isDayStarted());
 		assertEquals(startedWorkingDay.getCashierName(),"Miguel");
-		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(),4500.00);
+		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(),10000.00);
+		assertEquals(startedWorkingDay.getTotalCashierSalary().doubleValue(),4000.00);
+		assertEquals(startedWorkingDay.getTotalChefSalary().doubleValue(),5000.00);
+		assertEquals(startedWorkingDay.getTotalDishWasherSalary().doubleValue(),4000.00);
+		assertEquals(startedWorkingDay.getTotalHelperSalary().doubleValue(),3500.00);
 		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
 		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
 		assertTrue(startedWorkingDay.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
@@ -135,6 +144,9 @@ public class WorkingDayServiceTest {
 		assertFalse(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
 		
 	}
+	
+	
+	
 	@Test
 	@Order(5)
 	void isWorkingDayStartedMethodTest() {
@@ -146,10 +158,26 @@ public class WorkingDayServiceTest {
 	@Test
 	@Order(6)
 	void updateWorkingDay() {
-		
+		WorkingDay day = workingDayService.findWorkingDayById(workingDayId);
+		List<Employee> ids = new ArrayList<>();
+		ids.add(new Employee(2L));
+		ids.add(new Employee(1L));
+		day.setWaitresses(ids);
+		day.setTotalDishWasherSalary(new BigDecimal(6600.00));
+		day.setTotalChefSalary(new BigDecimal(7000.00));
+		WorkingDay updatedDay = workingDayService.updateWorkingDay(day);
+		assertEquals(day.getWaitresses().size(), 2);
+		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==2L).findFirst().isPresent());
+		assertTrue(day.getWaitresses().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
+		assertEquals(updatedDay.getTotalChefSalary().doubleValue(), 7000.00);
+		assertEquals(day.getTotalHelperSalary().doubleValue(), 3500.00);
+		assertEquals(updatedDay.getTotalStartCash().doubleValue(), 10000.00);
 		
 	}
 	
+	void closeWorkingDay() {
+		
+	}
 	
 	
 	

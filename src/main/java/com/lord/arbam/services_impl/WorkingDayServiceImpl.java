@@ -55,9 +55,15 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public WorkingDay startWorkingDay(WorkingDay workingDay) {
 
 		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
-				.totalStartCash(workingDay.getTotalStartCash()).waitresses(workingDay.getWaitresses())
-				.totalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary())
-				.totalCashierSalary(workingDay.getTotalCashierSalary()).build();
+				.totalStartCash(workingDay.getTotalStartCash())
+				.cashierName(workingDay.getCashierName())
+				.totalCashierSalary(workingDay.getTotalCashierSalary())
+				.totalWaitressSalary(workingDay.getTotalWaitressSalary())
+				.totalChefSalary(workingDay.getTotalChefSalary())
+				.totalHelperSalary(workingDay.getTotalHelperSalary())
+				.totalDishWasherSalary(workingDay.getTotalDishWasherSalary())
+				.waitresses(workingDay.getWaitresses()).build();
+				
 		log.info("Iniciando dia de trabajo");
 		return workingDayRepository.save(newWorkingDay);
 
@@ -68,7 +74,11 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
 			wd.setTotalStartCash(workingDay.getTotalStartCash());
 			wd.setCashierName(workingDay.getCashierName());
-			wd.setTotalPostEmployeeSalary(workingDay.getTotalPostEmployeeSalary());
+			wd.setTotalCashierSalary(workingDay.getTotalCashierSalary());
+			wd.setTotalWaitressSalary(workingDay.getTotalWaitressSalary());
+			wd.setTotalChefSalary(workingDay.getTotalChefSalary());
+			wd.setTotalDishWasherSalary(workingDay.getTotalDishWasherSalary());
+			wd.setTotalHelperSalary(workingDay.getTotalHelperSalary());
 			wd.setWaitresses(workingDay.getWaitresses());
 			log.info("Actualizando working day. WorkingDayServiceImpl.updateWorkingDay");
 			return workingDayRepository.save(wd);
@@ -77,7 +87,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
-		log.info("Finalizando el dea de trabajo. WorkingDayServiceImpl.closeWorkingDay");
+		log.info("Finalizando el dia de trabajo. WorkingDayServiceImpl.closeWorkingDay");
 		List<RestoTableClosed> tablesClosed = restoTableClosedRepository.findAllByWorkingDayId(workingDayId);
 		ListIterator<RestoTableClosed> tablesClosedIt = tablesClosed.listIterator();
 		Double totalCashResult = 0.00;
@@ -85,13 +95,11 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		while (tablesClosedIt.hasNext()) {
 			totalCashResult += tablesClosedIt.next().getTotalPrice().doubleValue();
 		}
-		System.out.println(totalCashResult);
 		BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
-		
-		log.info("Guardando calculos en la base de datos");
 		return workingDayRepository.findById(workingDayId).map(wd -> {
 			wd.setId(workingDayId);
 			wd.setTotalCash(totalCashDecimal);
+			log.info(" en la base de datos");
 			return workingDayRepository.save(wd);
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
 
