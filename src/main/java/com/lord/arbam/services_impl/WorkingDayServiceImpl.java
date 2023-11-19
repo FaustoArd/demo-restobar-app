@@ -32,6 +32,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	
 	@Autowired
 	private final EmployeeRepository employeeRepository;
+	
+	private BigDecimal totalResult;
 
 	@Override
 	public List<WorkingDay> findAll() {
@@ -88,20 +90,21 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		while (tablesClosedIt.hasNext()) {
 			totalCashResult += tablesClosedIt.next().getTotalPrice().doubleValue();
 		}
-		BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
+		//BigDecimal totalCashDecimal = new BigDecimal(totalCashResult);
+		totalResult = new BigDecimal(totalCashResult);
 		log.info("Restando el pago a los empleados");
-		return workingDayRepository.findById(workingDayId).map(wd -> {
-			totalCashDecimal.subtract(wd.getTotalCashierSalary());
-			totalCashDecimal.subtract(wd.getTotalChefSalary());
-			totalCashDecimal.subtract(wd.getTotalDishWasherSalary());
-			totalCashDecimal.subtract(wd.getTotalWaitressSalary());
-			totalCashDecimal.subtract(wd.getTotalHelperSalary());
-			wd.setId(workingDayId);
-			wd.setTotalCash(totalCashDecimal);
-			log.info("Guardando en la base de datos");
-			return workingDayRepository.save(wd);
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
-
+		return workingDayRepository.findById(workingDayId).map(wDay ->{
+			wDay.setTotalCash(totalResult);
+			wDay.setTotalCashDiscounted(totalResult);
+			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalCashierSalary()));
+			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalChefSalary()));
+			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalDishWasherSalary()));
+			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalHelperSalary()));
+			wDay.setTotalCashDiscounted(wDay.getTotalCashDiscounted().subtract(wDay.getTotalWaitressSalary()));
+			
+			return workingDayRepository.save(wDay);
+		}).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
+		
 	}
 
 	@Override

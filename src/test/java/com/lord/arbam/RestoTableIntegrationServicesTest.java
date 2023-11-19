@@ -370,8 +370,14 @@ public class RestoTableIntegrationServicesTest {
 	@Order(21)
 	void closeWorkingDay() {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
-		assertEquals(day.getTotalCash().doubleValue(), 38900.00);
-		assertEquals(day.getTotalCash(), 7900.00);
+		assertEquals(day.getId(), workingDayId);
+		assertEquals(day.getTotalCashierSalary().doubleValue(), 4000.00);
+		assertEquals(day.getTotalWaitressSalary().doubleValue(), 10000.00);
+		assertEquals(day.getTotalChefSalary().doubleValue(), 7000.00);
+		assertEquals(day.getTotalDishWasherSalary().doubleValue(), 6600.00);
+		assertEquals(day.getTotalHelperSalary().doubleValue(), 3500);
+		assertEquals(day.getTotalCash().doubleValue(),  38900.00);
+		assertEquals(day.getTotalCashDiscounted().doubleValue(), 7800.00);
 	}
 	
 
