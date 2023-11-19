@@ -33,13 +33,9 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
-	
+
 	@Autowired
 	private final EmployeeRepository employeeRepository;
-	
-	private BigDecimal totalCashCollectResult;
-	
-	private BigDecimal totalEmployeeSalaryCollectResult;
 
 	@Override
 	public List<WorkingDay> findAll() {
@@ -56,9 +52,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public WorkingDay startWorkingDay(WorkingDay workingDay) {
 
 		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
-				.totalStartCash(workingDay.getTotalStartCash())
-				.employees(workingDay.getEmployees()).build();
-				
+				.totalStartCash(workingDay.getTotalStartCash()).employees(workingDay.getEmployees()).build();
+
 		log.info("Iniciando dia de trabajo");
 		return workingDayRepository.save(newWorkingDay);
 
@@ -76,24 +71,21 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
-		log.info("Finalizando el dia de trabajo. WorkingDayServiceImpl.closeWorkingDay");
-		List<RestoTableClosed> tablesClosed = restoTableClosedRepository.findAllByWorkingDayId(workingDayId);
-		ListIterator<RestoTableClosed> tablesClosedIt = tablesClosed.listIterator();
-		Double totalCashResult = 0.00;
-		log.info("Sumando los totales de todas las mesas");
-		while (tablesClosedIt.hasNext()) {
-			totalCashResult += tablesClosedIt.next().getTotalPrice().doubleValue();
-		}
-		totalCashCollectResult = new BigDecimal(totalCashResult);
+		log.info("Sumando los totales de las mesas.");
+		double totalTablesCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.mapToDouble(res -> res.getTotalPrice().doubleValue()).sum();
+
 		log.info("Restando el pago a los empleados");
-		return workingDayRepository.findById(workingDayId).map(wDay ->{
-		double result =  wDay.getEmployees().stream().mapToDouble(emp -> emp.getEmployeeJob().getEmployeeSalary().doubleValue()).sum();
-			wDay.setTotalEmployeeSalary(new BigDecimal(result));
-			wDay.setTotalCash(totalCashCollectResult);
+		return workingDayRepository.findById(workingDayId).map(wDay -> {
+			double employeeTotalResult = wDay.getEmployees().stream()
+					.mapToDouble(emp -> emp.getEmployeeJob().getEmployeeSalary().doubleValue()).sum();
+
+			wDay.setTotalEmployeeSalary(new BigDecimal(employeeTotalResult));
+			wDay.setTotalCash(new BigDecimal(totalTablesCashResult));
 			wDay.setTotalCashDiscounted(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()));
-		return workingDayRepository.save(wDay);
-		}).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
-		
+			return workingDayRepository.save(wDay);
+
+		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
 	}
 
 	@Override
@@ -101,8 +93,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		log.info("Buscando mesera por id");
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
 		log.info("Filtrando por id, si es distinto al id eliminado,se agrega a la lista");
-		List<Employee> waitresses = workingDay.getEmployees().stream().filter(waitress -> waitress.getId() != waitressId)
-				.map(ws -> ws).collect(Collectors.toList());
+		List<Employee> waitresses = workingDay.getEmployees().stream()
+				.filter(waitress -> waitress.getId() != waitressId).map(ws -> ws).collect(Collectors.toList());
 		workingDay.setEmployees(waitresses);
 		log.info("Finalizando eliminacion de mesera");
 		return workingDayRepository.save(workingDay);
@@ -116,10 +108,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public List<Employee> findCurrentWaitressSelected(Long workingDayId) {
-	WorkingDay workingDay=  findWorkingDayById(workingDayId);
-	return  employeeRepository.findAllById(workingDay.getEmployees().stream().map(w -> w.getId()).toList());
+		WorkingDay workingDay = findWorkingDayById(workingDayId);
+		return employeeRepository.findAllById(workingDay.getEmployees().stream().map(w -> w.getId()).toList());
 	}
-
-	
 
 }
