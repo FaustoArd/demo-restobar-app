@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Persistent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.lord.arbam.exceptions.ItemNotFoundException;
@@ -67,7 +66,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		newRestotable.setTableNumber(restoTable.getTableNumber());
 		newRestotable.setOpen(true);
 		newRestotable.setTotalTablePrice(new BigDecimal(0));
-		log.info("Abriendo mesa Numero:" + newRestotable.getTableNumber());
+		log.info("Abriendo mesa");
 		return restoTableRepository.save(newRestotable);
 		}
 	}
@@ -80,7 +79,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 			updatedPrice += ordersIt.next().getTotalOrderPrice().doubleValue();
 		}
 		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
-		log.info("Actualizando precio :");
+		log.info("Actualizando total de la mesa");
 		return restoTableRepository.save(restoTable);
 	}
 	
@@ -88,6 +87,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Transactional
 	@Override
 	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId) {
+		log.info("Iniciando el cierre de mesa id:");
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
 		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
@@ -97,12 +97,14 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.totalPrice(findedTable.getTotalTablePrice())
 				.paymentMethod(findedTable.getPaymentMethod())
 				.workingDay(workingDay).build();
+		log.info("Generando backup de mesa");
 		restoTableClosedRepository.save(tableClosed);
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
+		log.info("Reiniciando la mesa");
 		return restoTableRepository.save(findedTable);
 	
 	}
