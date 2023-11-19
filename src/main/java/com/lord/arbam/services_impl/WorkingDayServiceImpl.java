@@ -51,7 +51,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
 				.totalStartCash(workingDay.getTotalStartCash())
-				.waitresses(workingDay.getWaitresses()).build();
+				.employees(workingDay.getEmployees()).build();
 				
 		log.info("Iniciando dia de trabajo");
 		return workingDayRepository.save(newWorkingDay);
@@ -63,7 +63,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
 			wd.setTotalStartCash(workingDay.getTotalStartCash());
 		
-			wd.setWaitresses(workingDay.getWaitresses());
+			wd.setEmployees(workingDay.getEmployees());
 			log.info("Actualizando working day. WorkingDayServiceImpl.updateWorkingDay");
 			return workingDayRepository.save(wd);
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
@@ -94,9 +94,9 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		log.info("Buscando mesera por id");
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
 		log.info("Filtrando por id, si es distinto al id eliminado,se agrega a la lista");
-		List<Employee> waitresses = workingDay.getWaitresses().stream().filter(waitress -> waitress.getId() != waitressId)
+		List<Employee> waitresses = workingDay.getEmployees().stream().filter(waitress -> waitress.getId() != waitressId)
 				.map(ws -> ws).collect(Collectors.toList());
-		workingDay.setWaitresses(waitresses);
+		workingDay.setEmployees(waitresses);
 		log.info("Finalizando eliminacion de mesera");
 		return workingDayRepository.save(workingDay);
 
@@ -110,7 +110,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	@Override
 	public List<Employee> findCurrentWaitressSelected(Long workingDayId) {
 	WorkingDay workingDay=  findWorkingDayById(workingDayId);
-	return  employeeRepository.findAllById(workingDay.getWaitresses().stream().map(w -> w.getId()).toList());
+	return  employeeRepository.findAllById(workingDay.getEmployees().stream().map(w -> w.getId()).toList());
 	}
 
 	

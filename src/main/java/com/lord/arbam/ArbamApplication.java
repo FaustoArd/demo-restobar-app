@@ -165,16 +165,16 @@ public class ArbamApplication {
 			ProductStock stock3 = new ProductStock(30);
 			Product savedProductstocked3 = productService.createProductStock(findedProduct3, stock3) ;
 			
-			EmployeeJob meseroJob = EmployeeJob.builder().jobRole("Mesera").build();
+			EmployeeJob meseroJob = EmployeeJob.builder().jobRole("Mesera").employeeSalary(new BigDecimal(6000)).build();
 			EmployeeJob savedMeseroJob = employeeJobRepository.save(meseroJob); 
 			
-			EmployeeJob cajeroJob = EmployeeJob.builder().jobRole("Cajera").build(); 
+			EmployeeJob cajeroJob = EmployeeJob.builder().jobRole("Cajera").employeeSalary(new BigDecimal(5000)).build(); 
 			EmployeeJob savedCajeroJob = employeeJobRepository.save(cajeroJob); 
 			
-			EmployeeJob bacheroJob = EmployeeJob.builder().jobRole("Bachero").build(); 
+			EmployeeJob bacheroJob = EmployeeJob.builder().jobRole("Bachero").employeeSalary(new BigDecimal(4000)).build(); 
 			EmployeeJob savedBacheroJob = employeeJobRepository.save(bacheroJob); 
 			
-			EmployeeJob cocineroJob = EmployeeJob.builder().jobRole("Cocinero").build(); 
+			EmployeeJob cocineroJob = EmployeeJob.builder().jobRole("Cocinero").employeeSalary(new BigDecimal(6500)).build(); 
 			EmployeeJob savedCocineroJob = employeeJobRepository.save(cocineroJob);
 			
 			Employee emp1 = Employee.builder().employeeName("Carla").employeeJob(savedMeseroJob).build();
