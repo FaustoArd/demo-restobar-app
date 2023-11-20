@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.lord.arbam.dtos.PaymentMethodDto;
 import com.lord.arbam.dtos.RestoTableDto;
-import com.lord.arbam.dtos.RestoTableOrderDto;
 import com.lord.arbam.mappers.RestoTableMapper;
 import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.RestoTable;
@@ -70,6 +68,7 @@ public class RestoTableController {
 		RestoTableDto createdTableDto = RestoTableMapper.INSTANCE.toRestotableDto(createdTable);
 		return new ResponseEntity<RestoTableDto>(createdTableDto,HttpStatus.CREATED);
 	}
+	
 	@PutMapping("/update_price/{id}")
 	ResponseEntity<RestoTableDto> udpateRestoTablePrice(@PathVariable("id")Long id){
 		RestoTable table = restoTableService.findRestoTableById(id);

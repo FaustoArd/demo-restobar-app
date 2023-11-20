@@ -372,7 +372,7 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(day.getId(), workingDayId);
 		assertEquals(day.getTotalCash().doubleValue(),  38900.00);
 		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 27000.00);
-		assertEquals(day.getTotalCashDiscounted().doubleValue(), 11900.00);
+		assertEquals(day.getTotalCashWithDiscount().doubleValue(), 11900.00);
 	}
 	
 

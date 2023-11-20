@@ -22,7 +22,7 @@ public class WorkingDayDto {
 
 	private BigDecimal totalCash;
 	
-	private BigDecimal totalCashDiscounted;
+	private BigDecimal totalCashWithDiscount;
 
 	private BigDecimal totalDebit;
 

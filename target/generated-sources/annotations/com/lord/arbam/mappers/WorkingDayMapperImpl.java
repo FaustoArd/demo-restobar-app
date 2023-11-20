@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-19T18:49:28-0400",
+    date = "2023-11-19T21:23:17-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
@@ -30,7 +30,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         }
         workingDay.id( workingDayDto.getId() );
         workingDay.totalCash( workingDayDto.getTotalCash() );
-        workingDay.totalCashDiscounted( workingDayDto.getTotalCashDiscounted() );
+        workingDay.totalCashWithDiscount( workingDayDto.getTotalCashWithDiscount() );
         workingDay.totalCredit( workingDayDto.getTotalCredit() );
         workingDay.totalDebit( workingDayDto.getTotalDebit() );
         workingDay.totalEmployeeSalary( workingDayDto.getTotalEmployeeSalary() );
@@ -58,7 +58,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         }
         workingDayDto.setId( workingDay.getId() );
         workingDayDto.setTotalCash( workingDay.getTotalCash() );
-        workingDayDto.setTotalCashDiscounted( workingDay.getTotalCashDiscounted() );
+        workingDayDto.setTotalCashWithDiscount( workingDay.getTotalCashWithDiscount() );
         workingDayDto.setTotalCredit( workingDay.getTotalCredit() );
         workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
         workingDayDto.setTotalEmployeeSalary( workingDay.getTotalEmployeeSalary() );

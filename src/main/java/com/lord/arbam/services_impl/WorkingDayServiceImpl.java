@@ -82,7 +82,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 			wDay.setTotalEmployeeSalary(new BigDecimal(employeeTotalResult));
 			wDay.setTotalCash(new BigDecimal(totalTablesCashResult));
-			wDay.setTotalCashDiscounted(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()));
+			wDay.setTotalCashWithDiscount(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()));
 			return workingDayRepository.save(wDay);
 
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));

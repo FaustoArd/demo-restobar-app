@@ -42,7 +42,7 @@ public class WorkingDay {
 	private BigDecimal totalCash;
 	
 	@Column(name="total_cash_discounted")
-	private BigDecimal totalCashDiscounted;
+	private BigDecimal totalCashWithDiscount;
 	
 	@Column(name="total_debit")
 	private BigDecimal totalDebit;
