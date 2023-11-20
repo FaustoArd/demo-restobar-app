@@ -2,6 +2,7 @@ package com.lord.arbam.controllers;
 
 import java.util.List;
 
+import org.mapstruct.ap.shaded.freemarker.core.ReturnInstruction.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.lord.arbam.dtos.ProductDto;
+import com.lord.arbam.dtos.ProductStockDto;
 import com.lord.arbam.mappers.ProductMapper;
 import com.lord.arbam.models.Product;
+import com.lord.arbam.models.ProductStock;
 import com.lord.arbam.services.ProductService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -33,6 +37,12 @@ public class ProductController {
 	
 	
 
+	@GetMapping("/{id}")
+	ResponseEntity<ProductDto> findProductById(@PathVariable("id")Long id){
+		Product findedProduct = productService.findProductById(id);
+		ProductDto findedProductDto = ProductMapper.INSTANCE.toProductDto(findedProduct);
+		return new ResponseEntity<ProductDto>(findedProductDto,HttpStatus.OK);
+	}
 	
 
 	@GetMapping("/all")
@@ -72,5 +82,15 @@ public class ProductController {
 		Product findedProduct = productService.findProductById(id);
 		productService.deleteProductById(id);
 		return new ResponseEntity<String>(gson.toJson("Se elimino el producto:" + findedProduct.getProductName()),HttpStatus.OK);
+	}
+	
+	@PostMapping("/create_stock")
+	ResponseEntity<ProductDto> createStock(@RequestParam("productId")Long productId, @RequestBody ProductStockDto stockDto){
+		Product product = productService.findProductById(productId);
+		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
+		Product productUpdated = productService.createProductStock(product, stock);
+		ProductDto newProductDto =ProductMapper.INSTANCE.toProductDto(productUpdated);
+		return new ResponseEntity<ProductDto>(newProductDto,HttpStatus.CREATED);
+		
 	}
 }

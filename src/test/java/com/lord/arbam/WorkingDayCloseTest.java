@@ -31,12 +31,11 @@ public class WorkingDayCloseTest {
 	@Test
 	@Order(1)
 	public void setup() {
-		WorkingDay workingDay = WorkingDay.builder().cashierName("Mirta").totalStartCash(new BigDecimal(5000.00))
+		WorkingDay workingDay = WorkingDay.builder().totalStartCash(new BigDecimal(5000.00))
 			.build();
 				WorkingDay startedWorkingDay = workingDayService.startWorkingDay(workingDay);
 				this.workingDayId = startedWorkingDay.getId();
 				assertTrue(startedWorkingDay.isDayStarted());
-				assertEquals(startedWorkingDay.getCashierName(), "Mirta");
 				assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(), 5000.00);
 			
 	}

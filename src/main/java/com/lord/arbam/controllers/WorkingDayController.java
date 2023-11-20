@@ -77,8 +77,7 @@ public class WorkingDayController {
 	ResponseEntity<Boolean> isDayStarted(@RequestParam("workingDayId") Long workingDayId) {
 		return new ResponseEntity<Boolean>(workingDayService.isWorkingDayStarted(workingDayId),HttpStatus.OK);
 	}
-	@GetMapping("/find_employees"
-			+ "")
+	@GetMapping("/find_employees")
 	ResponseEntity<List<EmployeeDto>> findCurrentEmployees(@RequestParam Long workingDayId){
 		List<Employee> employees = workingDayService.findCurrentEmployeesSelected(workingDayId);
 		List<EmployeeDto> employeesDto = EmployeeMapper.INSTANCE.toEmployeesDto(employees);

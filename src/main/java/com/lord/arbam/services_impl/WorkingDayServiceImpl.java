@@ -51,7 +51,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	@Override
 	public WorkingDay startWorkingDay(WorkingDay workingDay) {
 
-		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).cashierName(workingDay.getCashierName())
+		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true)
 				.totalStartCash(workingDay.getTotalStartCash()).employees(workingDay.getEmployees()).build();
 
 		log.info("Iniciando dia de trabajo");
@@ -89,14 +89,13 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	}
 
 	@Override
-	public WorkingDay deleteEmployeesById(Long waitressId, Long workingDayId) {
+	public WorkingDay deleteEmployeesById(Long employeeId, Long workingDayId) {
 		log.info("Buscando empleado por id");
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
-		log.info("Filtrando por id, si es distinto al id eliminado,se agrega a la lista");
-		List<Employee> waitresses = workingDay.getEmployees().stream()
-				.filter(waitress -> waitress.getId() != waitressId).map(ws -> ws).collect(Collectors.toList());
-		workingDay.setEmployees(waitresses);
-		log.info("Finalizando eliminacion de mesera");
+		List<Employee> employees = workingDay.getEmployees().stream()
+				.filter(e -> e.getId() != employeeId).map(es -> es).collect(Collectors.toList());
+		workingDay.setEmployees(employees);
+		log.info("Finalizando eliminacion de empleado de la jornada de trabajo");
 		return workingDayRepository.save(workingDay);
 
 	}

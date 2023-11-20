@@ -1,6 +1,9 @@
 package com.lord.arbam.services_impl;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final IngredientService ingredientService;
 
-	
+	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	@Override
 	public Product findProductById(Long id) {
@@ -48,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product saveProduct(Product product) {
+		log.info("Creando nuevo producto");
 		ProductCategory category = productCategoryRepository.findById(product.getCategory()
 				.getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro la categoria"));
 				

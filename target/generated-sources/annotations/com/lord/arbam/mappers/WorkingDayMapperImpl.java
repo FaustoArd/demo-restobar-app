@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-19T21:23:17-0400",
+    date = "2023-11-20T17:47:41-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
@@ -22,7 +22,6 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDay.WorkingDayBuilder workingDay = WorkingDay.builder();
 
-        workingDay.cashierName( workingDayDto.getCashierName() );
         workingDay.dayStarted( workingDayDto.isDayStarted() );
         List<Employee> list = workingDayDto.getEmployees();
         if ( list != null ) {
@@ -50,7 +49,6 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDayDto workingDayDto = new WorkingDayDto();
 
-        workingDayDto.setCashierName( workingDay.getCashierName() );
         workingDayDto.setDayStarted( workingDay.isDayStarted() );
         List<Employee> list = workingDay.getEmployees();
         if ( list != null ) {

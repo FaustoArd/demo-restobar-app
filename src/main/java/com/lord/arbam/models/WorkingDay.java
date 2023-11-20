@@ -60,13 +60,10 @@ public class WorkingDay {
 	private BigDecimal totalEmployeeSalary;
 	
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	@JoinTable(name="waitress_working_day_junction", joinColumns = 
+	@JoinTable(name="employee_working_day_junction", joinColumns = 
 	@JoinColumn(name="working_day_id", referencedColumnName = "id"), inverseJoinColumns =
-	@JoinColumn(name="waitress_id", referencedColumnName = "id"))
+	@JoinColumn(name="employee_id", referencedColumnName = "id"))
 	private List<Employee> employees;
-	
-	@Column(name="cashierName")
-	private String cashierName;
 	
 	@Column(name="day_started")
 	private boolean dayStarted;

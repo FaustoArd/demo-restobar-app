@@ -7,7 +7,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.lord.arbam.dtos.ProductDto;
+import com.lord.arbam.dtos.ProductStockDto;
 import com.lord.arbam.models.Product;
+import com.lord.arbam.models.ProductStock;
 
 @Mapper
 public interface ProductMapper {
@@ -33,4 +35,11 @@ public interface ProductMapper {
 	@Mapping(target="productStock", source="productStock.productStock")
 	@Mapping(target="productPrice", source="productPrice.productPrice")
 	public List<ProductDto> toProductsDto(List<Product> products);
+	
+	
+	@Mapping(target="product.id", source="productId")
+	public ProductStock toStock(ProductStockDto productStockDto);
+	
+	@Mapping(target="productId", source = "product.id")
+	public ProductStockDto toStockDto(ProductStock productStock);
 }

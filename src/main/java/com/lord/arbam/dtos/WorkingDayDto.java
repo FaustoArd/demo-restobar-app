@@ -34,8 +34,6 @@ public class WorkingDayDto {
 	
 	private BigDecimal totalEmployeeSalary;
 
-	private String cashierName;
-
 	private List<Employee> employees;
 
 	private boolean dayStarted;

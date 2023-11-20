@@ -83,7 +83,6 @@ public class WorkingDayServiceTest {
 		empsId.add(waitress2);
 		empsId.add(waitress3);
 		WorkingDayDto workingDayDto = new WorkingDayDto();
-		workingDayDto.setCashierName("Miguel");
 		workingDayDto.setTotalStartCash(new BigDecimal(10000.00));
 		workingDayDto.setEmployees(empsId);
 	
@@ -93,7 +92,6 @@ public class WorkingDayServiceTest {
 		this.workingDayId = startedWorkingDay.getId();
 		assertTrue(startedWorkingDay.getId()!=null);
 		assertTrue(startedWorkingDay.isDayStarted());
-		assertEquals(startedWorkingDay.getCashierName(),"Miguel");
 		assertEquals(startedWorkingDay.getTotalStartCash().doubleValue(),10000.00);
 		assertTrue(startedWorkingDay.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
 		assertTrue(startedWorkingDay.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());

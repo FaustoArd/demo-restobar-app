@@ -1,6 +1,7 @@
 package com.lord.arbam.mappers;
 
 import com.lord.arbam.dtos.ProductDto;
+import com.lord.arbam.dtos.ProductStockDto;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.models.ProductCategory;
 import com.lord.arbam.models.ProductPrice;
@@ -12,7 +13,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-18T13:41:02-0400",
+    date = "2023-11-20T13:07:14-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class ProductMapperImpl implements ProductMapper {
@@ -66,6 +67,36 @@ public class ProductMapperImpl implements ProductMapper {
         }
 
         return list;
+    }
+
+    @Override
+    public ProductStock toStock(ProductStockDto productStockDto) {
+        if ( productStockDto == null ) {
+            return null;
+        }
+
+        ProductStock.ProductStockBuilder productStock = ProductStock.builder();
+
+        productStock.product( productStockDtoToProduct( productStockDto ) );
+        productStock.id( productStockDto.getId() );
+        productStock.productStock( productStockDto.getProductStock() );
+
+        return productStock.build();
+    }
+
+    @Override
+    public ProductStockDto toStockDto(ProductStock productStock) {
+        if ( productStock == null ) {
+            return null;
+        }
+
+        ProductStockDto productStockDto = new ProductStockDto();
+
+        productStockDto.setProductId( productStockProductId( productStock ) );
+        productStockDto.setId( productStock.getId() );
+        productStockDto.setProductStock( productStock.getProductStock() );
+
+        return productStockDto;
     }
 
     protected ProductCategory productDtoToProductCategory(ProductDto productDto) {
@@ -163,5 +194,32 @@ public class ProductMapperImpl implements ProductMapper {
             return null;
         }
         return price;
+    }
+
+    protected Product productStockDtoToProduct(ProductStockDto productStockDto) {
+        if ( productStockDto == null ) {
+            return null;
+        }
+
+        Product.ProductBuilder product = Product.builder();
+
+        product.id( productStockDto.getProductId() );
+
+        return product.build();
+    }
+
+    private Long productStockProductId(ProductStock productStock) {
+        if ( productStock == null ) {
+            return null;
+        }
+        Product product = productStock.getProduct();
+        if ( product == null ) {
+            return null;
+        }
+        Long id = product.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
     }
 }
