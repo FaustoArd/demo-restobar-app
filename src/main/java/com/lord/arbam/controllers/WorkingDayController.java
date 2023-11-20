@@ -67,9 +67,9 @@ public class WorkingDayController {
 		return new ResponseEntity<WorkingDayDto>(workingDayDto,HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/waitress")
-	ResponseEntity<WorkingDayDto> deleteWaitressById(@RequestParam Long waitressId,@RequestParam Long workingDayId){
-		WorkingDay day = workingDayService.deleteWaitressById(waitressId, workingDayId);
+	@DeleteMapping("/employees")
+	ResponseEntity<WorkingDayDto> deleteEmployeeById(@RequestParam Long employeesId,@RequestParam Long workingDayId){
+		WorkingDay day = workingDayService.deleteEmployeesById(employeesId, workingDayId);
 		WorkingDayDto dayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(day);
 		return new ResponseEntity<WorkingDayDto>(dayDto,HttpStatus.OK);
 	}
@@ -77,10 +77,11 @@ public class WorkingDayController {
 	ResponseEntity<Boolean> isDayStarted(@RequestParam("workingDayId") Long workingDayId) {
 		return new ResponseEntity<Boolean>(workingDayService.isWorkingDayStarted(workingDayId),HttpStatus.OK);
 	}
-	@GetMapping("/find_waitresses")
-	ResponseEntity<List<EmployeeDto>> findCurrentWaitresses(@RequestParam Long workingDayId){
-		List<Employee> waitresses = workingDayService.findCurrentWaitressSelected(workingDayId);
-		List<EmployeeDto> waitressesDto = EmployeeMapper.INSTANCE.toEmployeesDto(waitresses);
-		return new ResponseEntity<List<EmployeeDto>>(waitressesDto,HttpStatus.OK);
+	@GetMapping("/find_employees"
+			+ "")
+	ResponseEntity<List<EmployeeDto>> findCurrentEmployees(@RequestParam Long workingDayId){
+		List<Employee> employees = workingDayService.findCurrentEmployeesSelected(workingDayId);
+		List<EmployeeDto> employeesDto = EmployeeMapper.INSTANCE.toEmployeesDto(employees);
+		return new ResponseEntity<List<EmployeeDto>>(employeesDto,HttpStatus.OK);
 	}
 }

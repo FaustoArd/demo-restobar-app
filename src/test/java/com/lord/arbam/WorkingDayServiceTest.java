@@ -106,7 +106,7 @@ public class WorkingDayServiceTest {
 	void deleteEmployeeFromWorkingDayTest() {
 		long waitressId = 2L;
 		long workingDayId = 1L;
-		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
+		WorkingDay day =  workingDayService.deleteEmployeesById(waitressId, workingDayId);
 		assertEquals(day.getEmployees().size(), 2);
 		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
 		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
@@ -118,7 +118,7 @@ public class WorkingDayServiceTest {
 	void deleteAnotherEmployeeFromWorkingDayTest() {
 		long waitressId = 1L;
 		long workingDayId = 1L;
-		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
+		WorkingDay day =  workingDayService.deleteEmployeesById(waitressId, workingDayId);
 		assertEquals(day.getEmployees().size(), 1);
 		assertTrue(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
 		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());
@@ -130,7 +130,7 @@ public class WorkingDayServiceTest {
 	void deleteLastEmployeeFromWorkingDayTest() {
 		long waitressId = 3L;
 		long workingDayId = 1L;
-		WorkingDay day =  workingDayService.deleteWaitressById(waitressId, workingDayId);
+		WorkingDay day =  workingDayService.deleteEmployeesById(waitressId, workingDayId);
 		assertEquals(day.getEmployees().size(), 0);
 		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==3L).findFirst().isPresent());
 		assertFalse(day.getEmployees().stream().filter(wt -> wt.getId()==1L).findFirst().isPresent());

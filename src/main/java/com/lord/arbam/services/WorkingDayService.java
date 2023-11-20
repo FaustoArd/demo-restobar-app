@@ -17,11 +17,11 @@ public interface WorkingDayService {
 	
 	public WorkingDay closeWorkingDay(Long workingDayId);
 	
-	public WorkingDay deleteWaitressById(Long waitressId,Long workingDayId);
+	public WorkingDay deleteEmployeesById(Long waitressId,Long workingDayId);
 	
 	public boolean isWorkingDayStarted(Long workingDayId);
 	
-	public List<Employee> findCurrentWaitressSelected(Long workingDayId);
+	public List<Employee> findCurrentEmployeesSelected(Long workingDayId);
 	
 	
 

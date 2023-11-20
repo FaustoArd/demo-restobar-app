@@ -89,8 +89,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	}
 
 	@Override
-	public WorkingDay deleteWaitressById(Long waitressId, Long workingDayId) {
-		log.info("Buscando mesera por id");
+	public WorkingDay deleteEmployeesById(Long waitressId, Long workingDayId) {
+		log.info("Buscando empleado por id");
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
 		log.info("Filtrando por id, si es distinto al id eliminado,se agrega a la lista");
 		List<Employee> waitresses = workingDay.getEmployees().stream()
@@ -107,7 +107,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	}
 
 	@Override
-	public List<Employee> findCurrentWaitressSelected(Long workingDayId) {
+	public List<Employee> findCurrentEmployeesSelected(Long workingDayId) {
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
 		return employeeRepository.findAllById(workingDay.getEmployees().stream().map(w -> w.getId()).toList());
 	}
