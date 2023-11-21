@@ -1,6 +1,9 @@
 package com.lord.arbam.services_impl;
 
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.lord.arbam.exceptions.ItemNotFoundException;
@@ -20,7 +23,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 	@Autowired
 	private final ProductStockRepository productStockRepository;
 
-	
+	private Logger log = LoggerFactory.getLogger(ProductStock.class);
 
 	@Override
 	public ProductStock saveStock(ProductStock productStock) {
@@ -34,13 +37,15 @@ public class ProductStockServiceImpl implements ProductStockService {
 
 	@Override
 	public ProductStock updateStock(ProductStock stock, Long  productId) {
-		
+		log.info("Checkeando si es nuevo stock o update");
 		Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
 		if(stockResult.isPresent()) {
+			log.info("Existente , actualizando stock");
 			ProductStock updatedStock = stockResult.get();
 			updatedStock.setProductStock(stock.getProductStock());
 			return productStockRepository.save(updatedStock);
 		}else {
+			log.info("Nuevo stock , Creando");
 			ProductStock newStock = new ProductStock(stock.getProductStock());
 			return productStockRepository.save(newStock);
 		}

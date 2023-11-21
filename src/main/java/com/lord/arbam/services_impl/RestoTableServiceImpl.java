@@ -92,7 +92,8 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Transactional
 	@Override
 	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,String paymentMethod) {
-		log.info("Iniciando el cierre de mesa id:");
+		log.info("Iniciando el cierre de mesa");
+		log.info("Metodo de pago: " + paymentMethod);
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
 		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
@@ -104,12 +105,12 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.workingDay(workingDay).build();
 		log.info("Generando backup de mesa");
 		restoTableClosedRepository.save(tableClosed);
+		log.info("Reiniciando la mesa");
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
-		log.info("Reiniciando la mesa");
 		return restoTableRepository.save(findedTable);
 	
 	}

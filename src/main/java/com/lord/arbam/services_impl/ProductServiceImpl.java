@@ -86,7 +86,9 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	@Override
 	public Product createProductStock(Product product, ProductStock stock) {
+		log.info("Recepcion de stock");
 		if (stock.getProductStock() < 0) {
+			log.info("Numero negativo");
 			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
 		} else {
 			ProductStock savedStock = productStockService.updateStock(stock, product.getId());

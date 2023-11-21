@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
@@ -362,17 +363,37 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(closedTable.getTotalTablePrice(), null);
 		assertEquals(closedTable.getPaymentMethod(),null);
 	}
+	@Test
+	@Order(21)
+	void updateAgainWorkingDay() {
+		WorkingDay day = workingDayService.findWorkingDayById(workingDayId);
+		List<Employee> ids = new ArrayList<>();
+		ids.add(new Employee(2L));
+		ids.add(new Employee(5L));
+		day.setEmployees(ids);
+		day.setTotalStartCash(new BigDecimal(10000.00));
+		WorkingDay updatedDay = workingDayService.updateWorkingDay(day);
+		assertEquals(updatedDay.getId(), workingDayId);
+		assertEquals(updatedDay.getEmployees().size(), 2);
+		assertFalse(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 1L).findFirst().isPresent());
+		assertFalse(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 3L).findFirst().isPresent());
+		assertFalse(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 4L).findFirst().isPresent());
+		assertTrue(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 2L).findFirst().isPresent());
+		assertTrue(updatedDay.getEmployees().stream().filter(wt -> wt.getId() == 5L).findFirst().isPresent());
+		assertEquals(updatedDay.getTotalStartCash().doubleValue(), 10000.00);
+
+	}
 
 	//total Table N1 = 24500.00
 	//total Table N8 = 14400.00
 	@Test
-	@Order(21)
+	@Order(22)
 	void closeWorkingDay() {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
 		assertEquals(day.getId(), workingDayId);
 		assertEquals(day.getTotalCash().doubleValue(),  38900.00);
-		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 27000.00);
-		assertEquals(day.getTotalCashWithDiscount().doubleValue(), 11900.00);
+		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 10000.00);
+		assertEquals(day.getTotalCashWithDiscount().doubleValue(), 28900.00);
 	}
 	
 
