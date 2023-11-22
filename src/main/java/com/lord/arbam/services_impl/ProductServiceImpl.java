@@ -35,25 +35,19 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final ProductPriceRepository productPriceRepository;
 
-	@Autowired
-	private final ProductStockService productStockService;
-
-	@Autowired
-	private final IngredientService ingredientService;
-
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	@Override
 	public Product findProductById(Long id) {
 		return productRepository.findById(id).orElseThrow(
-				() -> new ItemNotFoundException("No se encontro el producto. ProductServiceImpl.findProductById"));
+				() -> new ItemNotFoundException("Product not found. ProductServiceImpl.findProductById"));
 	}
 
 	@Override
 	public Product saveProduct(Product product) {
 		log.info("Creando nuevo producto");
 		ProductCategory category = productCategoryRepository.findById(product.getCategory().getId())
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
+				.orElseThrow(() -> new ItemNotFoundException("Category not found"));
 
 		ProductPrice price = productPriceRepository.save(new ProductPrice(product.getProductPrice().getPrice()));
 
@@ -65,11 +59,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product updateProduct(Product product) {
 		ProductCategory category = productCategoryRepository.findById(product.getCategory().getId())
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
+				.orElseThrow(() -> new ItemNotFoundException("Category not found"));
 
 		return productRepository.findById(product.getId()).map(p -> {
 			ProductPrice price = productPriceRepository.findById(p.getProductPrice().getId())
-					.orElseThrow(() -> new ItemNotFoundException("No se encontro el precio"));
+					.orElseThrow(() -> new ItemNotFoundException("Price not found"));
 			log.info("Actualizando el producto");
 			price.setPrice(product.getProductPrice().getPrice());
 			ProductPrice updatedPrice = productPriceRepository.save(price);
@@ -78,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
 			p.setCategory(category);
 			p.setProductPrice(updatedPrice);
 			return productRepository.save(p);
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el producto"));
+		}).orElseThrow(() -> new ItemNotFoundException("Product not found"));
 
 	}
 
@@ -87,22 +81,12 @@ public class ProductServiceImpl implements ProductService {
 	public Product createProductStock(Product product, ProductStock stock) {
 		log.info("Recepcion de stock");
 		if (stock.getProductStock() < 0) {
-			log.warn("Stock con numero negativo");
-			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
+			log.info("Stock con numero negativo");
+			throw new NegativeNumberException("Negative number is not allowed. ProductServiceImpl.createProductStock");
 		} else {
-			log.info("Guardando stock en tabla stock");
-			ProductStock savedStock = productStockService.updateStock(stock, product.getId());
-			product.setProductStock(savedStock);
 			log.info("Guardando stock en tabla producto");
-			Product savedProduct = productRepository.save(product);
-			if (savedProduct.isMixed()) {
-				log.info("descontando ingredientes.");
-				ingredientService.updateIngredientAmount(savedStock.getProductStock(), product.getId());
-				return savedProduct;
-			}
-
-			return savedProduct;
-
+			product.setProductStock(stock);
+			return productRepository.save(product);
 		}
 	}
 
@@ -111,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
 		if (productRepository.existsById(id)) {
 			productRepository.deleteById(id);
 		} else {
-			throw new ItemNotFoundException("No se encontro el producto. ProductServiceImpl.deleteProductById");
+			throw new ItemNotFoundException("Product not found. ProductServiceImpl.deleteProductById");
 		}
 
 	}

@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +31,7 @@ import com.lord.arbam.services.ProductStockService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 public class ProductUpdateStockTest {
 	
 	@Autowired
@@ -48,6 +51,8 @@ public class ProductUpdateStockTest {
 	
 	@Autowired
 	private IngredientService ingredientService;
+	
+	private Long currentStockId;
 	
 	@Test
 	@Order(1)
@@ -89,10 +94,13 @@ public class ProductUpdateStockTest {
 	
 	@Test
 	@Order(2)
-	void whenSaveProductStock_MustCreateOrUpdateProductStock_UpdateIngredientsAmount_AndReturnProduct() {
+	void whenSaveProductStock_MustCreateProductStock_UpdateIngredientsAmount_AndReturnProduct() {
 		Product product = productService.findProductById(1L);
 		ProductStock stock = new ProductStock(10);
-		Product savedProduct = productService.createProductStock(product, stock);
+		ProductStock savedStock = productStockService.updateStock(stock, 1L);
+		this.currentStockId = savedStock.getId();
+		Product savedProduct = productService.createProductStock(product, savedStock);
+		ingredientService.updateIngredientAmount(savedStock.getProductStock(), product.getId());
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
 		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
@@ -105,6 +113,7 @@ public class ProductUpdateStockTest {
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
 		assertEquals(findedPimienta.getIngredientAmount(),1000);
 	}
+	
 	@Test
 	@Order(3)
 	void checkForMixedBoolean() {
@@ -114,5 +123,26 @@ public class ProductUpdateStockTest {
 		assertTrue(trueProduct.isMixed());
 		assertEquals(trueProduct.getProductPrice().getPrice().doubleValue(), 400.00);
 		assertFalse(falseProduct.isMixed());
+	}
+	
+	@Test
+	@Order(4)
+	void udpateStockTest() {
+		Product product = productService.findProductById(1L);
+		ProductStock stock = productStockService.findStockById(this.currentStockId);
+		ProductStock savedStock = productStockService.updateStock(stock, 1L);
+		Product savedProduct = productService.createProductStock(product, savedStock);
+		ingredientService.updateIngredientAmount(savedStock.getProductStock(), product.getId());
+		Ingredient findedSal = ingredientService.findIngredientById(1L);
+		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
+		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
+		assertTrue(savedProduct.getId()!=null);
+		assertEquals(savedProduct.getProductStock().getProductStock(), 20);
+		assertTrue(findedStock.getId()!=null);
+		assertEquals(findedStock.getProductStock(), 20);
+		assertEquals(findedSal.getIngredientName(), "sal");
+		assertEquals(findedSal.getIngredientAmount(), 0);
+		assertEquals(findedPimienta.getIngredientName(), "pimienta");
+		assertEquals(findedPimienta.getIngredientAmount(),1000);
 	}
 }

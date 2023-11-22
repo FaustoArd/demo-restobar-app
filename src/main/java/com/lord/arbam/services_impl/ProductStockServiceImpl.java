@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProductStockServiceImpl implements ProductStockService {
-	
+
 	@Autowired
 	private final ProductStockRepository productStockRepository;
 
@@ -27,50 +27,57 @@ public class ProductStockServiceImpl implements ProductStockService {
 
 	@Override
 	public ProductStock saveStock(ProductStock productStock) {
-	return productStockRepository.save(productStock);
+		return productStockRepository.save(productStock);
 	}
 
 	@Override
 	public ProductStock findStockById(Long id) {
-		return productStockRepository.findById(id).orElseThrow(()-> new ItemNotFoundException("No se encontro el stock"));
+		return productStockRepository.findById(id)
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
 
 	@Override
-	public ProductStock updateStock(ProductStock stock, Long  productId) {
-		log.info("Checkeando si es nuevo stock o update");
-		Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
-		if(stockResult.isPresent()) {
-			log.info("Existente , actualizando stock");
-			ProductStock updatedStock = stockResult.get();
-			updatedStock.setProductStock(stock.getProductStock());
-			return productStockRepository.save(updatedStock);
-		}else {
-			log.info("Creando Nuevo stock");
-			ProductStock newStock = new ProductStock(stock.getProductStock());
-			return productStockRepository.save(newStock);
+	public ProductStock updateStock(ProductStock stock, Long productId) {
+		log.info("Recepcion de stock");
+		if (stock.getProductStock() < 0) {
+			log.warn("Stock con numero negativo");
+			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
+		} else {
+			log.info("Checkeando si es nuevo stock o update");
+			Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
+			if (stockResult.isPresent()) {
+				log.info("Existente , actualizando stock");
+				ProductStock updatedStock = stockResult.get();
+				updatedStock.setProductStock(stock.getProductStock());
+				return productStockRepository.save(updatedStock);
+			} else {
+				log.info("Creando Nuevo stock");
+				ProductStock newStock = new ProductStock(stock.getProductStock());
+				return productStockRepository.save(newStock);
+			}
 		}
 	}
 
 	@Override
 	public ProductStock findStockByProductId(Long id) {
 		return productStockRepository.findStockByProductId(id)
-				.orElseThrow(()-> new ItemNotFoundException("No se encontro el stock"));
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
 
 	@Transactional
 	@Override
-	public void subTractStock(Integer amount,Long productId) {
-		if(amount<1) {
+	public void subTractStock(Integer amount, Long productId) {
+		if (amount < 1) {
 			throw new NegativeNumberException("No se permite cantidad 0 , o una cantidad negativa");
 		}
 		ProductStock productStock = findStockByProductId(productId);
-		if(productStock.getProductStock()<amount) {
+		if (productStock.getProductStock() < amount) {
 			throw new ProductOutOfStockException("No hay suficiente stock");
-		}else {
-			productStock.setProductStock(productStock.getProductStock()-amount);
+		} else {
+			productStock.setProductStock(productStock.getProductStock() - amount);
 		}
 		productStockRepository.save(productStock);
-		
+
 	}
-	
+
 }
