@@ -1,5 +1,7 @@
 package com.lord.arbam.services;
 
+import java.util.List;
+
 import com.lord.arbam.models.Ingredient;
 import com.lord.arbam.models.IngredientCategory;
 
@@ -14,5 +16,7 @@ public interface IngredientService {
 	public void updateIngredientAmount(Integer amountSubtracted, Long productId);
 	
 	public void deleteIngredientById(Long id);
+	
+	public List<Ingredient> findAllIngredients();
 
 }

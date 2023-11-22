@@ -28,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import com.lord.arbam.models.Employee;
+import com.lord.arbam.models.PaymentMethod;
 import com.lord.arbam.models.Product;
 import com.lord.arbam.models.RestoTable;
 import com.lord.arbam.models.RestoTableClosed;
@@ -288,7 +289,8 @@ public class RestoTableIntegrationServicesTest {
 	@Order(17)
 	public void closeRestoTable1Test() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
-		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,"Efectivo");
+		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Efectivo").build();
+		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,paymentMethod);
 		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 
 		assertEquals(table.getTotalTablePrice().doubleValue(), 24500.00);
@@ -346,7 +348,8 @@ public class RestoTableIntegrationServicesTest {
 	@Order(20)
 	void closeRestoTable8Test() {
 		RestoTable table = restoTableService.findRestoTableById(2L);
-		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,"Tajeta de debito");
+		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tajeta de debito").build();
+		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,paymentMethod);
 		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
 				.doubleValue(), 14400.00);

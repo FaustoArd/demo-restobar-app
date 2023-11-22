@@ -62,7 +62,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	public RestoTable openRestoTable(RestoTable restoTable) {
 		Optional<RestoTable> existingTableNumber = findByTableNumber(restoTable.getTableNumber());
 		if(existingTableNumber.isPresent()) {
-			log.error("No se puede abrir la mesa, el numero ingresado ya existe");
+			log.warn("No se puede abrir la mesa, el numero ingresado ya existe");
 			throw new ValueAlreadyExistException("El numero de mesa ya existe");
 		}else {
 		RestoTable newRestotable = findRestoTableById(restoTable.getId());
@@ -78,32 +78,34 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Override
 	public RestoTable updateRestoTableTotalPrice(RestoTable restoTable, List<RestoTableOrder> orders) {
+		log.info("Buscando los totales de todas las ordenes");
 		ListIterator<RestoTableOrder> ordersIt = orders.listIterator();
 		Double updatedPrice = 0.00;
+		log.info("sumando los totales de todas las ordenes");
 		while(ordersIt.hasNext()) {
 			updatedPrice += ordersIt.next().getTotalOrderPrice().doubleValue();
 		}
-		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
 		log.info("Actualizando total de la mesa");
+		restoTable.setTotalTablePrice(new BigDecimal(updatedPrice));
 		return restoTableRepository.save(restoTable);
 	}
 	
 
 	@Transactional
 	@Override
-	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,String paymentMethod) {
+	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,PaymentMethod paymentMethod) {
 		log.info("Iniciando el cierre de mesa");
-		log.info("Metodo de pago: " + paymentMethod);
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
 		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
+		log.info("Generando copia de la mesa");
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
 				.employeeName(employee.getEmployeeName())
 				.totalPrice(findedTable.getTotalTablePrice())
-				.paymentMethod(paymentMethod)
+				.paymentMethod(paymentMethod.getPaymentMethod())
 				.workingDay(workingDay).build();
-		log.info("Generando backup de mesa");
+		
 		restoTableClosedRepository.save(tableClosed);
 		log.info("Reiniciando la mesa");
 		findedTable.setEmployee(null);

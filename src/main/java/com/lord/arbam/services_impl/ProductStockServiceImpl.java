@@ -45,7 +45,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 			updatedStock.setProductStock(stock.getProductStock());
 			return productStockRepository.save(updatedStock);
 		}else {
-			log.info("Nuevo stock , Creando");
+			log.info("Creando Nuevo stock");
 			ProductStock newStock = new ProductStock(stock.getProductStock());
 			return productStockRepository.save(newStock);
 		}

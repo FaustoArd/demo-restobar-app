@@ -1,8 +1,12 @@
 package com.lord.arbam.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +34,19 @@ public class IngredientController {
 	private final CategoryService<IngredientCategory> categoryService;
 
 	
+	@GetMapping("/all")
+	ResponseEntity<List<IngredientDto>> findAllIngredients(){
+		List<Ingredient> ingredients = ingredientService.findAllIngredients();
+		List<IngredientDto> ingredientsDto = IngredientMapper.INSTANCE.toIngredientsDto(ingredients);
+		return new ResponseEntity<List<IngredientDto>>(ingredientsDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	ResponseEntity<IngredientDto> findIngredientById(@PathVariable("id")Long id){
+		Ingredient ingredient = ingredientService.findIngredientById(id);
+		IngredientDto ingredientDto = IngredientMapper.INSTANCE.toIngredientDto(ingredient);
+		return new ResponseEntity<IngredientDto>(ingredientDto,HttpStatus.OK);
+	}
 	
 	@PostMapping("/")
 	ResponseEntity<IngredientDto> saveIngredient(@RequestBody IngredientDto ingredientDto){

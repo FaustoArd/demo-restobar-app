@@ -52,9 +52,9 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product saveProduct(Product product) {
 		log.info("Creando nuevo producto");
-		ProductCategory category = productCategoryRepository.findById(product.getCategory()
-				.getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro la categoria"));
-				
+		ProductCategory category = productCategoryRepository.findById(product.getCategory().getId())
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
+
 		ProductPrice price = productPriceRepository.save(new ProductPrice(product.getProductPrice().getPrice()));
 
 		Product newProduct = Product.builder().category(category).productName(product.getProductName())
@@ -65,13 +65,12 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product updateProduct(Product product) {
 		ProductCategory category = productCategoryRepository.findById(product.getCategory().getId())
-				.orElseThrow(()-> new ItemNotFoundException("No se encontro la categoria"));
-				
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
 
 		return productRepository.findById(product.getId()).map(p -> {
 			ProductPrice price = productPriceRepository.findById(p.getProductPrice().getId())
-					.orElseThrow(()-> new ItemNotFoundException("No se encontro el precio"));
-					
+					.orElseThrow(() -> new ItemNotFoundException("No se encontro el precio"));
+			log.info("Actualizando el producto");
 			price.setPrice(product.getProductPrice().getPrice());
 			ProductPrice updatedPrice = productPriceRepository.save(price);
 			p.setId(product.getId());
@@ -88,18 +87,22 @@ public class ProductServiceImpl implements ProductService {
 	public Product createProductStock(Product product, ProductStock stock) {
 		log.info("Recepcion de stock");
 		if (stock.getProductStock() < 0) {
-			log.info("Numero negativo");
+			log.warn("Stock con numero negativo");
 			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
 		} else {
+			log.info("Guardando stock en tabla stock");
 			ProductStock savedStock = productStockService.updateStock(stock, product.getId());
 			product.setProductStock(savedStock);
+			log.info("Guardando stock en tabla producto");
 			Product savedProduct = productRepository.save(product);
 			if (savedProduct.isMixed()) {
+				log.info("descontando ingredientes.");
 				ingredientService.updateIngredientAmount(savedStock.getProductStock(), product.getId());
 				return savedProduct;
-			} else {
-				return savedProduct;
 			}
+
+			return savedProduct;
+
 		}
 	}
 

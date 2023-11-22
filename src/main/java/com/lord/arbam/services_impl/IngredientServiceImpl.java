@@ -67,13 +67,14 @@ public class IngredientServiceImpl implements IngredientService {
 
 	}
 
-	@Transactional
+	/** This method find the ingredients assigned to the product, and subtract the ingredient amount by the aggregated product stock **/
+	/**Ej: the manager add a pepperoni stock of 50, if a pizza consumes 300gr muzzarela  and 400gr of yeast the discounted form the ingredient stock   **/
 	@Override
 	public void updateIngredientAmount(Integer stockCreated, Long productId) {
 		List<ProductMix> mixes = productMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
-		ListIterator<ProductMix> it = mixes.listIterator();
+		ListIterator<ProductMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
-		it.forEachRemaining(mix -> {
+		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
 			ingredient
 					.setIngredientAmount(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount()));
@@ -81,5 +82,10 @@ public class IngredientServiceImpl implements IngredientService {
 		});
 		ingredientRepository.saveAll(ingredients);
 
+	}
+
+	@Override
+	public List<Ingredient> findAllIngredients() {
+		return (List<Ingredient>)ingredientRepository.findAll();
 	}
 }

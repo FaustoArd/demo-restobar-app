@@ -15,7 +15,7 @@ public interface RestoTableService {
 	
 	public RestoTable openRestoTable(RestoTable restoTable);
 	
-	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,String paymentMethod);
+	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,PaymentMethod paymentMethod);
 	
 	public List<RestoTable> findAllByOrderByIdAsc();
 	

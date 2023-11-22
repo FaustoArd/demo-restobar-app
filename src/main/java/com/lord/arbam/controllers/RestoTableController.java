@@ -82,7 +82,8 @@ public class RestoTableController {
 	
 	@PutMapping("/close_table")
 	ResponseEntity<String> closeTable(@RequestParam("restoTableId")
-	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestParam("paymentMethod")String paymentMethod){
+	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestBody PaymentMethod paymentMethod){
+		
 		restoTableService.closeRestoTable(restoTableId,workingDayId,paymentMethod);
 		return new ResponseEntity<String>(gson.toJson("La mesa fue cerrada con exito"),HttpStatus.OK);
 	}
