@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +31,7 @@ import com.lord.arbam.services.ProductStockService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 public class ProductUpdateStockTest {
 	
 	@Autowired
@@ -98,6 +101,7 @@ public class ProductUpdateStockTest {
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
 		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
+		this.currentStockId = findedStock.getId();
 		assertTrue(savedProduct.getId()!=null);
 		assertEquals(savedProduct.getProductStock().getProductStock(), 10);
 		assertTrue(findedStock.getId()!=null);

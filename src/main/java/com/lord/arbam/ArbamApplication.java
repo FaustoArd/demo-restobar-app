@@ -51,7 +51,7 @@ public class ArbamApplication {
 		SpringApplication.run(ArbamApplication.class, args);
 	}
 
-	@Bean
+	//@Bean
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
