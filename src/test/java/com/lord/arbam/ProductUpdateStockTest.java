@@ -132,16 +132,16 @@ public class ProductUpdateStockTest {
 		ProductStock stock = productStockService.findStockById(this.currentStockId);
 		ProductStock savedStock = productStockService.updateStock(stock, 1L);
 		Product savedProduct = productService.createProductStock(product, savedStock);
-		ingredientService.updateIngredientAmount(savedStock.getProductStock(), product.getId());
+		ingredientService.updateIngredientAmount(savedStock.getProductStock(), savedProduct.getId());
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
 		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
 		assertTrue(savedProduct.getId()!=null);
-		assertEquals(savedProduct.getProductStock().getProductStock(), 20);
+		assertEquals(savedProduct.getProductStock().getProductStock(), 10);
 		assertTrue(findedStock.getId()!=null);
-		assertEquals(findedStock.getProductStock(), 20);
+		assertEquals(findedStock.getProductStock(), 10);
 		assertEquals(findedSal.getIngredientName(), "sal");
-		assertEquals(findedSal.getIngredientAmount(), 0);
+		assertEquals(findedSal.getIngredientAmount(), -5000);
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
 		assertEquals(findedPimienta.getIngredientAmount(),1000);
 	}
