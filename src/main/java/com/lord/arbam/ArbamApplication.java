@@ -109,12 +109,7 @@ public class ArbamApplication {
 			ProductCategory pCategory3 = ProductCategory.builder().categoryName("Cerveza").build();
 			productCategoryService.saveCategory(pCategory3);
 
-			IngredientCategory ingredientCategory1 = IngredientCategory.builder().categoryName("Salsa de tomate").build();
-			ingredientCategoryService.saveCategory(ingredientCategory1);
-			IngredientCategory ingredientCategory2 = IngredientCategory.builder().categoryName("Micelaneos").build();
-			ingredientCategoryService.saveCategory(ingredientCategory2);
-
-			
+		
 			Product product1 = Product.builder().productName("Grande Muzza").category(pCategory1)
 					.productPrice(new ProductPrice(new BigDecimal(1500.00))).build();
 			Product savedProduct1 = productService.saveProduct(product1);
@@ -141,6 +136,13 @@ public class ArbamApplication {
 
 			IngredientCategory ingredientCategory3 = IngredientCategory.builder().categoryName("Especias").build();
 			IngredientCategory savedIngredientCategory3 = ingredientCategoryService.saveCategory(ingredientCategory3);
+			IngredientCategory ingredientCategory1 = IngredientCategory.builder().categoryName("Salsa de tomate").build();
+			ingredientCategoryService.saveCategory(ingredientCategory1);
+			IngredientCategory ingredientCategory2 = IngredientCategory.builder().categoryName("Micelaneos").build();
+			ingredientCategoryService.saveCategory(ingredientCategory2);
+
+			
+			
 
 			Ingredient sal = Ingredient.builder().ingredientName("sal").ingredientAmount(5000).build();
 			Ingredient savedSal = ingredientService.saveIngredient(savedIngredientCategory3, sal);
