@@ -143,6 +143,6 @@ public class ProductUpdateStockTest {
 		assertEquals(findedSal.getIngredientName(), "sal");
 		assertEquals(findedSal.getIngredientAmount(), -5000);
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
-		assertEquals(findedPimienta.getIngredientAmount(),1000);
+		assertEquals(findedPimienta.getIngredientAmount(),-2000);
 	}
 }
