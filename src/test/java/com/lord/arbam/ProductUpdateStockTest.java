@@ -82,10 +82,10 @@ public class ProductUpdateStockTest {
 		IngredientCategory especias = IngredientCategory.builder().categoryName("Especias").build();
 		IngredientCategory savedEspecias = ingredientCategoryService.saveCategory(especias);
 
-		Ingredient sal = Ingredient.builder().ingredientName("sal").ingredientAmount(5000).build();
+		Ingredient sal = Ingredient.builder().ingredientName("sal").ingredientAmount(4000).build();
 		Ingredient savedSal = ingredientService.saveIngredient(savedEspecias, sal);
 
-		Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
+		Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(8000).build();
 		Ingredient savedPimienta = ingredientService.saveIngredient(savedEspecias, pimienta);
 
 		IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedGrandeMuza).ingredientAmount(500)
@@ -117,9 +117,9 @@ public class ProductUpdateStockTest {
 		assertTrue(findedStock.getId() != null);
 		assertEquals(findedStock.getProductStock(), 5);
 		assertEquals(findedSal.getIngredientName(), "sal");
-		assertEquals(findedSal.getIngredientAmount(), 2500);
+		assertEquals(findedSal.getIngredientAmount(), 1500);
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
-		assertEquals(findedPimienta.getIngredientAmount(), 2500);
+		assertEquals(findedPimienta.getIngredientAmount(), 6500);
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class ProductUpdateStockTest {
 		RuntimeException exception = Assertions.assertThrows(NegativeNumberException.class, ()->{ 
 			
 			Product product = productService.findProductById(1L);
-			ProductStock newStock = new ProductStock(8);
+			ProductStock newStock = new ProductStock(10);
 			if(product.isMixed()) {
 			ingredientService.updateIngredientAmount(newStock.getProductStock(), product.getId());
 			}
@@ -155,6 +155,13 @@ public class ProductUpdateStockTest {
 	@Order(5)
 	void whenFindProductStockById_StockQuantityMustBeSameAsMethodTwo(){
 		ProductStock stock = productStockService.findStockById(currentStockId);
+		Ingredient findedSal = ingredientService.findIngredientById(1L);
+		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
+		assertEquals(findedSal.getIngredientName(), "sal");
+		assertEquals(findedSal.getIngredientAmount(), 1500);
+		assertEquals(findedPimienta.getIngredientName(), "pimienta");
+		assertEquals(findedPimienta.getIngredientAmount(), 6500);
 		assertEquals(stock.getProductStock(), 5);
+		
 	}
 }
