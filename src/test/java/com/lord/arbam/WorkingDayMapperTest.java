@@ -10,10 +10,11 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.lord.arbam.dtos.WorkingDayDto;
-import com.lord.arbam.mappers.WorkingDayMapper;
-import com.lord.arbam.models.Employee;
-import com.lord.arbam.models.WorkingDay;
+
+import com.lord.arbam.dto.WorkingDayDto;
+import com.lord.arbam.mapper.WorkingDayMapper;
+import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.WorkingDay;
 
 @SpringBootTest
 public class WorkingDayMapperTest {

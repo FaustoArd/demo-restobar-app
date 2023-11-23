@@ -1,0 +1,14 @@
+package com.lord.arbam.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.lord.arbam.model.ProductMix;
+
+public interface ProductMixRepository extends JpaRepository<ProductMix, Long> {
+
+	
+	public Optional<List<ProductMix>> findByProductId(Long id);
+}

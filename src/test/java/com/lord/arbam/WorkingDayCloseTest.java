@@ -14,8 +14,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.lord.arbam.models.WorkingDay;
-import com.lord.arbam.services.WorkingDayService;
+import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.service.WorkingDayService;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)

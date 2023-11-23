@@ -13,36 +13,36 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.lord.arbam.models.ProductCategory;
-import com.lord.arbam.models.ProductMix;
-import com.lord.arbam.models.ProductPrice;
-import com.lord.arbam.models.ProductStock;
-import com.lord.arbam.models.RestoTable;
-import com.lord.arbam.models.RestoTableOrder;
-import com.lord.arbam.models.Role;
-import com.lord.arbam.models.User;
-import com.lord.arbam.repositories.EmployeeJobRepository;
-import com.lord.arbam.repositories.PaymentMethodRepository;
-import com.lord.arbam.repositories.RestoTableRepository;
-import com.lord.arbam.repositories.RoleRepository;
-import com.lord.arbam.repositories.UserRepository;
-import com.lord.arbam.models.Employee;
-import com.lord.arbam.models.EmployeeJob;
-import com.lord.arbam.models.Ingredient;
-import com.lord.arbam.models.IngredientCategory;
-import com.lord.arbam.models.PaymentMethod;
-import com.lord.arbam.models.Product;
-import com.lord.arbam.services.AuthenticationService;
-import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.CategoryService;
-import com.lord.arbam.services.ProductMixService;
-import com.lord.arbam.services.ProductPriceService;
-import com.lord.arbam.services.ProductService;
-import com.lord.arbam.services.ProductStockService;
-import com.lord.arbam.services.RestoTableOrderService;
-import com.lord.arbam.services.RestoTableService;
-import com.lord.arbam.services.UserService;
+import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.EmployeeJob;
+import com.lord.arbam.model.Ingredient;
+import com.lord.arbam.model.IngredientCategory;
+import com.lord.arbam.model.PaymentMethod;
+import com.lord.arbam.model.Product;
+import com.lord.arbam.model.ProductCategory;
+import com.lord.arbam.model.ProductMix;
+import com.lord.arbam.model.ProductPrice;
+import com.lord.arbam.model.ProductStock;
+import com.lord.arbam.model.RestoTable;
+import com.lord.arbam.model.RestoTableOrder;
+import com.lord.arbam.model.Role;
+import com.lord.arbam.model.User;
+import com.lord.arbam.repository.EmployeeJobRepository;
+import com.lord.arbam.repository.PaymentMethodRepository;
+import com.lord.arbam.repository.RestoTableRepository;
+import com.lord.arbam.repository.RoleRepository;
+import com.lord.arbam.repository.UserRepository;
+import com.lord.arbam.service.AuthenticationService;
+import com.lord.arbam.service.CategoryService;
+import com.lord.arbam.service.EmployeeService;
+import com.lord.arbam.service.IngredientService;
+import com.lord.arbam.service.ProductMixService;
+import com.lord.arbam.service.ProductPriceService;
+import com.lord.arbam.service.ProductService;
+import com.lord.arbam.service.ProductStockService;
+import com.lord.arbam.service.RestoTableOrderService;
+import com.lord.arbam.service.RestoTableService;
+import com.lord.arbam.service.UserService;
 
 @SpringBootApplication
 public class ArbamApplication {
@@ -51,7 +51,7 @@ public class ArbamApplication {
 		SpringApplication.run(ArbamApplication.class, args);
 	}
 
-	//@Bean
+	@Bean
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,

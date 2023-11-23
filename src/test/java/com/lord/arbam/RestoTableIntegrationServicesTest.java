@@ -27,20 +27,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import com.lord.arbam.models.Employee;
-import com.lord.arbam.models.PaymentMethod;
-import com.lord.arbam.models.Product;
-import com.lord.arbam.models.RestoTable;
-import com.lord.arbam.models.RestoTableClosed;
-import com.lord.arbam.models.RestoTableOrder;
-import com.lord.arbam.models.WorkingDay;
-import com.lord.arbam.repositories.RestoTableRepository;
-import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.ProductService;
-import com.lord.arbam.services.RestoTableClosedService;
-import com.lord.arbam.services.RestoTableOrderService;
-import com.lord.arbam.services.RestoTableService;
-import com.lord.arbam.services.WorkingDayService;
+import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.PaymentMethod;
+import com.lord.arbam.model.Product;
+import com.lord.arbam.model.RestoTable;
+import com.lord.arbam.model.RestoTableClosed;
+import com.lord.arbam.model.RestoTableOrder;
+import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.repository.RestoTableRepository;
+import com.lord.arbam.service.EmployeeService;
+import com.lord.arbam.service.ProductService;
+import com.lord.arbam.service.RestoTableClosedService;
+import com.lord.arbam.service.RestoTableOrderService;
+import com.lord.arbam.service.RestoTableService;
+import com.lord.arbam.service.WorkingDayService;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
