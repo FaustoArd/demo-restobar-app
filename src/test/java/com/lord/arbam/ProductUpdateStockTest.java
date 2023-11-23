@@ -153,7 +153,7 @@ public class ProductUpdateStockTest {
 	}
 	@Test
 	@Order(5)
-	void whenFindProductStockById_StockQuantityMustBeSameAsMethodTwo(){
+	void whenFindProductStockById_StockQuantity_AndIngredientAmount_MustBeSameAsMethodTwo(){
 		ProductStock stock = productStockService.findStockById(currentStockId);
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
