@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductMixDto {
+public class IngredientMixDto {
 
 	private Long id;
 	

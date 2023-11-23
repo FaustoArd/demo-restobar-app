@@ -14,9 +14,9 @@ import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
-import com.lord.arbam.model.ProductMix;
+import com.lord.arbam.model.IngredientMix;
 import com.lord.arbam.repository.IngredientRepository;
-import com.lord.arbam.repository.ProductMixRepository;
+import com.lord.arbam.repository.IngredientMixRepository;
 import com.lord.arbam.service.IngredientService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
 	private final IngredientRepository ingredientRepository;
 
 	@Autowired
-	private final ProductMixRepository productMixRepository;
+	private final IngredientMixRepository ingredientMixRepository;
 	
 	private static Logger log = LoggerFactory.getLogger(IngredientServiceImpl.class);
 
@@ -77,13 +77,14 @@ public class IngredientServiceImpl implements IngredientService {
 	}
 
 	/** This method find the ingredients assigned to the product, and subtract the ingredient amount by the aggregated product stock **/
-	/**Ej: the manager add a pepperoni stock of 50, if a pizza consumes 300gr muzzarela  and 400gr of yeast the discounted form the ingredient stock   **/
+	/**Ej: the manager add a pepperoni stock of 10, if a pizza consumes 300gr muzzarela  and 400gr of yeast,it discount 3000gr of muzzarela and 4000gr of yeast**/
+	/*Throw Exception if the final ingredient amount is minor to zero */
 	@Transactional
 	@Override
 	public void updateIngredientAmount(Integer stockCreated, Long productId) {
 		log.info("Actualizando ingredientes despues de producir stock");
-		List<ProductMix> mixes = productMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
-		ListIterator<ProductMix> mixesIterator = mixes.listIterator();
+		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
+		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());

@@ -8,61 +8,67 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.model.Product;
-import com.lord.arbam.model.ProductMix;
-import com.lord.arbam.repository.ProductMixRepository;
+import com.lord.arbam.model.IngredientMix;
+import com.lord.arbam.repository.IngredientMixRepository;
 import com.lord.arbam.repository.ProductRepository;
-import com.lord.arbam.service.ProductMixService;
+import com.lord.arbam.service.IngredientMixService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProductMixServiceImpl implements ProductMixService {
+public class ProductMixServiceImpl implements IngredientMixService {
 
 	@Autowired
-	private final ProductMixRepository productMixRepository;
+	private final IngredientMixRepository ingredientMixRepository;
 	
+	@Autowired
 	private final ProductRepository productRepository;
 
 	
 
 	@Override
-	public ProductMix findProductMixById(Long id) {
-		return productMixRepository.findById(id)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la mezcla de ingredientes"));
+	public IngredientMix findIngredientMixById(Long id) {
+		return ingredientMixRepository.findById(id)
+				.orElseThrow(() -> new ItemNotFoundException("Ingredient mix not found"));
 	}
 
 	@Transactional
 	@Override
-	public ProductMix saveProductMix(ProductMix productMix) {
-		Product product = productRepository.findById(productMix.getProduct().getId()).orElseThrow(() -> new ItemNotFoundException("no se encontro el producto"));
+	public IngredientMix saveIngredientMix(IngredientMix ingredientMix) {
+		Product product = productRepository.findById(ingredientMix.getProduct().getId()).orElseThrow(() -> new ItemNotFoundException("Product not found"));
 		product.setMixed(true);
 		productRepository.save(product);
-		return productMixRepository.save(productMix);
+		return ingredientMixRepository.save(ingredientMix);
 	}
 
 	@Override
-	public ProductMix updateProducMix(ProductMix productMix) {
+	public IngredientMix updateIngredientMix(IngredientMix productMix) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deleteProductMixById(Long id) {
-		// TODO Auto-generated method stub
+	public void deleteIngredientMixById(Long id) {
+		if(ingredientMixRepository.existsById(id)) {
+			ingredientMixRepository.deleteById(id);
+		}else {
+			throw new ItemNotFoundException("Ingredient Mix not found");
+		}
+	
 
 	}
 
 	@Override
-	public List<ProductMix> findAllProductsMixes() {
+	public List<IngredientMix> findAllIngredientMixes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ProductMix> findByProductId(Long id) {
-		return (List<ProductMix>) productMixRepository.findByProductId(id).orElseThrow(() -> new ItemNotFoundException(
-				"No se encontro la receta."));
+	public List<IngredientMix> findByProductId(Long id) {
+		return (List<IngredientMix>) ingredientMixRepository.findByProductId(id).orElseThrow(() -> new ItemNotFoundException(
+				"Ingredient Mix not found."));
 	}
 
 }

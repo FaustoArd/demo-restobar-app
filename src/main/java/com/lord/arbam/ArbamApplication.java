@@ -20,7 +20,7 @@ import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductCategory;
-import com.lord.arbam.model.ProductMix;
+import com.lord.arbam.model.IngredientMix;
 import com.lord.arbam.model.ProductPrice;
 import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.model.RestoTable;
@@ -36,7 +36,7 @@ import com.lord.arbam.service.AuthenticationService;
 import com.lord.arbam.service.CategoryService;
 import com.lord.arbam.service.EmployeeService;
 import com.lord.arbam.service.IngredientService;
-import com.lord.arbam.service.ProductMixService;
+import com.lord.arbam.service.IngredientMixService;
 import com.lord.arbam.service.ProductPriceService;
 import com.lord.arbam.service.ProductService;
 import com.lord.arbam.service.ProductStockService;
@@ -55,7 +55,7 @@ public class ArbamApplication {
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
-			ProductMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
+			IngredientMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
 			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,
 			AuthenticationService authService, PasswordEncoder encoder,UserService userService,PaymentMethodRepository paymentMethodRepository) {
@@ -150,10 +150,10 @@ public class ArbamApplication {
 			Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
 			Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
 			
-			ProductMix mix1 = ProductMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
-			productMixService.saveProductMix(mix1);
-			ProductMix mix2 = ProductMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
-			productMixService.saveProductMix(mix2);
+			IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
+			productMixService.saveIngredientMix(mix1);
+			IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
+			productMixService.saveIngredientMix(mix2);
 			
 			Product product = productService.findProductById(1L);
 			ProductStock stock = new ProductStock(10);

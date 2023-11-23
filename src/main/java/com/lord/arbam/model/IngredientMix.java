@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name="product_mixes")
-public class ProductMix {
+public class IngredientMix {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

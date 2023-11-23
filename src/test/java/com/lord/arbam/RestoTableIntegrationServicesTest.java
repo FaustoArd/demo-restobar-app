@@ -387,8 +387,9 @@ public class RestoTableIntegrationServicesTest {
 
 	}
 
-	//total Table N1 = 24500.00
-	//total Table N8 = 14400.00
+	//total Table N1 = $24500.00
+	//total Table N8 = $14400.00
+	//total working day $38900.00
 	@Test
 	@Order(22)
 	void closeWorkingDay() {
