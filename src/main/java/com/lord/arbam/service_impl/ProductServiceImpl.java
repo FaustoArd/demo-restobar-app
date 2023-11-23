@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,5 +111,13 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findByCategoryId(Long id) {
 		return (List<Product>) productRepository.findByCategoryId(id);
 	}
+
+	@Override
+	public List<Product> findAllProductByProductNameOrderAsc() {
+		Sort sort =  Sort.by("productName");
+		return (List<Product>)productRepository.findAll(sort);
+	}
+	
+
 
 }

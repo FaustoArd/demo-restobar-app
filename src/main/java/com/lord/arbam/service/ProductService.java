@@ -20,4 +20,6 @@ public interface ProductService {
 	public List<Product> findAllProducts();
 	
 	public List<Product> findByCategoryId(Long id);
+	
+	public List<Product> findAllProductByProductNameOrderAsc();
 }

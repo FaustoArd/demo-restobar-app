@@ -67,6 +67,13 @@ public class ProductController {
 		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
 		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
 	}
+	@GetMapping("/all_asc")
+	ResponseEntity<List<ProductDto>> findAllProductsByProductNameAsc() {
+		log.info("Buscando todos los productos");
+		List<Product> products = productService.findAllProductByProductNameOrderAsc();
+		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
+		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
+	}
 	
 	
 	@GetMapping("/all_by_category/{id}")

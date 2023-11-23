@@ -37,7 +37,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Ingredient findIngredientById(Long id) {
-		log.info("Buscando ingrediento por id");
+		log.info("Buscando ingrediente por id");
 		return ingredientRepository.findById(id).orElseThrow(
 				() -> new ItemNotFoundException("No se encontro el ingrediente. RecipentServiceImpl.findRecipentById"));
 	}

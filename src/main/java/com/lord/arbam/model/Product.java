@@ -30,7 +30,7 @@ public class Product {
 	private Long id;
 	
 	
-	@Column(nullable = false,length = 150)
+	@Column(name="product_name",nullable = false,length = 150, unique=true)
 	private String productName;
 	
 	

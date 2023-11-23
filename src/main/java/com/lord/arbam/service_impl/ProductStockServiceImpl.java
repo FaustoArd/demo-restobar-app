@@ -49,7 +49,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 			if (stockResult.isPresent()) {
 				log.info("Existente , actualizando stock");
 				ProductStock updatedStock = stockResult.get();
-				updatedStock.setProductStock(stock.getProductStock());
+				updatedStock.setProductStock(updatedStock.getProductStock()+ stock.getProductStock());
 				return productStockRepository.save(updatedStock);
 			} else {
 				log.info("Creando Nuevo stock");
