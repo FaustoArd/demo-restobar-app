@@ -49,7 +49,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 	@Override
 	public RestoTableOrder findOrderById(Long id) {
 		return restoTableOrderRepository.findById(id)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la orden"));
+				.orElseThrow(() -> new ItemNotFoundException("Price not found"));
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 			log.info("orden existente,actualizando...");
 			return updateOrder(existingOrder.get(), order.getProductQuantity());
 		}
-		Product product = productRepository.findById(order.getProduct().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el producto"));
-		RestoTable table = restoTableRepository.findById(order.getRestoTable().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa"));
+		Product product = productRepository.findById(order.getProduct().getId()).orElseThrow(()-> new ItemNotFoundException("Product not found"));
+		RestoTable table = restoTableRepository.findById(order.getRestoTable().getId()).orElseThrow(()-> new ItemNotFoundException("Resto table not found"));
 		RestoTableOrder newOrder = RestoTableOrder.builder().product(product)
 				.productQuantity(order.getProductQuantity()).restoTable(table)
 				.totalOrderPrice(
@@ -75,7 +75,7 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 	@Override
 	public RestoTableOrder updateOrder(RestoTableOrder existingOrder, Integer productquantity) {
 		ProductPrice price = productPriceRepository.findByProductId(existingOrder.getProduct().getId())
-				.orElseThrow(()-> new ItemNotFoundException("No se encontro el precio"));
+				.orElseThrow(()-> new ItemNotFoundException("Price not found"));
 		existingOrder.setProductQuantity(existingOrder.getProductQuantity() + productquantity);
 		existingOrder.setTotalOrderPrice(price.getPrice().multiply(new BigDecimal(existingOrder.getProductQuantity())));
 		log.info("orden actualizada.");
@@ -95,14 +95,14 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 			RestoTableOrder orderToBeDeleted = findOrderById(id);
 			ProductStock stock = productStockRepository
 					.findById(orderToBeDeleted.getProduct().getProductStock().getId())
-					.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
+					.orElseThrow(() -> new ItemNotFoundException("Stock not found"));
 			stock.setProductStock(stock.getProductStock() + orderToBeDeleted.getProductQuantity());
 			productStockRepository.save(stock);
 			log.info("Orden eliminada. id:" + id + ", Stock agregado: " + orderToBeDeleted.getProductQuantity());
 			restoTableOrderRepository.deleteById(id);
 		} else {
 			log.error("La orden a eliminar no existe.");
-			throw new ItemNotFoundException("No se encontro la orden");
+			throw new ItemNotFoundException("Order not found");
 		}
 
 	}

@@ -22,7 +22,7 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	@Override
 	public RestoTableClosed findTableClosedById(Long id) {
 		return restoTableClosedRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
-				"No se enconto la mesa cerrada"));
+				"Closed table not found"));
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 			restoTableClosedRepository.deleteById(id);
 		} else {
 			throw new ItemNotFoundException(
-					"No se encontro la mesa cerrada");
+					"Closed table not found");
 		}
 	}
 

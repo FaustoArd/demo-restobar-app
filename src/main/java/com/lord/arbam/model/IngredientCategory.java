@@ -25,7 +25,7 @@ public class IngredientCategory {
 	private Long id;
 	
 	
-	@Column(name="category_name", nullable = false)
+	@Column(name="category_name", nullable = false,unique=true)
 	private String categoryName;
 
 }

@@ -31,7 +31,7 @@ public class Ingredient {
 	private Long id;
 	
 	
-	@Column(name="ingredient_name", nullable = false)
+	@Column(name="ingredient_name", nullable = false,unique=true)
 	private String ingredientName;
 	
 	@Column(name="ingredient_amount")

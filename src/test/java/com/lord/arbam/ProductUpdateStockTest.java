@@ -54,15 +54,15 @@ public class ProductUpdateStockTest {
 
 	@Autowired
 	private IngredientService ingredientService;
-<<<<<<< HEAD
+
 	
 	private Long currentStockId;
 	
-=======
 
-	private Long currentStockId;
 
->>>>>>> modify-product-stock
+
+
+
 	@Test
 	@Order(1)
 	void setup() {
@@ -118,17 +118,9 @@ public class ProductUpdateStockTest {
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
 		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
-<<<<<<< HEAD
-		this.currentStockId = findedStock.getId();
-		assertTrue(savedProduct.getId()!=null);
-		assertEquals(savedProduct.getProductStock().getProductStock(), 10);
-		assertTrue(findedStock.getId()!=null);
-		assertEquals(findedStock.getProductStock(), 10);
-=======
 		assertTrue(savedProduct.getId() != null);
 		assertEquals(savedProduct.getProductStock().getProductStock(), 5);
 		assertTrue(findedStock.getId() != null);
->>>>>>> modify-product-stock
 		assertEquals(findedSal.getIngredientName(), "sal");
 		assertEquals(findedSal.getIngredientAmount(), 1500);
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
@@ -145,27 +137,6 @@ public class ProductUpdateStockTest {
 		assertEquals(trueProduct.getProductPrice().getPrice().doubleValue(),400.00);
 		assertFalse(falseProduct.isMixed());
 	}
-<<<<<<< HEAD
-	@Test
-	@Order(4)
-	void udpateStockTest() {
-		Product product = productService.findProductById(1L);
-		ProductStock stock = productStockService.findStockById(this.currentStockId);
-		Product savedProduct = productService.createProductStock(product, stock);
-		Ingredient findedSal = ingredientService.findIngredientById(1L);
-		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
-		ProductStock findedStock = productStockService.findStockByProductId(savedProduct.getId());
-		assertTrue(savedProduct.getId()!=null);
-		assertEquals(savedProduct.getProductStock().getProductStock(), 10);
-		assertTrue(findedStock.getId()!=null);
-		assertEquals(findedStock.getProductStock(), 10);
-		assertEquals(findedSal.getIngredientName(), "sal");
-		assertEquals(findedSal.getIngredientAmount(), 0);
-		assertEquals(findedPimienta.getIngredientName(), "pimienta");
-		assertEquals(findedPimienta.getIngredientAmount(),1000);
-	}
-}
-=======
 
 	@Test
 	@Order(4)
@@ -254,4 +225,4 @@ public class ProductUpdateStockTest {
 	
 	}
 
->>>>>>> modify-product-stock
+

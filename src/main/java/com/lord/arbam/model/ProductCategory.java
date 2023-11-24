@@ -24,7 +24,7 @@ public class ProductCategory {
 	private Long id;
 	
 	
-	@Column(name="category_name")
+	@Column(name="category_name",unique = true, nullable = false)
 	private String categoryName;
 	
 	

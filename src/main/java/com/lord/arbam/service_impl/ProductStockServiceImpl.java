@@ -34,7 +34,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 	@Override
 	public ProductStock findStockById(Long id) {
 		return productStockRepository.findById(id)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
+				.orElseThrow(() -> new ItemNotFoundException("Stock not found"));
 	}
 
 	@Transactional
@@ -43,7 +43,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 		log.info("Recepcion de stock");
 		if (stock.getProductStock() < 0) {
 			log.warn("Stock con numero negativo");
-			throw new NegativeNumberException("No se permite un numero negativo. ProductServiceImpl.saveProductStock");
+			throw new NegativeNumberException("Negative number is not allowed");
 		} else {
 			log.info("Checkeando si es nuevo stock o update");
 			Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
