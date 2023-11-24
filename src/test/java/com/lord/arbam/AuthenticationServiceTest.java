@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.lord.arbam.models.Role;
-import com.lord.arbam.models.User;
-import com.lord.arbam.repositories.RoleRepository;
-import com.lord.arbam.services.UserService;
+import com.lord.arbam.model.Role;
+import com.lord.arbam.model.User;
+import com.lord.arbam.repository.RoleRepository;
+import com.lord.arbam.service.UserService;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)

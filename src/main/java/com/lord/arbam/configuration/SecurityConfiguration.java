@@ -24,7 +24,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import com.lord.arbam.utils.RSAKeyProperties;
+
+import com.lord.arbam.util.RSAKeyProperties;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -72,6 +73,7 @@ public class SecurityConfiguration {
 			auth.requestMatchers("/api/v1/arbam/orders/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/employees/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/working_days/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/ingredient_mixes/**").hasAnyRole("USER","ADMIN");
 			auth.anyRequest().authenticated();
 		});
 		http.oauth2ResourceServer(oauth ->{

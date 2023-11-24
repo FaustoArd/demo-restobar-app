@@ -13,36 +13,36 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.lord.arbam.models.ProductCategory;
-import com.lord.arbam.models.ProductMix;
-import com.lord.arbam.models.ProductPrice;
-import com.lord.arbam.models.ProductStock;
-import com.lord.arbam.models.RestoTable;
-import com.lord.arbam.models.RestoTableOrder;
-import com.lord.arbam.models.Role;
-import com.lord.arbam.models.User;
-import com.lord.arbam.repositories.EmployeeJobRepository;
-import com.lord.arbam.repositories.PaymentMethodRepository;
-import com.lord.arbam.repositories.RestoTableRepository;
-import com.lord.arbam.repositories.RoleRepository;
-import com.lord.arbam.repositories.UserRepository;
-import com.lord.arbam.models.Employee;
-import com.lord.arbam.models.EmployeeJob;
-import com.lord.arbam.models.Ingredient;
-import com.lord.arbam.models.IngredientCategory;
-import com.lord.arbam.models.PaymentMethod;
-import com.lord.arbam.models.Product;
-import com.lord.arbam.services.AuthenticationService;
-import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.IngredientService;
-import com.lord.arbam.services.CategoryService;
-import com.lord.arbam.services.ProductMixService;
-import com.lord.arbam.services.ProductPriceService;
-import com.lord.arbam.services.ProductService;
-import com.lord.arbam.services.ProductStockService;
-import com.lord.arbam.services.RestoTableOrderService;
-import com.lord.arbam.services.RestoTableService;
-import com.lord.arbam.services.UserService;
+import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.EmployeeJob;
+import com.lord.arbam.model.Ingredient;
+import com.lord.arbam.model.IngredientCategory;
+import com.lord.arbam.model.PaymentMethod;
+import com.lord.arbam.model.Product;
+import com.lord.arbam.model.ProductCategory;
+import com.lord.arbam.model.IngredientMix;
+import com.lord.arbam.model.ProductPrice;
+import com.lord.arbam.model.ProductStock;
+import com.lord.arbam.model.RestoTable;
+import com.lord.arbam.model.RestoTableOrder;
+import com.lord.arbam.model.Role;
+import com.lord.arbam.model.User;
+import com.lord.arbam.repository.EmployeeJobRepository;
+import com.lord.arbam.repository.PaymentMethodRepository;
+import com.lord.arbam.repository.RestoTableRepository;
+import com.lord.arbam.repository.RoleRepository;
+import com.lord.arbam.repository.UserRepository;
+import com.lord.arbam.service.AuthenticationService;
+import com.lord.arbam.service.CategoryService;
+import com.lord.arbam.service.EmployeeService;
+import com.lord.arbam.service.IngredientService;
+import com.lord.arbam.service.IngredientMixService;
+import com.lord.arbam.service.ProductPriceService;
+import com.lord.arbam.service.ProductService;
+import com.lord.arbam.service.ProductStockService;
+import com.lord.arbam.service.RestoTableOrderService;
+import com.lord.arbam.service.RestoTableService;
+import com.lord.arbam.service.UserService;
 
 @SpringBootApplication
 public class ArbamApplication {
@@ -55,7 +55,7 @@ public class ArbamApplication {
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
-			ProductMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
+			IngredientMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
 			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,
 			AuthenticationService authService, PasswordEncoder encoder,UserService userService,PaymentMethodRepository paymentMethodRepository) {
@@ -150,10 +150,10 @@ public class ArbamApplication {
 			Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
 			Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
 			
-			ProductMix mix1 = ProductMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
-			productMixService.saveProductMix(mix1);
-			ProductMix mix2 = ProductMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
-			productMixService.saveProductMix(mix2);
+			IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
+			productMixService.saveIngredientMix(mix1);
+			IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
+			productMixService.saveIngredientMix(mix2);
 			
 			Product product = productService.findProductById(1L);
 			ProductStock stock = new ProductStock(10);

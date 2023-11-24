@@ -16,14 +16,15 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.lord.arbam.dtos.WorkingDayDto;
-import com.lord.arbam.mappers.WorkingDayMapper;
-import com.lord.arbam.models.Employee;
-import com.lord.arbam.models.EmployeeJob;
-import com.lord.arbam.models.WorkingDay;
-import com.lord.arbam.repositories.EmployeeJobRepository;
-import com.lord.arbam.services.EmployeeService;
-import com.lord.arbam.services.WorkingDayService;
+
+import com.lord.arbam.dto.WorkingDayDto;
+import com.lord.arbam.mapper.WorkingDayMapper;
+import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.EmployeeJob;
+import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.repository.EmployeeJobRepository;
+import com.lord.arbam.service.EmployeeService;
+import com.lord.arbam.service.WorkingDayService;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)

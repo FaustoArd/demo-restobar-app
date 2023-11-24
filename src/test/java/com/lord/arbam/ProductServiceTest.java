@@ -1,40 +1,31 @@
 package com.lord.arbam;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.when;
+
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-
-import com.lord.arbam.dtos.ProductDto;
-import com.lord.arbam.mappers.ProductMapper;
-import com.lord.arbam.models.ProductCategory;
-import com.lord.arbam.models.Product;
-import com.lord.arbam.models.ProductPrice;
-import com.lord.arbam.models.ProductStock;
-import com.lord.arbam.repositories.ProductCategoryRepository;
-import com.lord.arbam.repositories.ProductPriceRepository;
-import com.lord.arbam.repositories.ProductStockRepository;
-import com.lord.arbam.services_impl.ProductCategoryServiceImpl;
-import com.lord.arbam.services_impl.ProductServiceImpl;
-
-import net.bytebuddy.NamingStrategy.Suffixing.BaseNameResolver.ForGivenType;
-
+import com.lord.arbam.dto.ProductDto;
+import com.lord.arbam.mapper.ProductMapper;
+import com.lord.arbam.model.Product;
+import com.lord.arbam.model.ProductCategory;
+import com.lord.arbam.model.ProductPrice;
+import com.lord.arbam.model.ProductStock;
+import com.lord.arbam.repository.ProductCategoryRepository;
+import com.lord.arbam.repository.ProductPriceRepository;
+import com.lord.arbam.repository.ProductStockRepository;
+import com.lord.arbam.service_impl.ProductCategoryServiceImpl;
+import com.lord.arbam.service_impl.ProductServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)

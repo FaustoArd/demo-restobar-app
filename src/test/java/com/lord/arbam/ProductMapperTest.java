@@ -6,9 +6,10 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.lord.arbam.dtos.ProductDto;
-import com.lord.arbam.mappers.ProductMapper;
-import com.lord.arbam.models.Product;
+
+import com.lord.arbam.dto.ProductDto;
+import com.lord.arbam.mapper.ProductMapper;
+import com.lord.arbam.model.Product;
 
 
 
