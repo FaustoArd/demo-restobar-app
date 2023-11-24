@@ -11,4 +11,6 @@ public interface IngredientMixRepository extends JpaRepository<IngredientMix, Lo
 
 	
 	public Optional<List<IngredientMix>> findByProductId(Long id);
+	
+	public IngredientMix findByProductIdAndIngredientId(Long productId,Long ingredientId);
 }

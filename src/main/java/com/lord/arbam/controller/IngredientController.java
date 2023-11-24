@@ -34,6 +34,8 @@ public class IngredientController {
 	
 	@Autowired
 	private final CategoryService<IngredientCategory> categoryService;
+	
+	
 
 	
 	

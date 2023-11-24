@@ -26,7 +26,7 @@ public class  ProductCategoryServiceImpl implements CategoryService<ProductCateg
 	@Override
 	public ProductCategory findCategoryById(Long id) {
 		return productCategoryRepository.findById(id)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria."));
+				.orElseThrow(() -> new ItemNotFoundException("Category Not found"));
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class  ProductCategoryServiceImpl implements CategoryService<ProductCateg
 		return productCategoryRepository.findById(category.getId()).map(cat -> {
 			cat.setCategoryName(category.getCategoryName());
 			return productCategoryRepository.save(cat);
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro la categoria"));
+		}).orElseThrow(() -> new ItemNotFoundException("Category Not found"));
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class  ProductCategoryServiceImpl implements CategoryService<ProductCateg
 		if (productCategoryRepository.existsById(id)) {
 			productCategoryRepository.deleteById(id);
 		} else {
-			throw new ItemNotFoundException("No se encontro la categoria");
+			throw new ItemNotFoundException("Category Not found");
 		}
 
 		
