@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
@@ -14,7 +15,7 @@ import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.repository.ProductStockRepository;
 import com.lord.arbam.service.ProductStockService;
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -36,7 +37,8 @@ public class ProductStockServiceImpl implements ProductStockService {
 		return productStockRepository.findById(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
-
+	
+	@Transactional
 	@Override
 	public ProductStock updateStock(ProductStock stock, Long productId) {
 		log.info("Recepcion de stock");
@@ -58,16 +60,43 @@ public class ProductStockServiceImpl implements ProductStockService {
 			}
 		}
 	}
+	
+	@Transactional
+	@Override
+	public ProductStock reduceStock(ProductStock stockReduced, Long productId) {
+		log.info("Eliminacion de stock");
+		if(stockReduced.getProductStock()<0) {
+			log.warn("Stock con numero negativo");
+			throw new NegativeNumberException("Negative number is not allowed.");
+		}else {
+			Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
+			if(stockResult.isEmpty()) {
+				log.info("Stock inexistente");
+				throw new ItemNotFoundException("Stock not found");
+			}else {
+				log.info("Eliminando stock");
+				ProductStock deletedStock = stockResult.get();
+				deletedStock.setProductStock(deletedStock.getProductStock() - stockReduced.getProductStock());
+				return productStockRepository.save(deletedStock);
+			}
+		}
+		
+	}
+	
+	
+	
 
 	@Override
 	public ProductStock findStockByProductId(Long id) {
 		return productStockRepository.findStockByProductId(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
+	
+
 
 	@Transactional
 	@Override
-	public void subTractStock(Integer amount, Long productId) {
+	public void subTractStockFromOrder(Integer amount, Long productId) {
 		if (amount < 1) {
 			throw new NegativeNumberException("No se permite cantidad 0 , o una cantidad negativa");
 		}
@@ -80,5 +109,8 @@ public class ProductStockServiceImpl implements ProductStockService {
 		productStockRepository.save(productStock);
 
 	}
+
+	
+	
 
 }

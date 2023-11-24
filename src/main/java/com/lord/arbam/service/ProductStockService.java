@@ -10,9 +10,11 @@ public interface ProductStockService {
 	
 	public ProductStock updateStock(ProductStock stock, Long  productId);
 	
+	public ProductStock reduceStock(ProductStock stock,Long productId);
+	
 	public ProductStock findStockByProductId(Long productId);
 	
-	public void subTractStock(Integer amount,Long productId);
+	public void subTractStockFromOrder(Integer amount,Long productId);
 	
 	
 

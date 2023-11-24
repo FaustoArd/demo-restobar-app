@@ -32,15 +32,17 @@ public class RestoTableOrderController {
 	@Autowired
 	private final RestoTableOrderService restoTableOrderService;
 	
-	private static Gson gson = new Gson();
-	
 	@Autowired
 	private final ProductStockService productStockService;
+	
+	private static Gson gson = new Gson();
+	
+	
 	
 	@PostMapping("/create_order")
 	ResponseEntity<RestoTableOrderDto> createOrder(@RequestBody RestoTableOrderDto restoTableOrderDto){
 		
-		productStockService.subTractStock(restoTableOrderDto.getProductQuantity(), restoTableOrderDto.getProductId());
+		productStockService.subTractStockFromOrder(restoTableOrderDto.getProductQuantity(), restoTableOrderDto.getProductId());
 		RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(restoTableOrderDto);
 		RestoTableOrder createdOrder = restoTableOrderService.createOrder(order);
 		RestoTableOrderDto  createdOrderDto = RestoTableOrderMapper.INSTANCE.toOrderDto(createdOrder);

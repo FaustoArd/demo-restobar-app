@@ -101,9 +101,28 @@ public class IngredientServiceImpl implements IngredientService {
 		ingredientRepository.saveAll(ingredients);
 
 	}
+	@Override
+	public void increaseIngredientAmount(Integer stockDeleted, Long productId) {
+		log.info("Actualizando ingredientes despues de eliminar stock");
+		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
+		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
+		List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		mixesIterator.forEachRemaining(mix -> {
+			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
+			ingredient
+					.setIngredientAmount(ingredient.getIngredientAmount() + (stockDeleted * mix.getIngredientAmount()));
+			ingredients.add(ingredient);
+			
+		});
+		ingredientRepository.saveAll(ingredients);
+		
+	}
+	
 
 	@Override
 	public List<Ingredient> findAllIngredients() {
 		return (List<Ingredient>)ingredientRepository.findAll();
 	}
+
+	
 }

@@ -127,4 +127,18 @@ public class ProductController {
 		return new ResponseEntity<ProductDto>(newProductDto,HttpStatus.CREATED);
 	
 	}
+	@PutMapping("/reduce_stock")
+	ResponseEntity<String> reduceStock(@RequestParam("productId")Long productId,@RequestParam ProductStockDto stockDto){
+		Product product  = productService.findProductById(productId);
+		if(product.isMixed()) {
+			log.info("Actualizando la cantidad de ingredientes");
+			ingredientService.increaseIngredientAmount(stockDto.getProductStock(), productId);
+			
+		}
+		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
+		log.info("Eliminando stock");
+		ProductStock savedStock =productStockService.reduceStock(stock, productId);
+		return new ResponseEntity<String>(gson.toJson("Stock eliminado correctamete, cantidad total actual: " + savedStock.getProductStock() ),HttpStatus.OK);
+		
+	}
 }

@@ -115,11 +115,11 @@ public class ProductUpdateStockTest {
 		assertTrue(savedProduct.getId() != null);
 		assertEquals(savedProduct.getProductStock().getProductStock(), 5);
 		assertTrue(findedStock.getId() != null);
-		assertEquals(findedStock.getProductStock(), 5);
 		assertEquals(findedSal.getIngredientName(), "sal");
 		assertEquals(findedSal.getIngredientAmount(), 1500);
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
 		assertEquals(findedPimienta.getIngredientAmount(), 6500);
+		assertEquals(findedStock.getProductStock(), 5);
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class ProductUpdateStockTest {
 	}
 	@Test
 	@Order(5)
-	void whenFindProductStockById_StockQuantity_AndIngredientAmount_MustBeSameAsMethodTwo(){
+	void whenCheckStockAndIngredients_StockQuantity_AndIngredientAmount_MustBeSameAsMethodTwo(){
 		ProductStock stock = productStockService.findStockById(currentStockId);
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
@@ -162,6 +162,25 @@ public class ProductUpdateStockTest {
 		assertEquals(findedPimienta.getIngredientName(), "pimienta");
 		assertEquals(findedPimienta.getIngredientAmount(), 6500);
 		assertEquals(stock.getProductStock(), 5);
+		
+	}
+	@Test
+	@Order(6)
+	void whenDeleteStock_IngredientsMustBeUpdated() {
+		
+		Product product = productService.findProductById(1L);
+		ProductStock stock = new ProductStock(3);
+		if(product.isMixed()) {
+			ingredientService.increaseIngredientAmount(stock.getProductStock(), product.getId());
+		}
+		ProductStock deleteStock = productStockService.reduceStock(stock, product.getId());
+		Ingredient findedSal = ingredientService.findIngredientById(1L);
+		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
+		assertEquals(findedSal.getIngredientName(),"sal" );
+		assertEquals(findedSal.getIngredientAmount(), 3000);
+		assertEquals(findedPimienta.getIngredientName(), "pimienta");
+		assertEquals(findedPimienta.getIngredientAmount(), 7400);
+		assertEquals(deleteStock.getProductStock(), 2);
 		
 	}
 }
