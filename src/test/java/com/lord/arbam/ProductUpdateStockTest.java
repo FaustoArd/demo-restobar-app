@@ -170,10 +170,10 @@ public class ProductUpdateStockTest {
 		
 		Product product = productService.findProductById(1L);
 		ProductStock stock = new ProductStock(3);
+		ProductStock deleteStock = productStockService.reduceStock(stock, product.getId());
 		if(product.isMixed()) {
 			ingredientService.increaseIngredientAmount(stock.getProductStock(), product.getId());
 		}
-		ProductStock deleteStock = productStockService.reduceStock(stock, product.getId());
 		Ingredient findedSal = ingredientService.findIngredientById(1L);
 		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
 		assertEquals(findedSal.getIngredientName(),"sal" );
@@ -183,4 +183,39 @@ public class ProductUpdateStockTest {
 		assertEquals(deleteStock.getProductStock(), 2);
 		
 	}
-}
+	@Test
+	@Order(7)
+	void whenDeleteStockProduceNegativeStockQuantity_ExceptionMustBeThrown() {
+		
+			RuntimeException exception = Assertions.assertThrows(NegativeNumberException.class, ()->{ 
+				
+				Product product = productService.findProductById(1L);
+				ProductStock stockReduced = new ProductStock(10);
+				ProductStock deleteStock = productStockService.reduceStock(stockReduced, product.getId());
+				if(product.isMixed()) {
+				ingredientService.increaseIngredientAmount(stockReduced.getProductStock(), product.getId());
+				}
+				
+			
+			}, "No Exception throw");
+			
+			assertTrue(exception.getMessage().equals( "Negative number, or as a result of stock reduction stock quantity is negative"));
+		
+			
+		}
+	@Test
+	@Order(8)
+	void whenCheckStockAndIngredients_StockQuantity_AndIngredientAmount_MustBeSameAsMethodSeven(){
+		ProductStock stock = productStockService.findStockById(currentStockId);
+		Ingredient findedSal = ingredientService.findIngredientById(1L);
+		Ingredient findedPimienta = ingredientService.findIngredientById(2L);
+		assertEquals(findedSal.getIngredientName(), "sal");
+		assertEquals(findedSal.getIngredientAmount(), 3000);
+		assertEquals(findedPimienta.getIngredientName(), "pimienta");
+		assertEquals(findedPimienta.getIngredientAmount(), 7400);
+		assertEquals(stock.getProductStock(), 2);
+		
+	}
+	
+	}
+

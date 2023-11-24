@@ -38,27 +38,24 @@ public class ProductController {
 
 	@Autowired
 	private final ProductService productService;
-	
+
 	@Autowired
 	private final ProductStockService productStockService;
-	
+
 	@Autowired
 	private final IngredientService ingredientService;
-	
+
 	private static final Gson gson = new Gson();
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
-	
-	
 
 	@GetMapping("/{id}")
-	ResponseEntity<ProductDto> findProductById(@PathVariable("id")Long id){
+	ResponseEntity<ProductDto> findProductById(@PathVariable("id") Long id) {
 		log.info("Buscando product por id");
 		Product findedProduct = productService.findProductById(id);
 		ProductDto findedProductDto = ProductMapper.INSTANCE.toProductDto(findedProduct);
-		return new ResponseEntity<ProductDto>(findedProductDto,HttpStatus.OK);
+		return new ResponseEntity<ProductDto>(findedProductDto, HttpStatus.OK);
 	}
-	
 
 	@GetMapping("/all")
 	ResponseEntity<List<ProductDto>> findAllProducts() {
@@ -67,6 +64,7 @@ public class ProductController {
 		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
 		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
 	}
+
 	@GetMapping("/all_asc")
 	ResponseEntity<List<ProductDto>> findAllProductsByProductNameAsc() {
 		log.info("Buscando todos los productos");
@@ -74,16 +72,14 @@ public class ProductController {
 		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
 		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/all_by_category/{id}")
-	ResponseEntity<List<ProductDto>> findAllProductsByCategoryId(@PathVariable("id")Long id){
+	ResponseEntity<List<ProductDto>> findAllProductsByCategoryId(@PathVariable("id") Long id) {
 		log.info("Buscando todos los productos por categoria");
 		List<Product> products = productService.findByCategoryId(id);
 		List<ProductDto> productsDto = ProductMapper.INSTANCE.toProductsDto(products);
-		return new ResponseEntity<List<ProductDto>>(productsDto,HttpStatus.OK);
+		return new ResponseEntity<List<ProductDto>>(productsDto, HttpStatus.OK);
 	}
-	
 
 	@PostMapping("/")
 	ResponseEntity<ProductDto> saveProduct(@RequestBody ProductDto productDto) {
@@ -103,42 +99,49 @@ public class ProductController {
 		ProductDto updatedProductDto = ProductMapper.INSTANCE.toProductDto(updatedProduct);
 		return new ResponseEntity<ProductDto>(updatedProductDto, HttpStatus.OK);
 	}
+
 	@DeleteMapping("/{id}")
-	ResponseEntity<String> deleteProduct(@PathVariable("id")Long id){
+	ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
 		Product findedProduct = productService.findProductById(id);
 		productService.deleteProductById(id);
-		return new ResponseEntity<String>(gson.toJson("Se elimino el producto:" + findedProduct.getProductName()),HttpStatus.OK);
+		return new ResponseEntity<String>(gson.toJson("Se elimino el producto:" + findedProduct.getProductName()),
+				HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/create_stock")
-	ResponseEntity<ProductDto> createStock(@RequestParam("productId")Long productId, @RequestBody ProductStockDto stockDto){
+	ResponseEntity<ProductDto> createStock(@RequestParam("productId") Long productId,
+			@RequestBody ProductStockDto stockDto) {
 		log.info("Buscando producto por id");
 		Product product = productService.findProductById(productId);
-		if(product.isMixed()) {
+		if (product.isMixed()) {
 			log.info("Actualizando la cantidad de ingredientes");
 			ingredientService.updateIngredientAmount(stockDto.getProductStock(), productId);
 		}
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
 		log.info("Creando o actualizando stock");
-		ProductStock savedStock =productStockService.updateStock(stock, productId);
+		ProductStock savedStock = productStockService.updateStock(stock, productId);
 		log.info("Guardando producto");
 		Product productUpdated = productService.createProductStock(product, savedStock);
-		ProductDto newProductDto =ProductMapper.INSTANCE.toProductDto(productUpdated);
-		return new ResponseEntity<ProductDto>(newProductDto,HttpStatus.CREATED);
-	
+		ProductDto newProductDto = ProductMapper.INSTANCE.toProductDto(productUpdated);
+		return new ResponseEntity<ProductDto>(newProductDto, HttpStatus.CREATED);
+
 	}
+
 	@PutMapping("/reduce_stock")
-	ResponseEntity<String> reduceStock(@RequestParam("productId")Long productId,@RequestParam ProductStockDto stockDto){
-		Product product  = productService.findProductById(productId);
-		if(product.isMixed()) {
-			log.info("Actualizando la cantidad de ingredientes");
-			ingredientService.increaseIngredientAmount(stockDto.getProductStock(), productId);
-			
-		}
+	ResponseEntity<String> reduceStock(@RequestParam("productId") Long productId,
+			@RequestBody ProductStockDto stockDto) {
+		Product product = productService.findProductById(productId);
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
 		log.info("Eliminando stock");
-		ProductStock savedStock =productStockService.reduceStock(stock, productId);
-		return new ResponseEntity<String>(gson.toJson("Stock eliminado correctamete, cantidad total actual: " + savedStock.getProductStock() ),HttpStatus.OK);
-		
+		ProductStock savedStock = productStockService.reduceStock(stock, productId);
+		if (product.isMixed()) {
+			log.info("Actualizando la cantidad de ingredientes");
+			ingredientService.increaseIngredientAmount(stockDto.getProductStock(), productId);
+
+		}
+		return new ResponseEntity<String>(
+				gson.toJson("Stock eliminado correctamete, cantidad total actual: " + savedStock.getProductStock()),
+				HttpStatus.OK);
+
 	}
 }

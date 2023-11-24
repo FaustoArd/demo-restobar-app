@@ -15,7 +15,6 @@ import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.repository.ProductStockRepository;
 import com.lord.arbam.service.ProductStockService;
 
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,7 +36,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 		return productStockRepository.findById(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
-	
+
 	@Transactional
 	@Override
 	public ProductStock updateStock(ProductStock stock, Long productId) {
@@ -51,7 +50,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 			if (stockResult.isPresent()) {
 				log.info("Existente , actualizando stock");
 				ProductStock updatedStock = stockResult.get();
-				updatedStock.setProductStock(updatedStock.getProductStock()+ stock.getProductStock());
+				updatedStock.setProductStock(updatedStock.getProductStock() + stock.getProductStock());
 				return productStockRepository.save(updatedStock);
 			} else {
 				log.info("Creando Nuevo stock");
@@ -60,30 +59,26 @@ public class ProductStockServiceImpl implements ProductStockService {
 			}
 		}
 	}
-	
+
 	@Transactional
 	@Override
 	public ProductStock reduceStock(ProductStock stockReduced, Long productId) {
-		log.info("Eliminacion de stock");
-		if(stockReduced.getProductStock()<0) {
-			log.warn("Stock con numero negativo");
-			throw new NegativeNumberException("Negative number is not allowed.");
-		}else {
-			Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
-			if(stockResult.isEmpty()) {
-				log.info("Stock inexistente");
-				throw new ItemNotFoundException("Stock not found");
-			}else {
-				log.info("Eliminando stock");
-				ProductStock deletedStock = stockResult.get();
-				deletedStock.setProductStock(deletedStock.getProductStock() - stockReduced.getProductStock());
-				return productStockRepository.save(deletedStock);
-			}
+		Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
+		if (stockResult.isEmpty()) {
+			log.info("Stock inexistente");
+			throw new ItemNotFoundException("Stock not found");
+		} else if (stockReduced.getProductStock() < 0
+				|| stockResult.get().getProductStock() - stockReduced.getProductStock() < 0) {
+			log.warn("Stock con numero negativo o el resultado de la reduccion de stock daba un numero negativo");
+			throw new NegativeNumberException("Negative number, or as a result of stock reduction stock quantity is negative");
+		} else {
+			log.info("Eliminando stock");
+			ProductStock deletedStock = stockResult.get();
+			deletedStock.setProductStock(deletedStock.getProductStock() - stockReduced.getProductStock());
+			return productStockRepository.save(deletedStock);
 		}
-		
 	}
-	
-	
+
 	
 
 	@Override
@@ -91,8 +86,6 @@ public class ProductStockServiceImpl implements ProductStockService {
 		return productStockRepository.findStockByProductId(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}
-	
-
 
 	@Transactional
 	@Override
@@ -109,8 +102,5 @@ public class ProductStockServiceImpl implements ProductStockService {
 		productStockRepository.save(productStock);
 
 	}
-
-	
-	
 
 }

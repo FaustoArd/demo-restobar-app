@@ -344,6 +344,7 @@ public class RestoTableIntegrationServicesTest {
 
 	}
 	
+	// table id : 2
 	@Test
 	@Order(20)
 	void closeRestoTable8Test() {
