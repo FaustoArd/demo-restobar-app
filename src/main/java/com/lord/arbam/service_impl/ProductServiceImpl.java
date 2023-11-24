@@ -18,10 +18,7 @@ import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.repository.ProductCategoryRepository;
 import com.lord.arbam.repository.ProductPriceRepository;
 import com.lord.arbam.repository.ProductRepository;
-import com.lord.arbam.service.IngredientService;
 import com.lord.arbam.service.ProductService;
-import com.lord.arbam.service.ProductStockService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.ValueAlreadyExistException;
 import com.lord.arbam.model.Employee;
@@ -24,8 +23,6 @@ import com.lord.arbam.repository.RestoTableClosedRepository;
 import com.lord.arbam.repository.RestoTableRepository;
 import com.lord.arbam.repository.WorkingDayRepository;
 import com.lord.arbam.service.RestoTableService;
-
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service

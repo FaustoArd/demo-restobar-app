@@ -1,8 +1,6 @@
 package com.lord.arbam.service;
 
 import java.util.List;
-
-import com.lord.arbam.model.RestoTable;
 import com.lord.arbam.model.RestoTableOrder;
 
 public interface RestoTableOrderService {
