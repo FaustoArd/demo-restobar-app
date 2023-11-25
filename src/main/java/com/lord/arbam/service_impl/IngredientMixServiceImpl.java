@@ -1,8 +1,6 @@
 package com.lord.arbam.service_impl;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,7 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 			throw new ValueAlreadyExistException("Ingredient already exist in this recipe");
 		} else {
 
-			log.info("Guardando Item de receta");
+			log.info("Agregando Ingrediente a la receta");
 			Product product = productRepository.findById(productId)
 					.orElseThrow(() -> new ItemNotFoundException("Product not found"));
 			Ingredient ingredient = ingredientRepository.findById(ingredientMix.getIngredient().getId())
