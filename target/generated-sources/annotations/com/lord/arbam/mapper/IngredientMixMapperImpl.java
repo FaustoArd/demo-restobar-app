@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-24T22:17:24-0400",
+    date = "2023-11-25T01:02:15-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class IngredientMixMapperImpl implements IngredientMixMapper {
@@ -83,6 +83,7 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         Ingredient.IngredientBuilder ingredient = Ingredient.builder();
 
         ingredient.id( ingredientMixDto.getIngredientId() );
+        ingredient.ingredientName( ingredientMixDto.getIngredientName() );
 
         return ingredient.build();
     }

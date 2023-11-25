@@ -55,7 +55,7 @@ public class ArbamApplication {
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,
 			ProductStockService productStockService, ProductPriceService productPriceService,
-			IngredientMixService productMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
+			IngredientMixService ingredientMixService,RestoTableService restoTableService,RestoTableRepository restoTableRepository,
 			RestoTableOrderService restoTableOrderService, EmployeeService employeeService,
 			EmployeeJobRepository employeeJobRepository,RoleRepository roleRepository,
 			AuthenticationService authService, PasswordEncoder encoder,UserService userService,PaymentMethodRepository paymentMethodRepository) {
@@ -151,9 +151,9 @@ public class ArbamApplication {
 			Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
 			
 			IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
-			productMixService.saveIngredientMix(mix1,savedProduct1.getId());
+			ingredientMixService.saveIngredientMix(mix1,savedProduct1.getId());
 			IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
-			productMixService.saveIngredientMix(mix2,savedProduct1.getId());
+			ingredientMixService.saveIngredientMix(mix2,savedProduct1.getId());
 			
 			Product product = productService.findProductById(1L);
 			ProductStock stock = new ProductStock(10);

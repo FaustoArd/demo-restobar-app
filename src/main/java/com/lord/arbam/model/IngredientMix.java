@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@Table(name="product_mixes")
+@Table(name="ingredient_mixes")
 public class IngredientMix {
 	
 	@Id
@@ -36,7 +36,7 @@ public class IngredientMix {
 	private Product product;
 	
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-	@JoinColumn(name="ingredient_id", referencedColumnName = "id", unique = true)
+	@JoinColumn(name="ingredient_id", referencedColumnName = "id")
 	private Ingredient ingredient;
 	
 	@Column(name="ingredient_amount")

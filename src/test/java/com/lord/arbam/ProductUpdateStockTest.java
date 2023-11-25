@@ -32,7 +32,6 @@ import com.lord.arbam.service.ProductService;
 import com.lord.arbam.service.ProductStockService;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class ProductUpdateStockTest {

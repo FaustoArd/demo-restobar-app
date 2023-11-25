@@ -17,6 +17,7 @@ public interface IngredientMixMapper {
 	@Mapping(target="product.id", source="productId")
 	@Mapping(target="product.productName",ignore = true)
 	@Mapping(target="ingredient.id", source="ingredientId")
+	@Mapping(target="ingredient.ingredientName", source="ingredientName")
 	public IngredientMix toIngredientMix(IngredientMixDto ingredientMixDto);
 	
 	
