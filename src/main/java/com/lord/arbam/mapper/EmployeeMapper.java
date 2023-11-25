@@ -7,7 +7,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.lord.arbam.dto.EmployeeDto;
+import com.lord.arbam.dto.EmployeeJobDto;
 import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.EmployeeJob;
 
 @Mapper
 public interface EmployeeMapper {
@@ -28,6 +30,12 @@ public interface EmployeeMapper {
 	@Mapping(target="employeeSalary", source="employeeJob.employeeSalary")
 	@Mapping(target="employeeJob", source="employeeJob.jobRole")
 	public List<EmployeeDto> toEmployeesDto(List<Employee> employees);
+	
+	public EmployeeJob toEmployeeJob(EmployeeJobDto employeeJobDto);
+	
+	public EmployeeJobDto toEmployeeJobDto(EmployeeJob employeeJob);
+	
+	public List<EmployeeJobDto> toEmployeeJobsDto(List<EmployeeJob> jobs);
 	
 	
 }

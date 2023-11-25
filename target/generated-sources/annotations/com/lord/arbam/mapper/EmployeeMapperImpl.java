@@ -1,6 +1,7 @@
 package com.lord.arbam.mapper;
 
 import com.lord.arbam.dto.EmployeeDto;
+import com.lord.arbam.dto.EmployeeJobDto;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.EmployeeJob;
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-24T20:11:11-0400",
+    date = "2023-11-25T17:21:29-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class EmployeeMapperImpl implements EmployeeMapper {
@@ -59,6 +60,50 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         List<EmployeeDto> list = new ArrayList<EmployeeDto>( employees.size() );
         for ( Employee employee : employees ) {
             list.add( toEmployeeDto( employee ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public EmployeeJob toEmployeeJob(EmployeeJobDto employeeJobDto) {
+        if ( employeeJobDto == null ) {
+            return null;
+        }
+
+        EmployeeJob.EmployeeJobBuilder employeeJob = EmployeeJob.builder();
+
+        employeeJob.employeeSalary( employeeJobDto.getEmployeeSalary() );
+        employeeJob.id( employeeJobDto.getId() );
+        employeeJob.jobRole( employeeJobDto.getJobRole() );
+
+        return employeeJob.build();
+    }
+
+    @Override
+    public EmployeeJobDto toEmployeeJobDto(EmployeeJob employeeJob) {
+        if ( employeeJob == null ) {
+            return null;
+        }
+
+        EmployeeJobDto employeeJobDto = new EmployeeJobDto();
+
+        employeeJobDto.setEmployeeSalary( employeeJob.getEmployeeSalary() );
+        employeeJobDto.setId( employeeJob.getId() );
+        employeeJobDto.setJobRole( employeeJob.getJobRole() );
+
+        return employeeJobDto;
+    }
+
+    @Override
+    public List<EmployeeJobDto> toEmployeeJobsDto(List<EmployeeJob> jobs) {
+        if ( jobs == null ) {
+            return null;
+        }
+
+        List<EmployeeJobDto> list = new ArrayList<EmployeeJobDto>( jobs.size() );
+        for ( EmployeeJob employeeJob : jobs ) {
+            list.add( toEmployeeJobDto( employeeJob ) );
         }
 
         return list;
