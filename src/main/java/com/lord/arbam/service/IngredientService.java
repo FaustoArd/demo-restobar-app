@@ -20,5 +20,7 @@ public interface IngredientService {
 	public List<Ingredient> findAllIngredients();
 	
 	public void increaseIngredientAmount(Integer stockDeleted,Long productId);
+	
+	public List<Ingredient> findAllIngredientsOrderByNameAsc();
 
 }

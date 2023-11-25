@@ -30,7 +30,7 @@ public class CategoryController {
 	
 	@GetMapping("/all")
 	ResponseEntity<List<ProductCategoryDto>> findAllCategories(){
-		List<ProductCategory> categories = productCategoryService.findAllCategories();
+		List<ProductCategory> categories = productCategoryService.findAllCategoriesOrderByNamAsc();
 		List<ProductCategoryDto> categoriesDto = CategoryMapper.INSTANCE.toProductCategoriesDto(categories);
 		return new ResponseEntity<List<ProductCategoryDto>>(categoriesDto,HttpStatus.OK);
 	}

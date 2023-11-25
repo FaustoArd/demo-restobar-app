@@ -36,7 +36,7 @@ public class IngredientMix {
 	private Product product;
 	
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-	@JoinColumn(name="ingredient_id", referencedColumnName = "id")
+	@JoinColumn(name="ingredient_id", referencedColumnName = "id", unique = true)
 	private Ingredient ingredient;
 	
 	@Column(name="ingredient_amount")

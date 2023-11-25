@@ -2,6 +2,7 @@ package com.lord.arbam.service_impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.lord.arbam.exception.ItemNotFoundException;
@@ -47,6 +48,12 @@ public class IngredientCategoryServiceImpl implements CategoryService<Ingredient
 	@Override
 	public List<IngredientCategory> findAllCategories() {
 		return (List<IngredientCategory>)ingredientCategoryRepository.findAll();
+	}
+
+	@Override
+	public List<IngredientCategory> findAllCategoriesOrderByNamAsc() {
+		  Sort sort = Sort.by("categoryName");
+		  return (List<IngredientCategory>)ingredientCategoryRepository.findAll(sort);
 	}
 	
 

@@ -13,5 +13,7 @@ public interface  CategoryService<T> {
 	public void deleteCategoryById(Long id);
 	
 	public List<T> findAllCategories();
+	
+	public List<T> findAllCategoriesOrderByNamAsc();
 
 }

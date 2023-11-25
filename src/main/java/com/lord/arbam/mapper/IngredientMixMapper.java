@@ -15,20 +15,20 @@ public interface IngredientMixMapper {
 	public static IngredientMixMapper INSTANCE = Mappers.getMapper(IngredientMixMapper.class);
 	
 	@Mapping(target="product.id", source="productId")
-	@Mapping(target="product.productName", source="productName")
+	@Mapping(target="product.productName",ignore = true)
 	@Mapping(target="ingredient.id", source="ingredientId")
-	public IngredientMix toProductMix(IngredientMixDto productMixDto);
+	public IngredientMix toIngredientMix(IngredientMixDto ingredientMixDto);
 	
 	
 	@Mapping(target="productId", source="product.id")
 	@Mapping(target="productName", source="product.productName")
 	@Mapping(target="ingredientId", source="ingredient.id")
 	@Mapping(target="ingredientName", source="ingredient.ingredientName")
-	public IngredientMixDto toProductMixDto(IngredientMix productMix);
+	public IngredientMixDto toIngredientMixDto(IngredientMix ingredientMix);
 	
 	@Mapping(target="productId", source="product.id")
 	@Mapping(target="productName", source="product.productName")
 	@Mapping(target="ingredientId", source="ingredient.id")
 	@Mapping(target="ingredientName", source="ingredient.ingredientName")
-	public List<IngredientMixDto> toProductsMixDto(List<IngredientMix> productsMixes);
+	public List<IngredientMixDto> toIngredientsMixesDto(List<IngredientMix> ingredientMixes);
 }

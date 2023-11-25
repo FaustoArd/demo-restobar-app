@@ -18,6 +18,7 @@ public interface EmployeeService {
 	
 	List<Employee> findByEmployeeJobJobRole(String jobRole);
 	
+	List<Employee> findAllEmployeesSortByNameAsc();
 	
 	
 	

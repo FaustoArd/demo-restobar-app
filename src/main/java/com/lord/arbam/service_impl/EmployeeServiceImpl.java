@@ -3,6 +3,7 @@ package com.lord.arbam.service_impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.lord.arbam.exception.ItemNotFoundException;
@@ -64,6 +65,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<Employee> findByEmployeeJobJobRole(String jobRole) {
 		return (List<Employee>)employeeRepository.findByEmployeeJobJobRole(jobRole);
+	}
+
+	@Override
+	public List<Employee> findAllEmployeesSortByNameAsc() {
+		 Sort sort = Sort.by("employeeName");
+		 return (List<Employee>)employeeRepository.findAll(sort);
 	}
 
 	

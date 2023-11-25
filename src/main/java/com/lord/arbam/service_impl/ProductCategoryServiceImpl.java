@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.lord.arbam.exception.ItemNotFoundException;
@@ -57,6 +58,13 @@ public class  ProductCategoryServiceImpl implements CategoryService<ProductCateg
 	@Override
 	public List<ProductCategory> findAllCategories() {
 		return (List<ProductCategory>) productCategoryRepository.findAll();
+	}
+
+	@Override
+	public List<ProductCategory> findAllCategoriesOrderByNamAsc() {
+		Sort sort = Sort.by("categoryName");
+		return (List<ProductCategory>)productCategoryRepository.findAll(sort);
+	 
 	}
 
 	

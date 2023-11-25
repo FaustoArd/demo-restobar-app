@@ -96,10 +96,10 @@ public class ProductUpdateStockTest {
 
 		IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedGrandeMuza).ingredientAmount(500)
 				.build();
-		ingredientMixService.saveIngredientMix(mix1);
+		ingredientMixService.saveIngredientMix(mix1,savedGrandeMuza.getId());
 		IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedGrandeMuza)
 				.ingredientAmount(300).build();
-		ingredientMixService.saveIngredientMix(mix2);
+		ingredientMixService.saveIngredientMix(mix2,savedGrandeMuza.getId());
 	}
 
 	@Test

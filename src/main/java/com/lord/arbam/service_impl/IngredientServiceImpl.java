@@ -3,13 +3,13 @@ package com.lord.arbam.service_impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
@@ -27,6 +27,8 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Autowired
 	private final IngredientRepository ingredientRepository;
+	
+	private static final Sort sort = Sort.by("ingredientName");
 
 	@Autowired
 	private final IngredientMixRepository ingredientMixRepository;
@@ -122,6 +124,12 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
 	public List<Ingredient> findAllIngredients() {
 		return (List<Ingredient>)ingredientRepository.findAll();
+	}
+
+	@Override
+	public List<Ingredient> findAllIngredientsOrderByNameAsc() {
+		//Sort sort =  Sort.by("ingredientName");
+		return (List<Ingredient>)ingredientRepository.findAll(sort);
 	}
 
 	

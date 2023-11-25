@@ -41,14 +41,14 @@ public class IngredientController {
 	
 	@GetMapping("/all_categories")
 	ResponseEntity<List<IngredientCategoryDto>> findAllCategories(){
-		List<IngredientCategory> categories = categoryService.findAllCategories();
+		List<IngredientCategory> categories = categoryService.findAllCategoriesOrderByNamAsc();
 		List<IngredientCategoryDto> categoriesDto = CategoryMapper.INSTANCE.toIngredientCategoriesDto(categories);
 		return new ResponseEntity<List<IngredientCategoryDto>>(categoriesDto,HttpStatus.OK);
 	}
 	
 	@GetMapping("/all")
 	ResponseEntity<List<IngredientDto>> findAllIngredients(){
-		List<Ingredient> ingredients = ingredientService.findAllIngredients();
+		List<Ingredient> ingredients = ingredientService.findAllIngredientsOrderByNameAsc();
 		List<IngredientDto> ingredientsDto = IngredientMapper.INSTANCE.toIngredientsDto(ingredients);
 		return new ResponseEntity<List<IngredientDto>>(ingredientsDto,HttpStatus.OK);
 	}

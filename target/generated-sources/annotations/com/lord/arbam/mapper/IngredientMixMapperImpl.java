@@ -10,54 +10,54 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-24T16:31:07-0400",
+    date = "2023-11-24T22:17:24-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class IngredientMixMapperImpl implements IngredientMixMapper {
 
     @Override
-    public IngredientMix toProductMix(IngredientMixDto productMixDto) {
-        if ( productMixDto == null ) {
+    public IngredientMix toIngredientMix(IngredientMixDto ingredientMixDto) {
+        if ( ingredientMixDto == null ) {
             return null;
         }
 
         IngredientMix.IngredientMixBuilder ingredientMix = IngredientMix.builder();
 
-        ingredientMix.product( ingredientMixDtoToProduct( productMixDto ) );
-        ingredientMix.ingredient( ingredientMixDtoToIngredient( productMixDto ) );
-        ingredientMix.id( productMixDto.getId() );
-        ingredientMix.ingredientAmount( productMixDto.getIngredientAmount() );
+        ingredientMix.product( ingredientMixDtoToProduct( ingredientMixDto ) );
+        ingredientMix.ingredient( ingredientMixDtoToIngredient( ingredientMixDto ) );
+        ingredientMix.id( ingredientMixDto.getId() );
+        ingredientMix.ingredientAmount( ingredientMixDto.getIngredientAmount() );
 
         return ingredientMix.build();
     }
 
     @Override
-    public IngredientMixDto toProductMixDto(IngredientMix productMix) {
-        if ( productMix == null ) {
+    public IngredientMixDto toIngredientMixDto(IngredientMix ingredientMix) {
+        if ( ingredientMix == null ) {
             return null;
         }
 
         IngredientMixDto ingredientMixDto = new IngredientMixDto();
 
-        ingredientMixDto.setProductId( productMixProductId( productMix ) );
-        ingredientMixDto.setProductName( productMixProductProductName( productMix ) );
-        ingredientMixDto.setIngredientId( productMixIngredientId( productMix ) );
-        ingredientMixDto.setIngredientName( productMixIngredientIngredientName( productMix ) );
-        ingredientMixDto.setId( productMix.getId() );
-        ingredientMixDto.setIngredientAmount( productMix.getIngredientAmount() );
+        ingredientMixDto.setProductId( ingredientMixProductId( ingredientMix ) );
+        ingredientMixDto.setProductName( ingredientMixProductProductName( ingredientMix ) );
+        ingredientMixDto.setIngredientId( ingredientMixIngredientId( ingredientMix ) );
+        ingredientMixDto.setIngredientName( ingredientMixIngredientIngredientName( ingredientMix ) );
+        ingredientMixDto.setId( ingredientMix.getId() );
+        ingredientMixDto.setIngredientAmount( ingredientMix.getIngredientAmount() );
 
         return ingredientMixDto;
     }
 
     @Override
-    public List<IngredientMixDto> toProductsMixDto(List<IngredientMix> productsMixes) {
-        if ( productsMixes == null ) {
+    public List<IngredientMixDto> toIngredientsMixesDto(List<IngredientMix> ingredientMixes) {
+        if ( ingredientMixes == null ) {
             return null;
         }
 
-        List<IngredientMixDto> list = new ArrayList<IngredientMixDto>( productsMixes.size() );
-        for ( IngredientMix ingredientMix : productsMixes ) {
-            list.add( toProductMixDto( ingredientMix ) );
+        List<IngredientMixDto> list = new ArrayList<IngredientMixDto>( ingredientMixes.size() );
+        for ( IngredientMix ingredientMix : ingredientMixes ) {
+            list.add( toIngredientMixDto( ingredientMix ) );
         }
 
         return list;
@@ -71,7 +71,6 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         Product.ProductBuilder product = Product.builder();
 
         product.id( ingredientMixDto.getProductId() );
-        product.productName( ingredientMixDto.getProductName() );
 
         return product.build();
     }
@@ -88,7 +87,7 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         return ingredient.build();
     }
 
-    private Long productMixProductId(IngredientMix ingredientMix) {
+    private Long ingredientMixProductId(IngredientMix ingredientMix) {
         if ( ingredientMix == null ) {
             return null;
         }
@@ -103,7 +102,7 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         return id;
     }
 
-    private String productMixProductProductName(IngredientMix ingredientMix) {
+    private String ingredientMixProductProductName(IngredientMix ingredientMix) {
         if ( ingredientMix == null ) {
             return null;
         }
@@ -118,7 +117,7 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         return productName;
     }
 
-    private Long productMixIngredientId(IngredientMix ingredientMix) {
+    private Long ingredientMixIngredientId(IngredientMix ingredientMix) {
         if ( ingredientMix == null ) {
             return null;
         }
@@ -133,7 +132,7 @@ public class IngredientMixMapperImpl implements IngredientMixMapper {
         return id;
     }
 
-    private String productMixIngredientIngredientName(IngredientMix ingredientMix) {
+    private String ingredientMixIngredientIngredientName(IngredientMix ingredientMix) {
         if ( ingredientMix == null ) {
             return null;
         }

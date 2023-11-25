@@ -33,17 +33,17 @@ public class IngredientMixController {
 	
 	
 	@GetMapping("/all_by_product_id")
-	ResponseEntity<List<IngredientMixDto>> findMixesByProductId(@RequestParam("productId")Long productId){
-		List<IngredientMix> mixes = ingredientMixService.findByProductId(productId);
-		List<IngredientMixDto> mixesDto = IngredientMixMapper.INSTANCE.toProductsMixDto(mixes);
+	ResponseEntity<List<IngredientMixDto>> findMixesByProductIdByOrderAsc(@RequestParam("productId")Long productId){
+		List<IngredientMix> mixes = ingredientMixService.findByProductIdByOrderAsc(productId);
+		List<IngredientMixDto> mixesDto = IngredientMixMapper.INSTANCE.toIngredientsMixesDto(mixes);
 		return new ResponseEntity<List<IngredientMixDto>>(mixesDto,HttpStatus.OK);
 	}
 	
 	@PostMapping("/")
 	ResponseEntity<String> createMix(@RequestBody IngredientMixDto ingredientMixDto,@RequestParam("productId") Long productId){
-		IngredientMix mix = IngredientMixMapper.INSTANCE.toProductMix(ingredientMixDto);
-		IngredientMix savedMix = ingredientMixService.saveIngredientMix(mix);
-		IngredientMixDto savedMixDto = IngredientMixMapper.INSTANCE.toProductMixDto(savedMix);
+		IngredientMix mix = IngredientMixMapper.INSTANCE.toIngredientMix(ingredientMixDto);
+		IngredientMix savedMix = ingredientMixService.saveIngredientMix(mix,productId);
+		IngredientMixDto savedMixDto = IngredientMixMapper.INSTANCE.toIngredientMixDto(savedMix);
 		return new ResponseEntity<String>(gson.toJson("Receta actualizada, se agrego: " + savedMixDto.getIngredientName()), HttpStatus.CREATED);
 	}
 	

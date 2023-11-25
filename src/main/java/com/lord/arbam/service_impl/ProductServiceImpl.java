@@ -35,6 +35,8 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductPriceRepository productPriceRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+	
+	private static final Sort sort = Sort.by("productName");
 
 	@Override
 	public Product findProductById(Long id) {
@@ -111,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> findAllProductByProductNameOrderAsc() {
-		Sort sort =  Sort.by("productName");
+		
 		return (List<Product>)productRepository.findAll(sort);
 	}
 	
