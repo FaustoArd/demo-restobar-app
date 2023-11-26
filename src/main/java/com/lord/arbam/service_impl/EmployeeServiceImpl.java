@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Employee saveEmployee(Employee employee) {
 		EmployeeJob empJob = employeeJobRepository.findById(employee.getEmployeeJob().getId())
-				.orElseThrow(()-> new ItemNotFoundException("No se encontro el puesto de trabajo. EmployeeServiceImpl.saveEmployee"));
+				.orElseThrow(()-> new ItemNotFoundException("Employee job not found"));
 		employee.setEmployeeJob(empJob);
 		return employeeRepository.save(employee);
 	}

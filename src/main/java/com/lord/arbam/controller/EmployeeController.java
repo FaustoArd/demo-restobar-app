@@ -19,6 +19,7 @@ import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.EmployeeJob;
 import com.lord.arbam.service.EmployeeJobService;
 import com.lord.arbam.service.EmployeeService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,11 +33,13 @@ public class EmployeeController {
 	
 	@Autowired
 	private final EmployeeJobService employeeJobService;
+	
+	private static final Gson gson = new Gson();
  	
 	
 	@GetMapping("/all")
-	ResponseEntity<List<EmployeeDto>> findAllemployees(){
-		List<Employee> employees = employeeService.findAllEmployees();
+	ResponseEntity<List<EmployeeDto>> findAllemployeesByNameAsc(){
+		List<Employee> employees = employeeService.findAllEmployeesSortByNameAsc();
 		List<EmployeeDto> employeesDto = EmployeeMapper.INSTANCE.toEmployeesDto(employees);
 		return new ResponseEntity<List<EmployeeDto>>(employeesDto,HttpStatus.OK);
 		
@@ -54,6 +57,14 @@ public class EmployeeController {
 		List<Employee> employees = employeeService.findByEmployeeJobJobRole(jobRole);
 		List<EmployeeDto> employeesDto = EmployeeMapper.INSTANCE.toEmployeesDto(employees);
 		return new ResponseEntity<List<EmployeeDto>>(employeesDto,HttpStatus.OK);
+	}
+	
+	@PostMapping("/new_employee")
+	ResponseEntity<String> createEmployee(@RequestBody EmployeeDto employeeDto){
+		Employee employee = EmployeeMapper.INSTANCE.toEmployee(employeeDto);
+		Employee savedEmployee = employeeService.saveEmployee(employee);
+		return new ResponseEntity<String>(gson.toJson("Se guardo el empleado: " + savedEmployee.getEmployeeName()), HttpStatus.CREATED);
+		
 	}
 	
 	@GetMapping("/all_jobs")
