@@ -69,15 +69,31 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		log.info("Sumando los totales de las mesas.");
 		double totalTablesCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.mapToDouble(res -> res.getTotalPrice().doubleValue()).sum();
-
-		log.info("Restando el pago a los empleados");
+		
+		log.info("Filtrando totales por metodo de pago");
+		double totalCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.filter(res -> res.getPaymentMethod().equals("Efectivo")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+		double totalDebitResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.filter(res -> res.getPaymentMethod().equals("Tarjeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+		double totalTransResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.filter(res -> res.getPaymentMethod().equals("Transferencia")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+		double totalCreditResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.filter(res -> res.getPaymentMethod().equals("Tarjeta de credito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+		double totalMpResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.filter(res -> res.getPaymentMethod().equals("Mercado pago")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+		
+		log.info("Guardando total pago a empleados y todos los totales");
 		return workingDayRepository.findById(workingDayId).map(wDay -> {
 			double employeeTotalResult = wDay.getEmployees().stream()
 					.mapToDouble(emp -> emp.getEmployeeJob().getEmployeeSalary().doubleValue()).sum();
-
 			wDay.setTotalEmployeeSalary(new BigDecimal(employeeTotalResult));
-			wDay.setTotalCash(new BigDecimal(totalTablesCashResult));
-			wDay.setTotalCashWithDiscount(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()));
+			wDay.setTotalCash(new BigDecimal(totalCashResult));
+			wDay.setTotalDebit(new BigDecimal(totalDebitResult));
+			wDay.setTotalTransf(new BigDecimal(totalTransResult));
+			wDay.setTotalCredit(new BigDecimal(totalCreditResult));
+			wDay.setTotalMP(new BigDecimal(totalMpResult));
+			wDay.setTotalWorkingDay(new BigDecimal(totalTablesCashResult));
+			wDay.setTotalCashWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
 			return workingDayRepository.save(wDay);
 
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
