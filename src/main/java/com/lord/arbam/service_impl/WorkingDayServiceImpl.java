@@ -69,12 +69,11 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		log.info("Sumando los totales de las mesas.");
 		double totalTablesCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.mapToDouble(res -> res.getTotalPrice().doubleValue()).sum();
-		
 		log.info("Filtrando totales por metodo de pago");
 		double totalCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.filter(res -> res.getPaymentMethod().equals("Efectivo")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalDebitResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Tarjeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+				.filter(res -> res.getPaymentMethod().equals("Tajeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalTransResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.filter(res -> res.getPaymentMethod().equals("Transferencia")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalCreditResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
