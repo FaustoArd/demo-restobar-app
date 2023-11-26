@@ -25,7 +25,7 @@ public class EmployeeJob {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(name="job_role",unique = true)
+	@Column(name="job_role")
 	private String jobRole;
 	
 	@Column(name="employee_salary")
