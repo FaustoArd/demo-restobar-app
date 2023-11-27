@@ -9,6 +9,8 @@ public interface WorkingDayService {
 	
 	public List<WorkingDay> findAll();
 	
+	public List<WorkingDay> findAllByOrderByDateAsc();
+	
 	public WorkingDay findWorkingDayById(Long id);
 	
 	public WorkingDay startWorkingDay(WorkingDay workingDay);

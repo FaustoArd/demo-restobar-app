@@ -27,5 +27,7 @@ public interface RestoTableService {
 	
 	public List<PaymentMethod> findAllPaymentMethods();
 	
+	public void checkTablesOpen();
+	
 
 }

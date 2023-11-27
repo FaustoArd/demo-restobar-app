@@ -12,6 +12,8 @@ public interface RestoTableOrderRepository extends JpaRepository<RestoTableOrder
 	
 	public List<RestoTableOrder> findAllByRestoTableId(Long id);
 	
+	
+	
 	Optional<RestoTableOrder> findByRestoTableIdAndProductId(Long restoTableId, Long productId);
 
 }

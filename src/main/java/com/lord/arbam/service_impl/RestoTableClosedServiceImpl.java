@@ -46,8 +46,13 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	}
 
 	@Override
-	public List<RestoTableClosed> findAllByWorkingDayId(Long id) {
-		return (List<RestoTableClosed>)restoTableClosedRepository.findAllByWorkingDayId(id);
+	public List<RestoTableClosed> findAllByWorkingDayId(Long workingDayId) {
+		return (List<RestoTableClosed>)restoTableClosedRepository.findAllByWorkingDayId(workingDayId);
+	}
+
+	@Override
+	public List<RestoTableClosed> findAllByWorkingDayIdOrderByTableNumberAsc(Long workingDayId) {
+		return (List<RestoTableClosed>)restoTableClosedRepository.findAllByWorkingDayIdOrderByTableNumberAsc(workingDayId);
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.lord.arbam.model;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +35,10 @@ public class WorkingDay {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name="date")
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Calendar date;
+	
 	@Column(name="total_start_cash")
 	private BigDecimal totalStartCash;
 	
@@ -42,7 +49,7 @@ public class WorkingDay {
 	private BigDecimal totalCash;
 	
 	@Column(name="total_cash_discounted")
-	private BigDecimal totalCashWithDiscount;
+	private BigDecimal totalWorkingDayWithDiscount;
 	
 	@Column(name="total_debit")
 	private BigDecimal totalDebit;
@@ -62,7 +69,7 @@ public class WorkingDay {
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	@JoinTable(name="employee_working_day_junction", joinColumns = 
 	@JoinColumn(name="working_day_id", referencedColumnName = "id"), inverseJoinColumns =
-	@JoinColumn(name="employee_id", referencedColumnName = "id"))
+	@JoinColumn(name="employee_id", referencedColumnName = "id",unique = false))
 	private List<Employee> employees;
 	
 	@Column(name="day_started")

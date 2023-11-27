@@ -11,6 +11,7 @@ import com.lord.arbam.exception.EmployeeNotSelectedException;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.exception.ProductOutOfStockException;
+import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.exception.ValueAlreadyExistException;
 
 @ControllerAdvice
@@ -42,6 +43,10 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(EmployeeNotSelectedException.class)
 	ResponseEntity<String> handleEmployeeNotSelected(EmployeeNotSelectedException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(RestoTableOpenException.class)
+	ResponseEntity<String> handleRestoTableOpenException(RestoTableOpenException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.EXPECTATION_FAILED);
 	}
 
 }

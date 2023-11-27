@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.lord.arbam.exception.ItemNotFoundException;
+import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.exception.ValueAlreadyExistException;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.PaymentMethod;
@@ -114,6 +115,8 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return restoTableRepository.save(findedTable);
 	
 	}
+	
+	
 
 	@Override
 	public List<RestoTable> findAllByOrderByIdAsc() {
@@ -133,6 +136,14 @@ public class RestoTableServiceImpl implements RestoTableService {
 	@Override
 	public List<PaymentMethod> findAllPaymentMethods(){
 		return (List<PaymentMethod>)paymentMethodRepository.findAll();
+	}
+
+	@Override
+	public void checkTablesOpen() {
+		 if(findAllRestoTables().stream().filter(r -> r.isOpen()).findFirst().isPresent()) {
+			 throw new RestoTableOpenException("Cannot close Working Day because they are One or More tables Open");
+		 }
+		
 	}
 
 	

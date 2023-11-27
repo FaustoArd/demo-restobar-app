@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-25T16:49:11-0400",
+    date = "2023-11-26T19:15:59-0400",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
@@ -22,6 +22,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDay.WorkingDayBuilder workingDay = WorkingDay.builder();
 
+        workingDay.date( workingDayDto.getDate() );
         workingDay.dayStarted( workingDayDto.isDayStarted() );
         List<Employee> list = workingDayDto.getEmployees();
         if ( list != null ) {
@@ -29,7 +30,6 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         }
         workingDay.id( workingDayDto.getId() );
         workingDay.totalCash( workingDayDto.getTotalCash() );
-        workingDay.totalCashWithDiscount( workingDayDto.getTotalCashWithDiscount() );
         workingDay.totalCredit( workingDayDto.getTotalCredit() );
         workingDay.totalDebit( workingDayDto.getTotalDebit() );
         workingDay.totalEmployeeSalary( workingDayDto.getTotalEmployeeSalary() );
@@ -37,6 +37,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
         workingDay.totalTransf( workingDayDto.getTotalTransf() );
         workingDay.totalWorkingDay( workingDayDto.getTotalWorkingDay() );
+        workingDay.totalWorkingDayWithDiscount( workingDayDto.getTotalWorkingDayWithDiscount() );
 
         return workingDay.build();
     }
@@ -49,6 +50,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDayDto workingDayDto = new WorkingDayDto();
 
+        workingDayDto.setDate( workingDay.getDate() );
         workingDayDto.setDayStarted( workingDay.isDayStarted() );
         List<Employee> list = workingDay.getEmployees();
         if ( list != null ) {
@@ -56,7 +58,6 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         }
         workingDayDto.setId( workingDay.getId() );
         workingDayDto.setTotalCash( workingDay.getTotalCash() );
-        workingDayDto.setTotalCashWithDiscount( workingDay.getTotalCashWithDiscount() );
         workingDayDto.setTotalCredit( workingDay.getTotalCredit() );
         workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
         workingDayDto.setTotalEmployeeSalary( workingDay.getTotalEmployeeSalary() );
@@ -64,6 +65,7 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
         workingDayDto.setTotalStartCash( workingDay.getTotalStartCash() );
         workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
         workingDayDto.setTotalWorkingDay( workingDay.getTotalWorkingDay() );
+        workingDayDto.setTotalWorkingDayWithDiscount( workingDay.getTotalWorkingDayWithDiscount() );
 
         return workingDayDto;
     }

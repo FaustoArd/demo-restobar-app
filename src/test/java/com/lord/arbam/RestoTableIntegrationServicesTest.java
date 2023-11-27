@@ -14,19 +14,19 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import org.hamcrest.number.IsCloseTo;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.Product;
@@ -34,7 +34,6 @@ import com.lord.arbam.model.RestoTable;
 import com.lord.arbam.model.RestoTableClosed;
 import com.lord.arbam.model.RestoTableOrder;
 import com.lord.arbam.model.WorkingDay;
-import com.lord.arbam.repository.RestoTableRepository;
 import com.lord.arbam.service.EmployeeService;
 import com.lord.arbam.service.ProductService;
 import com.lord.arbam.service.RestoTableClosedService;
@@ -513,14 +512,19 @@ public class RestoTableIntegrationServicesTest {
 	@Test
 	@Order(28)
 	void closeWorkingDay() {
+		Calendar date = Calendar.getInstance();
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
+		assertEquals(day.getTotalStartCash().doubleValue(), 10000.00);
 		assertEquals(day.getId(), workingDayId);
 		assertEquals(day.getTotalCash().doubleValue(),  24500.00);
 		assertEquals(day.getTotalDebit().doubleValue(),14400.00 );
 		assertEquals(day.getTotalCredit().doubleValue(), 4800.00);
 		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 10000.00);
-		assertEquals(day.getTotalCashWithDiscount().doubleValue(), 33700.00);
-		assertEquals(day.getTotalWorkingDay().doubleValue(), 43700.00);
+		assertEquals(day.getTotalWorkingDayWithDiscount().doubleValue(), 43700.00);
+		assertEquals(day.getTotalWorkingDay().doubleValue(), 53700.00);
+		assertThat(day.getDate().getTimeInMillis()).isBetween(date.getTimeInMillis() - 600L,
+				date.getTimeInMillis());
+		
 	}
 	
 

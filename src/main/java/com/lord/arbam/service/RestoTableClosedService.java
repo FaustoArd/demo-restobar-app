@@ -8,7 +8,9 @@ public interface RestoTableClosedService {
 	
 	public List<RestoTableClosed> findAllTablesClosed();
 	
-	public List<RestoTableClosed> findAllByWorkingDayId(Long id);
+	public List<RestoTableClosed> findAllByWorkingDayId(Long workingDayId);
+	
+	public List<RestoTableClosed> findAllByWorkingDayIdOrderByTableNumberAsc(Long workingDayId);
 	
 	public RestoTableClosed findTableClosedById(Long id);
 	

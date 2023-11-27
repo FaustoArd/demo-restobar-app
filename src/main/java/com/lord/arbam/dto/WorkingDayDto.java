@@ -1,12 +1,10 @@
 package com.lord.arbam.dto;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lord.arbam.model.Employee;
-
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +13,10 @@ import lombok.Setter;
 public class WorkingDayDto {
 
 	private Long id;
+	
+	
+	@JsonFormat(pattern="dd-MM-yyyy")
+	private Calendar date;
 
 	private BigDecimal totalStartCash;
 
@@ -22,7 +24,7 @@ public class WorkingDayDto {
 
 	private BigDecimal totalCash;
 	
-	private BigDecimal totalCashWithDiscount;
+	private BigDecimal totalWorkingDayWithDiscount;
 
 	private BigDecimal totalDebit;
 

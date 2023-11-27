@@ -9,4 +9,6 @@ import com.lord.arbam.model.RestoTableClosed;
 public interface RestoTableClosedRepository extends JpaRepository<RestoTableClosed, Long>{
 	
 	public List<RestoTableClosed> findAllByWorkingDayId(Long id);
+	
+	public List<RestoTableClosed> findAllByWorkingDayIdOrderByTableNumberAsc(Long id);
 }

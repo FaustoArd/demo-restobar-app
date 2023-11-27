@@ -1,6 +1,7 @@
 package com.lord.arbam.service_impl;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -45,8 +46,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public WorkingDay startWorkingDay(WorkingDay workingDay) {
-
-		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true)
+		Calendar date = Calendar.getInstance();
+		WorkingDay newWorkingDay = WorkingDay.builder().dayStarted(true).date(date)
 				.totalStartCash(workingDay.getTotalStartCash()).employees(workingDay.getEmployees()).build();
 
 		log.info("Iniciando dia de trabajo");
@@ -67,13 +68,14 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
 		log.info("Sumando los totales de las mesas.");
-		double totalTablesCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+		double totalTablesResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.mapToDouble(res -> res.getTotalPrice().doubleValue()).sum();
+		BigDecimal bdTotalTablesResult = new BigDecimal(totalTablesResult); 
 		log.info("Filtrando totales por metodo de pago");
 		double totalCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.filter(res -> res.getPaymentMethod().equals("Efectivo")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalDebitResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Tajeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
+				.filter(res -> res.getPaymentMethod().equals("Tarjeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalTransResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
 				.filter(res -> res.getPaymentMethod().equals("Transferencia")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
 		double totalCreditResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
@@ -91,8 +93,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			wDay.setTotalTransf(new BigDecimal(totalTransResult));
 			wDay.setTotalCredit(new BigDecimal(totalCreditResult));
 			wDay.setTotalMP(new BigDecimal(totalMpResult));
-			wDay.setTotalWorkingDay(new BigDecimal(totalTablesCashResult));
-			wDay.setTotalCashWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
+			wDay.setTotalWorkingDay(bdTotalTablesResult.add(wDay.getTotalStartCash()));
+			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
 			return workingDayRepository.save(wDay);
 
 		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
@@ -119,6 +121,11 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	public List<Employee> findCurrentEmployeesSelected(Long workingDayId) {
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
 		return employeeRepository.findAllById(workingDay.getEmployees().stream().map(w -> w.getId()).toList());
+	}
+
+	@Override
+	public List<WorkingDay> findAllByOrderByDateAsc() {
+	return (List<WorkingDay>)workingDayRepository.findAllByOrderByDateAsc();
 	}
 
 }

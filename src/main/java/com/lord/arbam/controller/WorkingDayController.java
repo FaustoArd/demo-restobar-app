@@ -21,6 +21,7 @@ import com.lord.arbam.mapper.EmployeeMapper;
 import com.lord.arbam.mapper.WorkingDayMapper;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.service.RestoTableService;
 import com.lord.arbam.service.WorkingDayService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -34,6 +35,9 @@ public class WorkingDayController {
 	@Autowired
 	private final WorkingDayService workingDayService;
 	
+	@Autowired
+	private final RestoTableService restoTableService;
+	
 	private static final Gson gson = new Gson();
 	
 	@GetMapping("/{id}")
@@ -41,6 +45,13 @@ public class WorkingDayController {
 		WorkingDay day = workingDayService.findWorkingDayById(id);
 		WorkingDayDto dayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(day);
 		return new ResponseEntity<WorkingDayDto>(dayDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	ResponseEntity<List<WorkingDayDto>> findAllWorkingDaysByDateAsc(){
+		List<WorkingDay> days = workingDayService.findAllByOrderByDateAsc();
+		List<WorkingDayDto> daysDto = WorkingDayMapper.INSTANCE.toWorkingDaysDto(days);
+		return new ResponseEntity<List<WorkingDayDto>>(daysDto,HttpStatus.OK);
 	}
 
 	@PostMapping("/")
@@ -61,10 +72,11 @@ public class WorkingDayController {
 	}
 	
 	@GetMapping("/close/{id}")
-	ResponseEntity<WorkingDayDto> closeWorkingDay(@PathVariable("id") Long id){
-		WorkingDay workingDay = workingDayService.closeWorkingDay(id);
-		WorkingDayDto workingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(workingDay);
-		return new ResponseEntity<WorkingDayDto>(workingDayDto,HttpStatus.OK);
+	ResponseEntity<?> closeWorkingDay(@PathVariable("id") Long id){
+		restoTableService.checkTablesOpen();
+		workingDayService.closeWorkingDay(id);
+		return new ResponseEntity<String>(gson.toJson("Jornada finalizada con exito!"),HttpStatus.OK);
+		
 	}
 	
 	@DeleteMapping("/employees")
