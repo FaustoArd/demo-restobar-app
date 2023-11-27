@@ -1,5 +1,7 @@
 package com.lord.arbam.dto;
 
+import java.math.BigInteger;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +17,6 @@ public class EmployeeDto {
 	
 	private String employeeJob;
 	
-	private String employeeSalary;
+	private BigInteger employeeSalary;
 
 }

@@ -467,7 +467,7 @@ public class RestoTableIntegrationServicesTest {
 	@Order(26)
 	void closeRestoTable8Test() {
 		RestoTable table = restoTableService.findRestoTableById(2L);
-		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tajeta de debito").build();
+		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
 		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,paymentMethod);
 		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
@@ -477,7 +477,7 @@ public class RestoTableIntegrationServicesTest {
 				"Silvana Mesera");
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getWorkingDay()
 				.getId(), 1);
-		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getPaymentMethod(),"Tajeta de debito");
+		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getPaymentMethod(),"Tarjeta de debito");
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
 		assertEquals(closedTable.getPaymentMethod(), null);

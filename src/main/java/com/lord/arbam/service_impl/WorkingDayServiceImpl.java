@@ -57,12 +57,12 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public WorkingDay updateWorkingDay(WorkingDay workingDay) {
+		log.info("Actualizando working day.");
 		return workingDayRepository.findById(workingDay.getId()).map(wd -> {
 			wd.setTotalStartCash(workingDay.getTotalStartCash());
 			wd.setEmployees(workingDay.getEmployees());
-			log.info("Actualizando working day. WorkingDayServiceImpl.updateWorkingDay");
 			return workingDayRepository.save(wd);
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
+		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
 			return workingDayRepository.save(wDay);
 
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
+		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
 
 	@Override
