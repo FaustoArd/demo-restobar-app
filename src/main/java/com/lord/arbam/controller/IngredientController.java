@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.service.CategoryService;
 import com.lord.arbam.service.IngredientService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +36,8 @@ public class IngredientController {
 	
 	@Autowired
 	private final CategoryService<IngredientCategory> categoryService;
+	
+	private static final Gson gson = new Gson();
 	
 	
 
@@ -75,5 +79,10 @@ public class IngredientController {
 		Ingredient savedIngredient = ingredientService.updateIngredient(category,ingredient);
 		IngredientDto savedIngredientDto = IngredientMapper.INSTANCE.toIngredientDto(savedIngredient);
 		return new ResponseEntity<IngredientDto>(savedIngredientDto,HttpStatus.OK);
+	}
+	@DeleteMapping("/{id}")
+	ResponseEntity<String> deleteIngredient(@PathVariable("id")Long id){
+		ingredientService.deleteIngredientById(id);
+		return new ResponseEntity<String>(gson.toJson("Se elimino el ingrediente"),HttpStatus.OK);
 	}
 }
