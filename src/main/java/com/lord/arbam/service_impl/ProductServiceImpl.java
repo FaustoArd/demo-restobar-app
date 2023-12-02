@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product saveProduct(Product product) {
-		log.info("Creando nuevo producto");
+		log.info("Creating new porduct");
 		ProductCategory category = productCategoryRepository.findById(product.getCategory().getId())
 				.orElseThrow(() -> new ItemNotFoundException("Category not found"));
 
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findById(product.getId()).map(p -> {
 			ProductPrice price = productPriceRepository.findById(p.getProductPrice().getId())
 					.orElseThrow(() -> new ItemNotFoundException("Price not found"));
-			log.info("Actualizando el producto");
+			log.info("Updating product");
 			price.setPrice(product.getProductPrice().getPrice());
 			ProductPrice updatedPrice = productPriceRepository.save(price);
 			p.setId(product.getId());
@@ -93,9 +93,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void deleteProductById(Long id) {
+		
 		if (productRepository.existsById(id)) {
+			log.info("Deleting product");
 			productRepository.deleteById(id);
 		} else {
+			log.info("Cant delete, product not found");
 			throw new ItemNotFoundException("Product not found. ProductServiceImpl.deleteProductById");
 		}
 

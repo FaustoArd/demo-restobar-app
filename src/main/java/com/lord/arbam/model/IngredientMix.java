@@ -2,6 +2,9 @@ package com.lord.arbam.model;
 
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +33,7 @@ public class IngredientMix {
 	private Long id;
 	
 	
-	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 	@JoinColumn(name="product_id", referencedColumnName = "id")
 	private Product product;
