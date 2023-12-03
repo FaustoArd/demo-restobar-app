@@ -1,0 +1,11 @@
+com\lord\arbam\AuthenticationServiceTest.class
+com\lord\arbam\RestoTableIntegrationControllersTest.class
+com\lord\arbam\ArbamApplicationTests.class
+com\lord\arbam\WorkingDayServiceTest.class
+com\lord\arbam\WorkingDayMapperTest.class
+com\lord\arbam\WorkingDayCloseTest.class
+com\lord\arbam\ProductMapperTest.class
+com\lord\arbam\RestoTableIntegrationServicesTest.class
+com\lord\arbam\CategoryControllerTest.class
+com\lord\arbam\IngredientMixServiceTest.class
+com\lord\arbam\ProductUpdateStockTest.class

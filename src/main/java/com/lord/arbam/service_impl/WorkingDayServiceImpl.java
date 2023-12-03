@@ -128,4 +128,14 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	return (List<WorkingDay>)workingDayRepository.findAllByOrderByDateAsc();
 	}
 
+	@Override
+	public void deleteWorkingDayById(Long id) {
+		if(workingDayRepository.existsById(id)) {
+			workingDayRepository.deleteById(id);
+		}else {
+			throw new ItemNotFoundException("Working day not found");
+		}
+		
+	}
+
 }

@@ -50,7 +50,7 @@ public class ArbamApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ArbamApplication.class, args);
 	}
-
+	
 	@Bean
 	CommandLineRunner run(ProductService productService, CategoryService<ProductCategory> productCategoryService,
 			CategoryService<IngredientCategory> ingredientCategoryService, IngredientService ingredientService,

@@ -2,6 +2,8 @@ package com.lord.arbam.service_impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,15 +29,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private final EmployeeJobRepository employeeJobRepository;
 	
+	private static final Logger log = LoggerFactory.getLogger(EmployeeJobServiceImpl.class);
+	
 	
 
 	@Override
 	public Employee findEmployeeById(Long id) {
+		log.info("Find employee by id");
 		return employeeRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("No se encontro el empleado. EmployeeServiceImpl.findEmployeeById"));
 	}
 
 	@Override
 	public Employee saveEmployee(Employee employee) {
+		log.info("Saving new employee");
 		EmployeeJob empJob = employeeJobRepository.findById(employee.getEmployeeJob().getId())
 				.orElseThrow(()-> new ItemNotFoundException("Employee job not found"));
 		employee.setEmployeeJob(empJob);
@@ -44,14 +50,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List<Employee> findAllEmployees() {
+		log.info("Getting all employees");
 		return (List<Employee>)employeeRepository.findAll();
 	}
 
 	@Override
 	public void deleteEmployeeById(Long id) {
 		if(employeeRepository.existsById(id)) {
+			log.info("Deleting employee");
 			employeeRepository.deleteById(id);
 		}else {
+			log.info("Cant delete, employee not found");
 			throw new ItemNotFoundException("No se encontro el empleado. EmployeeServiceImpl.deleteEmployeeById");
 		}
 		

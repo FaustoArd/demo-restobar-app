@@ -33,7 +33,7 @@ public class ProductMapperTest {
 		Product product = ProductMapper.INSTANCE.toProduct(productDto);
 		assertEquals(product.getCategory().getId(), 2L);
 		assertEquals(product.getProductName(), "Milanesa de pollo");
-		assertEquals(product.getProductPrice().getPrice(), 2000.00);
+		assertEquals(product.getProductPrice().getPrice().doubleValue(), 2000.00);
 		assertEquals(product.getProductStock().getProductStock(), 20);
 		
 	}

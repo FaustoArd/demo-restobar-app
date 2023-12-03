@@ -78,6 +78,11 @@ public class WorkingDayController {
 		return new ResponseEntity<String>(gson.toJson("Jornada finalizada con exito!"),HttpStatus.OK);
 		
 	}
+	@DeleteMapping("/{id}")
+	ResponseEntity<String> deleteWorkingDay(@PathVariable("id")Long id){
+		workingDayService.deleteWorkingDayById(id);
+		return new ResponseEntity<String>(gson.toJson("Se elimino la jornada"),HttpStatus.OK);
+	}
 	
 	@DeleteMapping("/employees")
 	ResponseEntity<WorkingDayDto> deleteEmployeeById(@RequestParam Long employeesId,@RequestParam Long workingDayId){

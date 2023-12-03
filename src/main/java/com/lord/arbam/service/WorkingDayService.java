@@ -25,6 +25,8 @@ public interface WorkingDayService {
 	
 	public List<Employee> findCurrentEmployeesSelected(Long workingDayId);
 	
+	public void deleteWorkingDayById(Long id);
+	
 	
 
 }

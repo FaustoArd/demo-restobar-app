@@ -28,13 +28,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.EmployeeJob;
+import com.lord.arbam.model.Ingredient;
+import com.lord.arbam.model.IngredientCategory;
+import com.lord.arbam.model.IngredientMix;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.Product;
+import com.lord.arbam.model.ProductCategory;
+import com.lord.arbam.model.ProductPrice;
+import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.model.RestoTable;
 import com.lord.arbam.model.RestoTableClosed;
 import com.lord.arbam.model.RestoTableOrder;
 import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.repository.EmployeeJobRepository;
+import com.lord.arbam.repository.PaymentMethodRepository;
+import com.lord.arbam.repository.RestoTableRepository;
+import com.lord.arbam.service.CategoryService;
 import com.lord.arbam.service.EmployeeService;
+import com.lord.arbam.service.IngredientMixService;
+import com.lord.arbam.service.IngredientService;
 import com.lord.arbam.service.ProductService;
 import com.lord.arbam.service.RestoTableClosedService;
 import com.lord.arbam.service.RestoTableOrderService;
@@ -62,7 +75,28 @@ public class RestoTableIntegrationServicesTest {
 
 	@Autowired
 	private WorkingDayService workingDayService;
-
+	
+	@Autowired
+	private RestoTableRepository restoTableRepository;
+	
+	@Autowired
+	private PaymentMethodRepository paymentMethodRepository;
+	
+	@Autowired
+	private CategoryService<ProductCategory> productCategoryService;
+	
+	@Autowired
+	private CategoryService<IngredientCategory> ingredientCategoryService;
+	
+	@Autowired
+	private IngredientService ingredientService;
+	
+	@Autowired
+	private IngredientMixService ingredientMixService;
+	
+	@Autowired
+	private EmployeeJobRepository employeeJobRepository;
+	
 	@Autowired
 	private RestoTableClosedService restoTableClosedService;
 
@@ -71,7 +105,124 @@ public class RestoTableIntegrationServicesTest {
 	
 	@Test
 	@Order(1)
-	public void WorkingDayStart() {
+	void setup() {
+		 PaymentMethod p1 = PaymentMethod.builder().paymentMethod("Efectivo").build();
+		 PaymentMethod p2 = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
+		 PaymentMethod p3 = PaymentMethod.builder().paymentMethod("Transferencia").build();
+		 PaymentMethod p4 = PaymentMethod.builder().paymentMethod("Mercado pago").build();
+		 PaymentMethod p5 = PaymentMethod.builder().paymentMethod("Tarjeta de credito").build();
+		 List<PaymentMethod> payments = new ArrayList<>();
+		 payments.add(p1);
+		 payments.add(p2);
+		 payments.add(p3);
+		 payments.add(p4);
+		 payments.add(p5);
+		 paymentMethodRepository.saveAll(payments);
+
+		ProductCategory pCategory1 = ProductCategory.builder().categoryName("Pizza").build();
+		productCategoryService.saveCategory(pCategory1);
+		ProductCategory pCategory2 = ProductCategory.builder().categoryName("Pollo").build();
+		productCategoryService.saveCategory(pCategory2);
+		
+		ProductCategory pCategory3 = ProductCategory.builder().categoryName("Cerveza").build();
+		productCategoryService.saveCategory(pCategory3);
+
+	
+		Product product1 = Product.builder().productName("Grande Muzza").category(pCategory1)
+				.productPrice(new ProductPrice(new BigDecimal(1500.00))).build();
+		Product savedProduct1 = productService.saveProduct(product1);
+
+		Product product2 = Product.builder().productName("Grande Cebolla").category(pCategory1)
+				.productPrice(new ProductPrice(new BigDecimal(1800.00))).build();
+		Product savedProduct2 = productService.saveProduct(product2);
+		
+		Product product3 = Product.builder().productName("Cerveza heineken").category(pCategory3)
+				.productPrice(new ProductPrice(new BigDecimal(1700.00))).build();
+		Product savedProduct3 = productService.saveProduct(product3);
+		
+		Product product4 = Product.builder().productName("Cerveza Brahma").category(pCategory3)
+				.productPrice(new ProductPrice(new BigDecimal(2500.00))).build();
+		Product savedProduct4 = productService.saveProduct(product4);
+		
+		Product product5 = Product.builder().productName("Pollo a la cartunia").category(pCategory2)
+				.productPrice(new ProductPrice(new BigDecimal(2800.00))).build();
+		Product savedProduct5 = productService.saveProduct(product5);
+		
+		Product product6 = Product.builder().productName("Pollo al horno").category(pCategory2)
+				.productPrice(new ProductPrice(new BigDecimal(2400.00))).build();
+		Product savedProduct6 = productService.saveProduct(product6);
+
+		IngredientCategory ingredientCategory3 = IngredientCategory.builder().categoryName("Especias").build();
+		IngredientCategory savedIngredientCategory3 = ingredientCategoryService.saveCategory(ingredientCategory3);
+		IngredientCategory ingredientCategory1 = IngredientCategory.builder().categoryName("Salsa de tomate").build();
+		ingredientCategoryService.saveCategory(ingredientCategory1);
+		IngredientCategory ingredientCategory2 = IngredientCategory.builder().categoryName("Micelaneos").build();
+		ingredientCategoryService.saveCategory(ingredientCategory2);
+
+		
+		
+
+		Ingredient sal = Ingredient.builder().ingredientName("sal").ingredientAmount(5000).build();
+		Ingredient savedSal = ingredientService.saveIngredient(savedIngredientCategory3, sal);
+
+		Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
+		Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
+		
+		IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
+		ingredientMixService.saveIngredientMix(mix1,savedProduct1.getId());
+		IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
+		ingredientMixService.saveIngredientMix(mix2,savedProduct1.getId());
+		
+		Product product = productService.findProductById(1L);
+		ProductStock stock = new ProductStock(10);
+		Product savedProductstocked1 = productService.createProductStock(product, stock);
+		
+		Product findedProduct2 = productService.findProductById(2L);
+		ProductStock stock2 = new ProductStock(20);
+		Product savedProductstocked2 = productService.createProductStock(findedProduct2, stock2);
+		
+		Product findedProduct3 = productService.findProductById(3L);
+		ProductStock stock3 = new ProductStock(30);
+		Product savedProductstocked3 = productService.createProductStock(findedProduct3, stock3) ;
+		
+		EmployeeJob meseroJob = EmployeeJob.builder().jobRole("Mesera").employeeSalary(new BigDecimal(6000)).build();
+		EmployeeJob savedMeseroJob = employeeJobRepository.save(meseroJob); 
+		
+		EmployeeJob cajeroJob = EmployeeJob.builder().jobRole("Cajera").employeeSalary(new BigDecimal(5000)).build(); 
+		EmployeeJob savedCajeroJob = employeeJobRepository.save(cajeroJob); 
+		
+		EmployeeJob bacheroJob = EmployeeJob.builder().jobRole("Bachero").employeeSalary(new BigDecimal(4000)).build(); 
+		EmployeeJob savedBacheroJob = employeeJobRepository.save(bacheroJob); 
+		
+		EmployeeJob cocineroJob = EmployeeJob.builder().jobRole("Cocinero").employeeSalary(new BigDecimal(6500)).build(); 
+		EmployeeJob savedCocineroJob = employeeJobRepository.save(cocineroJob);
+		
+		Employee emp1 = Employee.builder().employeeName("Carla Mesera").employeeJob(savedMeseroJob).build();
+		Employee savedEmp1 =  employeeService.saveEmployee(emp1);
+		
+		Employee emp2 = Employee.builder().employeeName("Marina Mesera").employeeJob(savedMeseroJob).build();
+		Employee savedEmp2 =  employeeService.saveEmployee(emp2);
+		
+		Employee emp3 = Employee.builder().employeeName("Silvana Mesera").employeeJob(savedMeseroJob).build();
+		Employee savedEmp3 =  employeeService.saveEmployee(emp3);
+		
+		Employee emp4 = Employee.builder().employeeName("Mirta Cajera").employeeJob(savedCajeroJob).build();
+		Employee savedEmp4 =  employeeService.saveEmployee(emp4);
+		
+		Employee emp5 = Employee.builder().employeeName("Susana Bachera").employeeJob(savedBacheroJob).build();
+		Employee savedEmp5 =  employeeService.saveEmployee(emp5);
+		
+		ArrayList<RestoTable> tables = new ArrayList<RestoTable>();
+		for(int i = 1; i<31;i++) {
+			RestoTable table = new RestoTable();
+			tables.add(table);
+			
+		}
+		restoTableRepository.saveAll(tables);
+	}
+	@Test
+	@Order(2)
+	void WorkingDayStart() {
 		List<Employee> emps = new ArrayList<>();
 		emps.add(new Employee(1L));
 		emps.add(new Employee(3L));
@@ -89,7 +240,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	//table number: 1
 	@Test
-	@Order(2)
+	@Order(3)
 	void openRestoTable() {
 		Employee emp = employeeService.findEmployeeById(1L);
 		RestoTable table = RestoTable.builder().id(1L).employee(emp).tableNumber(1).build();
@@ -108,7 +259,7 @@ public class RestoTableIntegrationServicesTest {
 	//table number: 1
 	// Product id1: name="Grande Muzza",price=1500.00
 	@Test
-	@Order(3)
+	@Order(4)
 	void whenCreateNewOrderInRestoTable_MustReturnOrder() {
 		Product product = Product.builder().id(1L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -124,7 +275,7 @@ public class RestoTableIntegrationServicesTest {
 		//table number: 1
 	// Product id2: name="Grande Cebolla", price=1800.00
 	@Test
-	@Order(4)
+	@Order(5)
 	void createNewOrderRestoTable1() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -138,7 +289,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(5)
+	@Order(6)
 	void checkRestoTableOrdersRestoTable1() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -148,7 +299,7 @@ public class RestoTableIntegrationServicesTest {
 
 	// table id : 1
 	@Test
-	@Order(6)
+	@Order(7)
 	void whenUpdateRestoTableTotalPrice_MustReturnUpdatedTotalPrice() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -159,7 +310,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 2
 	// table number: 8
 	@Test
-	@Order(7)
+	@Order(8)
 	void whenOpenRestoTable8_mustReturnRestoTable() {
 		Employee emp = employeeService.findEmployeeById(3L);
 		RestoTable table = RestoTable.builder().id(2L).employee(emp).tableNumber(8).build();
@@ -174,7 +325,7 @@ public class RestoTableIntegrationServicesTest {
 	// table number: 8
 	// Product id2: name="Grande Cebolla", price=1800.00
 	@Test
-	@Order(8)
+	@Order(9)
 	void createNewOrderRestoTable8() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(2L).build();
@@ -190,7 +341,7 @@ public class RestoTableIntegrationServicesTest {
 	// table number: 8
 	
 	@Test
-	@Order(9)
+	@Order(10)
 	void whenTryToCreateExistingRestoTable8Order_MustResturnUpdatedRestoTableOrder() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(2L).build();
@@ -204,7 +355,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 2
 	// table number: 8
 		@Test
-		@Order(10)
+		@Order(11)
 		void whenUpdateRestoTablePriceRestoTable8_MustReturnRestotableUpdatedTotalPrice() {
 			RestoTable table = restoTableService.findRestoTableById(2L);
 			List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -216,7 +367,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 		// table number: 1	
 	@Test
-	@Order(11)
+	@Order(12)
 	void whenTryToCreateExistingRestoTable1Order_MustResturnUpdatedRestoTableOrder() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -231,7 +382,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// table number: 1	
 	@Test
-	@Order(12)
+	@Order(13)
 	void checkForRestoTableTotalPriceRestoTable1() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -242,7 +393,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// table number: 1	
 	@Test
-	@Order(13)
+	@Order(14)
 	void updateAgainOrderWithProductId2RestoTable1() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(1L).build();
@@ -258,7 +409,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// table number: 1	
 	@Test
-	@Order(14)
+	@Order(15)
 	void checkAgainForRestoTableTotalPriceRestoTable1() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -269,7 +420,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// table number: 1	
 	@Test
-	@Order(15)
+	@Order(16)
 	void whenDeleteOrderbyIdRestoTable1_RestoTableTotalPriceMustBeUpdated() {
 		restoTableOrderService.deleteOderById(1L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
@@ -284,7 +435,7 @@ public class RestoTableIntegrationServicesTest {
 	// table number: 1	
 	// Product id3:"Cerveza heineken" price : 1700.00
 	@Test
-	@Order(16)
+	@Order(17)
 	void updateAgainOrderWithProductId3RestoTable1() {
 		Product product = productService.findProductById(3L);
 		RestoTable table = restoTableService.findRestoTableById(1L);
@@ -301,8 +452,8 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 1
 	// table number: 1	
 	@Test
-	@Order(17)
-	public void closeRestoTable1Test() {
+	@Order(18)
+	void closeRestoTable1Test() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Efectivo").build();
 		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,paymentMethod);
@@ -332,7 +483,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 15
 	//table number: 20
 	@Test
-	@Order(18)
+	@Order(19)
 	void openRestoTable20() {
 		Employee emp = employeeService.findEmployeeById(1L);
 		RestoTable table = RestoTable.builder().id(15L).employee(emp).tableNumber(20).build();
@@ -352,7 +503,7 @@ public class RestoTableIntegrationServicesTest {
 	//table number: 20
 	// Product id1: name="Grande Muzza",price=1500.00
 	@Test
-	@Order(19)
+	@Order(20)
 	void whenCreateNewOrderInRestoTable20_MustReturnOrder() {
 		Product product = Product.builder().id(1L).build();
 		RestoTable table = RestoTable.builder().id(15L).build();
@@ -369,7 +520,7 @@ public class RestoTableIntegrationServicesTest {
 	// table number: 20
 	// Product id2: name="Grande Cebolla", price=1800.00
 	@Test
-	@Order(20)
+	@Order(21)
 	void createNewOrderRestoTable20() {
 		Product product = Product.builder().id(2L).build();
 		RestoTable table = RestoTable.builder().id(15L).build();
@@ -384,7 +535,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 15
 	// table number: 20
 	@Test
-	@Order(21)
+	@Order(22)
 	void checkRestoTableOrdersRestoTable20() {
 		RestoTable table = restoTableService.findRestoTableById(15L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -395,7 +546,7 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 15
 	// table number: 20
 	@Test
-	@Order(22)
+	@Order(23)
 	void whenUpdateRestoTable20TotalPrice_MustReturnUpdatedTotalPrice() {
 		RestoTable table = restoTableService.findRestoTableById(15L);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(table.getId());
@@ -406,8 +557,8 @@ public class RestoTableIntegrationServicesTest {
 	// table id : 15
 	// table number: 20
 	@Test
-	@Order(23)
-	public void closeRestoTable20Test() {
+	@Order(24)
+	void closeRestoTable20Test() {
 		RestoTable table = restoTableService.findRestoTableById(15L);
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tarjeta de credito").build();
 		RestoTable closedTable = restoTableService.closeRestoTable(15L, workingDayId,paymentMethod);
@@ -432,14 +583,14 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(closedTable.getTotalTablePrice(), null);
 	}
 	@Test
-	@Order(24)
+	@Order(25)
 	void checkWorkingDayStatus() {
 		boolean result = this.workingDayService.isWorkingDayStarted(workingDayId);
 		assertTrue(result);
 	}
 
 	@Test
-	@Order(25)
+	@Order(26)
 	void updateWorkingDay() {
 		WorkingDay day = workingDayService.findWorkingDayById(workingDayId);
 		List<Employee> ids = new ArrayList<>();
@@ -464,7 +615,7 @@ public class RestoTableIntegrationServicesTest {
 	
 	// table id : 2
 	@Test
-	@Order(26)
+	@Order(27)
 	void closeRestoTable8Test() {
 		RestoTable table = restoTableService.findRestoTableById(2L);
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
@@ -486,7 +637,7 @@ public class RestoTableIntegrationServicesTest {
 		
 	}
 	@Test
-	@Order(27)
+	@Order(28)
 	void updateAgainWorkingDay() {
 		WorkingDay day = workingDayService.findWorkingDayById(workingDayId);
 		List<Employee> ids = new ArrayList<>();
@@ -510,7 +661,7 @@ public class RestoTableIntegrationServicesTest {
 	//total Table N8 = $14400.00
 	//total Table N20 = $4800.00
 	@Test
-	@Order(28)
+	@Order(29)
 	void closeWorkingDay() {
 		Calendar date = Calendar.getInstance();
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);

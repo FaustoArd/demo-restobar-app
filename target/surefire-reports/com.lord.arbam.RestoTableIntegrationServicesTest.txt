@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.lord.arbam.RestoTableIntegrationServicesTest
+-------------------------------------------------------------------------------
+Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.543 s - in com.lord.arbam.RestoTableIntegrationServicesTest

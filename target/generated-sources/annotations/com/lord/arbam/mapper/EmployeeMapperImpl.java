@@ -11,8 +11,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-01T22:41:42-0400",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2023-12-02T10:36:21-0400",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class EmployeeMapperImpl implements EmployeeMapper {
 
@@ -25,8 +25,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         Employee.EmployeeBuilder employee = Employee.builder();
 
         employee.employeeJob( employeeDtoToEmployeeJob( employeeDto ) );
-        employee.employeeName( employeeDto.getEmployeeName() );
         employee.id( employeeDto.getId() );
+        employee.employeeName( employeeDto.getEmployeeName() );
 
         return employee.build();
     }
@@ -45,8 +45,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
             employeeDto.setEmployeeSalary( employeeSalary.toBigInteger() );
         }
         employeeDto.setEmployeeJob( employeeEmployeeJobJobRole( employee ) );
-        employeeDto.setEmployeeName( employee.getEmployeeName() );
         employeeDto.setId( employee.getId() );
+        employeeDto.setEmployeeName( employee.getEmployeeName() );
 
         return employeeDto;
     }
@@ -73,9 +73,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
         EmployeeJob.EmployeeJobBuilder employeeJob = EmployeeJob.builder();
 
-        employeeJob.employeeSalary( employeeJobDto.getEmployeeSalary() );
         employeeJob.id( employeeJobDto.getId() );
         employeeJob.jobRole( employeeJobDto.getJobRole() );
+        employeeJob.employeeSalary( employeeJobDto.getEmployeeSalary() );
 
         return employeeJob.build();
     }
@@ -88,9 +88,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
         EmployeeJobDto employeeJobDto = new EmployeeJobDto();
 
-        employeeJobDto.setEmployeeSalary( employeeJob.getEmployeeSalary() );
         employeeJobDto.setId( employeeJob.getId() );
         employeeJobDto.setJobRole( employeeJob.getJobRole() );
+        employeeJobDto.setEmployeeSalary( employeeJob.getEmployeeSalary() );
 
         return employeeJobDto;
     }

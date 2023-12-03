@@ -38,6 +38,7 @@ public class IngredientMix {
 	@JoinColumn(name="product_id", referencedColumnName = "id")
 	private Product product;
 	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
 	@JoinColumn(name="ingredient_id", referencedColumnName = "id")
 	private Ingredient ingredient;
