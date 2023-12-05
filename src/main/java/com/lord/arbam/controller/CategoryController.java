@@ -33,6 +33,9 @@ public class CategoryController {
 	@Autowired
 	private final CategoryService<IngredientCategory> ingredientCategoryService;
 	
+	
+	
+	/**Product Category**/
 	@GetMapping("/all")
 	ResponseEntity<List<ProductCategoryDto>> findAllCategories(){
 		List<ProductCategory> categories = productCategoryService.findAllCategoriesOrderByNamAsc();
@@ -62,11 +65,19 @@ public class CategoryController {
 		return new ResponseEntity<ProductCategoryDto>(updatedCategoryDto,HttpStatus.CREATED);
 	}
 	
+	/**Ingredient Category**/
 	@GetMapping("/all_ingredient")
 	ResponseEntity<List<IngredientCategoryDto>> findAllIngredientCategories(){
 		List<IngredientCategory> categories = ingredientCategoryService.findAllCategories();
 		List<IngredientCategoryDto> categoriesDto = CategoryMapper.INSTANCE.toIngredientCategoriesDto(categories);
 		return new ResponseEntity<List<IngredientCategoryDto>>(categoriesDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/ingredient/{id}")
+	ResponseEntity<IngredientCategoryDto> findIngredientCategoryById(@PathVariable("id")Long id){
+		IngredientCategory cat = ingredientCategoryService.findCategoryById(id);
+		IngredientCategoryDto catDto = CategoryMapper.INSTANCE.toIngredientCategoryDto(cat);
+		return new ResponseEntity<IngredientCategoryDto>(catDto,HttpStatus.OK);
 	}
 	
 	@PostMapping("/save_ingredient")
