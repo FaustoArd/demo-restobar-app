@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +39,7 @@ public class EmployeeController {
 	
 	private static final Gson gson = new Gson();
  	
-	
+	/**Employee**/
 	@GetMapping("/all")
 	ResponseEntity<List<EmployeeDto>> findAllemployeesByNameAsc(){
 		List<Employee> employees = employeeService.findAllEmployeesSortByNameAsc();
@@ -45,6 +48,14 @@ public class EmployeeController {
 		
 		
 	}
+	
+	@GetMapping("/employee/{id}")
+	ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable("id")Long id){
+		Employee employee = employeeService.findEmployeeById(id);
+		EmployeeDto employeeDto = EmployeeMapper.INSTANCE.toEmployeeDto(employee);
+		return new ResponseEntity<EmployeeDto>(employeeDto,HttpStatus.OK);
+	}
+	
 	@GetMapping("/all_by_id")
 	ResponseEntity<List<EmployeeDto>> findAllById(@RequestParam List<Long> employeesId){
 		List<Employee> employees = employeeService.findAllById(employeesId);
@@ -59,6 +70,7 @@ public class EmployeeController {
 		return new ResponseEntity<List<EmployeeDto>>(employeesDto,HttpStatus.OK);
 	}
 	
+	
 	@PostMapping("/new_employee")
 	ResponseEntity<String> createEmployee(@RequestBody EmployeeDto employeeDto){
 		Employee employee = EmployeeMapper.INSTANCE.toEmployee(employeeDto);
@@ -66,12 +78,28 @@ public class EmployeeController {
 		return new ResponseEntity<String>(gson.toJson("Se guardo el empleado: " + savedEmployee.getEmployeeName()), HttpStatus.CREATED);
 		
 	}
+
 	
+	@DeleteMapping("/employee/{id}")
+	ResponseEntity<String> deleteEmployeeById(@PathVariable("id")Long id){
+	employeeService.deleteEmployeeById(id);
+	return new ResponseEntity<String>(gson.toJson("Se elimino el empleado"),HttpStatus.OK);
+	}
+	
+	
+	/**Employee Job **/
 	@GetMapping("/all_jobs")
 	ResponseEntity<List<EmployeeJobDto>> findAllJobsOrderAsc(){
 		List<EmployeeJob> jobs = employeeJobService.findAllbyJobRoleAsc();
 		List<EmployeeJobDto> jobsDto = EmployeeMapper.INSTANCE.toEmployeeJobsDto(jobs);
 		return new ResponseEntity<List<EmployeeJobDto>>(jobsDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/employee_job/{id}")
+	ResponseEntity<EmployeeJobDto> findEmployeeJobById(@PathVariable("id")Long id){
+		EmployeeJob job = employeeJobService.findJobById(id);
+		EmployeeJobDto jobDto = EmployeeMapper.INSTANCE.toEmployeeJobDto(job);
+		return new ResponseEntity<EmployeeJobDto>(jobDto,HttpStatus.OK);
 	}
 	
 	@PostMapping("/new_job_role")
@@ -80,6 +108,12 @@ public class EmployeeController {
 		EmployeeJob savedJob = employeeJobService.saveJob(job);
 		EmployeeJobDto savedJobDto = EmployeeMapper.INSTANCE.toEmployeeJobDto(savedJob);
 		return new ResponseEntity<EmployeeJobDto>(savedJobDto,HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/employee_job/{id}")
+	ResponseEntity<String> deleteEmployeeJobById(@PathVariable("id")Long id){
+		employeeJobService.deleteJobById(id);
+		return new ResponseEntity<String>(gson.toJson("Se elimino el Rol de trabajo"), HttpStatus.OK);
 	}
 	
 	

@@ -33,7 +33,7 @@ public class ExcelController {
 	private final WorkingDayService workingDayService;
 	
 	@GetMapping("/{workingDayId}")
-	void exportToExcel(HttpServletResponse response,@PathVariable("workingDayId")Long workingDayId)throws IOException{
+	ResponseEntity<?>  exportToExcel(HttpServletResponse response,@PathVariable("workingDayId")Long workingDayId)throws IOException{
 		
 		response.setContentType("application/octet-stream");
 		DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss");
@@ -42,10 +42,13 @@ public class ExcelController {
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=users_" + currentDateTime + ".xlsx";
 		response.setHeader(headerKey, headerValue);
+		response.setContentType("application/vnd.ms-excel");
+		
 		
 		WorkingDay workingDay = workingDayService.findWorkingDayById(workingDayId);
 		ExcelExporter excelExporter = new  ExcelExporter(workingDay);
 		 excelExporter.export(response);
+		 return ResponseEntity.ok().build();
 		
 		
 		}

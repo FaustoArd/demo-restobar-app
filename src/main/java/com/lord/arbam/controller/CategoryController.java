@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lord.arbam.dto.IngredientCategoryDto;
 import com.lord.arbam.dto.ProductCategoryDto;
 import com.lord.arbam.mapper.CategoryMapper;
+import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.model.ProductCategory;
 import com.lord.arbam.service.CategoryService;
 
@@ -27,6 +29,9 @@ public class CategoryController {
 	
 	@Autowired
 	private final CategoryService<ProductCategory> productCategoryService;
+	
+	@Autowired
+	private final CategoryService<IngredientCategory> ingredientCategoryService;
 	
 	@GetMapping("/all")
 	ResponseEntity<List<ProductCategoryDto>> findAllCategories(){
@@ -50,11 +55,26 @@ public class CategoryController {
 		return new ResponseEntity<ProductCategoryDto>(savedCategoryDto,HttpStatus.CREATED);
 	}
 	@PutMapping("/update")
-	ResponseEntity<ProductCategoryDto> updateProduct(@RequestBody ProductCategoryDto categoryDto){
+	ResponseEntity<ProductCategoryDto> updateProductCategory(@RequestBody ProductCategoryDto categoryDto){
 		ProductCategory category = CategoryMapper.INSTANCE.toProductCategory(categoryDto);
 		ProductCategory updatedCategory = productCategoryService.saveCategory(category);
 		ProductCategoryDto updatedCategoryDto = CategoryMapper.INSTANCE.toProductCategoryDto(updatedCategory);
 		return new ResponseEntity<ProductCategoryDto>(updatedCategoryDto,HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/all_ingredient")
+	ResponseEntity<List<IngredientCategoryDto>> findAllIngredientCategories(){
+		List<IngredientCategory> categories = ingredientCategoryService.findAllCategories();
+		List<IngredientCategoryDto> categoriesDto = CategoryMapper.INSTANCE.toIngredientCategoriesDto(categories);
+		return new ResponseEntity<List<IngredientCategoryDto>>(categoriesDto,HttpStatus.OK);
+	}
+	
+	@PostMapping("/save_ingredient")
+	ResponseEntity<IngredientCategoryDto> saveIngredientCategory( @RequestBody IngredientCategoryDto ingredientCategoryDto){
+		IngredientCategory category = CategoryMapper.INSTANCE.toIngredientCategory(ingredientCategoryDto);
+		IngredientCategory newCategory = ingredientCategoryService.saveCategory(category);
+		IngredientCategoryDto newCategoryDto =CategoryMapper.INSTANCE.toIngredientCategoryDto(newCategory);
+		return new ResponseEntity<IngredientCategoryDto>(newCategoryDto,HttpStatus.CREATED);
 	}
 	
 

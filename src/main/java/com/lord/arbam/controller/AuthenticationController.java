@@ -1,5 +1,7 @@
 package com.lord.arbam.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,6 @@ import com.lord.arbam.dto.RegistrationDto;
 import com.lord.arbam.mapper.UserMapper;
 import com.lord.arbam.model.User;
 import com.lord.arbam.service.AuthenticationService;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,10 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
 	
-	
-	
 	@Autowired
-	private final AuthenticationService authenticationService;
+	private  final AuthenticationService authenticationService;
+	
+	private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 	
 	
 	

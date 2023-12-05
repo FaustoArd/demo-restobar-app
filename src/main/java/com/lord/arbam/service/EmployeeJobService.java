@@ -15,4 +15,6 @@ public interface EmployeeJobService {
 	public List<EmployeeJob> findAllbyJobRoleAsc();
 	
 	public void deleteJobById(Long id);
+	
+	public EmployeeJob updateEmployeeJob(EmployeeJob employeeJob);
 }

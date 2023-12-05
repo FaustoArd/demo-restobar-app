@@ -458,6 +458,8 @@ public class RestoTableIntegrationServicesTest {
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Efectivo").build();
 		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,paymentMethod);
 		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
+		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
+		
 
 		assertEquals(table.getTotalTablePrice().doubleValue(), 24500.00);
 		assertEquals(table.getEmployee().getId(), 1L);
@@ -476,6 +478,8 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(closedTable.getPaymentMethod(), null);
 		assertEquals(closedTable.getTableNumber(), null);
 		assertEquals(closedTable.getTotalTablePrice(), null);
+		assertEquals(orders.size(), 0);
+		
 
 	}
 	

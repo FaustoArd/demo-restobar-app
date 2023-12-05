@@ -11,8 +11,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-02T10:36:21-0400",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2023-12-04T19:51:01-0400",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class RestoTableMapperImpl implements RestoTableMapper {
 
@@ -26,10 +26,10 @@ public class RestoTableMapperImpl implements RestoTableMapper {
 
         restoTable.employee( restoTableDtoToEmployee( restoTableDto ) );
         restoTable.id( restoTableDto.getId() );
+        restoTable.open( restoTableDto.isOpen() );
+        restoTable.paymentMethod( restoTableDto.getPaymentMethod() );
         restoTable.tableNumber( restoTableDto.getTableNumber() );
         restoTable.totalTablePrice( restoTableDto.getTotalTablePrice() );
-        restoTable.paymentMethod( restoTableDto.getPaymentMethod() );
-        restoTable.open( restoTableDto.isOpen() );
 
         return restoTable.build();
     }
@@ -45,10 +45,10 @@ public class RestoTableMapperImpl implements RestoTableMapper {
         restoTableDto.setEmployeeId( restoTableEmployeeId( restoTable ) );
         restoTableDto.setEmployeeName( restoTableEmployeeEmployeeName( restoTable ) );
         restoTableDto.setId( restoTable.getId() );
+        restoTableDto.setOpen( restoTable.isOpen() );
+        restoTableDto.setPaymentMethod( restoTable.getPaymentMethod() );
         restoTableDto.setTableNumber( restoTable.getTableNumber() );
         restoTableDto.setTotalTablePrice( restoTable.getTotalTablePrice() );
-        restoTableDto.setPaymentMethod( restoTable.getPaymentMethod() );
-        restoTableDto.setOpen( restoTable.isOpen() );
 
         return restoTableDto;
     }

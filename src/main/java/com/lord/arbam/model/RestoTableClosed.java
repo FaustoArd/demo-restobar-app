@@ -2,6 +2,10 @@ package com.lord.arbam.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +47,7 @@ public class RestoTableClosed {
 	@Column(name="payment_method")
 	private String paymentMethod;
 	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 	@JoinColumn(name="working_day_id", referencedColumnName = "id")
 	private WorkingDay workingDay;

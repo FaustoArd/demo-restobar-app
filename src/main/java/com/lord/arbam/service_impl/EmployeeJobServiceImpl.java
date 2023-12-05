@@ -28,6 +28,12 @@ public class EmployeeJobServiceImpl implements EmployeeJobService{
 	public EmployeeJob saveJob(EmployeeJob employeeJob) {
 		return employeeJobRepository.save(employeeJob);
 	}
+	
+	@Override
+	public EmployeeJob updateEmployeeJob(EmployeeJob employeeJob) {
+		return null;
+	}
+	
 
 	@Override
 	public List<EmployeeJob> findAllJobs() {
@@ -49,5 +55,7 @@ public class EmployeeJobServiceImpl implements EmployeeJobService{
 	public List<EmployeeJob> findAllbyJobRoleAsc() {
 		return (List<EmployeeJob>)employeeJobRepository.findAllByOrderByJobRoleAsc();
 	}
+
+	
 
 }
