@@ -7,11 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.EmployeeJob;
-import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeJobRepository;
 import com.lord.arbam.repository.EmployeeRepository;
 import com.lord.arbam.service.EmployeeService;

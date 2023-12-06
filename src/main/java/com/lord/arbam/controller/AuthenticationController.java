@@ -31,6 +31,7 @@ public class AuthenticationController {
 	
 	@PostMapping("/register")
 	ResponseEntity<RegistrationDto> registerUser(@RequestBody RegistrationDto regDto){
+		log.info("Registrando usuario controlador");
 		User user = UserMapper.INSTANCE.RegDtotoUser(regDto);
 		User registeredUser = authenticationService.register(user);
 		RegistrationDto completeRegDto = UserMapper.INSTANCE.userToRegDto(registeredUser);
@@ -38,6 +39,7 @@ public class AuthenticationController {
 	}
 	@PostMapping("/login")
 	ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginResponseDto loginDto){
+		log.info("Logeando usuario controlador");
 		User user = UserMapper.INSTANCE.LoginDtoToUser(loginDto);
 		LoginResponseDto loggedUser = authenticationService.login(user);
 		return new ResponseEntity<LoginResponseDto>(loggedUser,HttpStatus.OK);
