@@ -12,7 +12,6 @@ com\lord\arbam\model\User$UserBuilder.class
 com\lord\arbam\controller\IngredientMixController.class
 com\lord\arbam\service_impl\RestoTableOrderServiceImpl.class
 com\lord\arbam\dto\RestoTableOrderDto.class
-com\lord\arbam\util\ExcelExporter.class
 com\lord\arbam\repository\IngredientRepository.class
 com\lord\arbam\service\ProductStockService.class
 com\lord\arbam\service_impl\EmployeeServiceImpl.class
@@ -39,7 +38,6 @@ com\lord\arbam\dto\EmployeeDto.class
 com\lord\arbam\mapper\UserMapperImpl.class
 com\lord\arbam\dto\WorkingDayDto.class
 com\lord\arbam\service_impl\WorkingDayServiceImpl.class
-com\lord\arbam\controller\ExcelController.class
 com\lord\arbam\model\RestoTableOrder$RestoTableOrderBuilder.class
 com\lord\arbam\model\IngredientCategory.class
 com\lord\arbam\util\KeyGeneratorUtility.class

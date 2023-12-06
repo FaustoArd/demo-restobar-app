@@ -8,8 +8,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-04T19:51:01-0400",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2023-12-05T21:35:53-0400",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class RestoTableClosedMapperImpl implements RestoTableClosedMapper {
 
@@ -34,11 +34,11 @@ public class RestoTableClosedMapperImpl implements RestoTableClosedMapper {
 
         RestoTableClosedDto restoTableClosedDto = new RestoTableClosedDto();
 
-        restoTableClosedDto.setEmployeeName( restoTableClosed.getEmployeeName() );
         restoTableClosedDto.setId( restoTableClosed.getId() );
-        restoTableClosedDto.setPaymentMethod( restoTableClosed.getPaymentMethod() );
         restoTableClosedDto.setTableNumber( restoTableClosed.getTableNumber() );
+        restoTableClosedDto.setEmployeeName( restoTableClosed.getEmployeeName() );
         restoTableClosedDto.setTotalPrice( restoTableClosed.getTotalPrice() );
+        restoTableClosedDto.setPaymentMethod( restoTableClosed.getPaymentMethod() );
 
         return restoTableClosedDto;
     }
