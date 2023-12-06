@@ -67,6 +67,7 @@ public class SecurityConfiguration {
 			auth.requestMatchers("/api/v1/arbam/working_days/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/ingredient_mixes/**").hasAnyRole("USER","ADMIN");
 			auth.requestMatchers("/api/v1/arbam/statistics/**").hasAnyRole("USER","ADMIN");
+			auth.requestMatchers("/api/v1/arbam/excel/**").hasAnyRole("USER","ADMIN");
 			auth.anyRequest().authenticated();
 		});
 		http.oauth2ResourceServer(oauth ->{
