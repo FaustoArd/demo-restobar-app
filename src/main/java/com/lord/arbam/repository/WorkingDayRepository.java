@@ -9,6 +9,8 @@ public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long>{
 	
 	public List<WorkingDay> findAllByOrderByDateAsc();
 	
+	public List<WorkingDay> findByEmployeesId(Long id);
+	
 
 
 }

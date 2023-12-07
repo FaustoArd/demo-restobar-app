@@ -9,8 +9,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-05T21:35:53-0400",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2023-12-06T21:11:33-0400",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class IngredientMapperImpl implements IngredientMapper {
 
@@ -23,10 +23,10 @@ public class IngredientMapperImpl implements IngredientMapper {
         Ingredient.IngredientBuilder ingredient = Ingredient.builder();
 
         ingredient.ingredientCategory( ingredientDtoToIngredientCategory( recipentDto ) );
-        ingredient.id( recipentDto.getId() );
-        ingredient.ingredientName( recipentDto.getIngredientName() );
-        ingredient.ingredientAmount( recipentDto.getIngredientAmount() );
         ingredient.expirationDate( recipentDto.getExpirationDate() );
+        ingredient.id( recipentDto.getId() );
+        ingredient.ingredientAmount( recipentDto.getIngredientAmount() );
+        ingredient.ingredientName( recipentDto.getIngredientName() );
 
         return ingredient.build();
     }
@@ -41,10 +41,10 @@ public class IngredientMapperImpl implements IngredientMapper {
 
         ingredientDto.setCategoryId( recipentIngredientCategoryId( recipent ) );
         ingredientDto.setCategoryName( recipentIngredientCategoryCategoryName( recipent ) );
-        ingredientDto.setId( recipent.getId() );
-        ingredientDto.setIngredientName( recipent.getIngredientName() );
-        ingredientDto.setIngredientAmount( recipent.getIngredientAmount() );
         ingredientDto.setExpirationDate( recipent.getExpirationDate() );
+        ingredientDto.setId( recipent.getId() );
+        ingredientDto.setIngredientAmount( recipent.getIngredientAmount() );
+        ingredientDto.setIngredientName( recipent.getIngredientName() );
 
         return ingredientDto;
     }

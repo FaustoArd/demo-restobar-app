@@ -13,8 +13,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-05T21:35:53-0400",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2023-12-06T21:11:33-0400",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class ProductMapperImpl implements ProductMapper {
 
@@ -30,8 +30,8 @@ public class ProductMapperImpl implements ProductMapper {
         product.productStock( productDtoToProductStock( productDto ) );
         product.productPrice( productDtoToProductPrice( productDto ) );
         product.id( productDto.getId() );
-        product.productName( productDto.getProductName() );
         product.mixed( productDto.isMixed() );
+        product.productName( productDto.getProductName() );
 
         return product.build();
     }
@@ -49,8 +49,8 @@ public class ProductMapperImpl implements ProductMapper {
         productDto.setProductStock( productProductStockProductStock( product ) );
         productDto.setProductPrice( productProductPricePrice( product ) );
         productDto.setId( product.getId() );
-        productDto.setProductName( product.getProductName() );
         productDto.setMixed( product.isMixed() );
+        productDto.setProductName( product.getProductName() );
 
         return productDto;
     }

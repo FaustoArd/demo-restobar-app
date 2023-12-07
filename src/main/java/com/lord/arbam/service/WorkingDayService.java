@@ -27,6 +27,8 @@ public interface WorkingDayService {
 	
 	public void deleteWorkingDayById(Long id);
 	
+	public List<WorkingDay> findByEmployeesId(Long employeeId);
+	
 	
 
 }

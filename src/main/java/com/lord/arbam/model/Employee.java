@@ -1,5 +1,7 @@
 package com.lord.arbam.model;
 
+import java.util.List;
+
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,6 +41,8 @@ public class Employee {
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name="employee_job_id", referencedColumnName = "id")
 	private EmployeeJob employeeJob;
+	
+
 	
 	public Employee(Long id) {
 		this.id = id;

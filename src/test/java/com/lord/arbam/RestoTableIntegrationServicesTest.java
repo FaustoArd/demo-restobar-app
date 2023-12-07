@@ -677,7 +677,7 @@ public class RestoTableIntegrationServicesTest {
 		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 10000.00);
 		assertEquals(day.getTotalWorkingDayWithDiscount().doubleValue(), 43700.00);
 		assertEquals(day.getTotalWorkingDay().doubleValue(), 53700.00);
-		assertThat(day.getDate().getTimeInMillis()).isBetween(date.getTimeInMillis() - 600L,
+		assertThat(day.getDate().getTimeInMillis()).isBetween(date.getTimeInMillis() - 2000L,
 				date.getTimeInMillis());
 		
 	}

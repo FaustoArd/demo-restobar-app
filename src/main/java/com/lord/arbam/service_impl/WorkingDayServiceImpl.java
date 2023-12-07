@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.mapstruct.ap.shaded.freemarker.core.ReturnInstruction.Return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +138,12 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			throw new ItemNotFoundException("Working day not found");
 		}
 		
+	}
+
+	@Override
+	public List<WorkingDay> findByEmployeesId(Long employeeId) {
+	return (List<WorkingDay>)workingDayRepository.findByEmployeesId(employeeId);
+	
 	}
 
 }

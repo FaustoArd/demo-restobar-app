@@ -13,6 +13,7 @@ import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.exception.ProductOutOfStockException;
 import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.exception.ValueAlreadyExistException;
+import com.lord.arbam.exception.ValueDeletionInvalidException;
 
 @ControllerAdvice
 public class HandleAppException extends ResponseEntityExceptionHandler {
@@ -47,6 +48,11 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RestoTableOpenException.class)
 	ResponseEntity<String> handleRestoTableOpenException(RestoTableOpenException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.EXPECTATION_FAILED);
+	}
+	
+	@ExceptionHandler(ValueDeletionInvalidException.class)
+	ResponseEntity<String> handleValueDeleteInvalid(ValueDeletionInvalidException ex){
+		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 
 }
