@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,6 +82,15 @@ public class EmployeeController {
 				HttpStatus.CREATED);
 
 	}
+	
+	@PutMapping("/update_employee")
+	ResponseEntity<String> updateEmployee(@RequestBody EmployeeDto employeeDto) {
+		Employee employee = EmployeeMapper.INSTANCE.toEmployee(employeeDto);
+		Employee savedEmployee = employeeService.saveEmployee(employee);
+		return new ResponseEntity<String>(gson.toJson("Se Actualizo  el empleado: " + savedEmployee.getEmployeeName()),
+				HttpStatus.CREATED);
+
+	}
 
 	@DeleteMapping("/employee/{id}")
 	ResponseEntity<String> deleteEmployeeById(@PathVariable("id") Long id) {
@@ -111,6 +121,13 @@ public class EmployeeController {
 
 	@PostMapping("/new_job_role")
 	ResponseEntity<EmployeeJobDto> createJobRole(@RequestBody EmployeeJobDto employeeJobDto) {
+		EmployeeJob job = EmployeeMapper.INSTANCE.toEmployeeJob(employeeJobDto);
+		EmployeeJob savedJob = employeeJobService.saveJob(job);
+		EmployeeJobDto savedJobDto = EmployeeMapper.INSTANCE.toEmployeeJobDto(savedJob);
+		return new ResponseEntity<EmployeeJobDto>(savedJobDto, HttpStatus.CREATED);
+	}
+	@PutMapping("/update_job_role")
+	ResponseEntity<EmployeeJobDto> updateJobRole(@RequestBody EmployeeJobDto employeeJobDto) {
 		EmployeeJob job = EmployeeMapper.INSTANCE.toEmployeeJob(employeeJobDto);
 		EmployeeJob savedJob = employeeJobService.saveJob(job);
 		EmployeeJobDto savedJobDto = EmployeeMapper.INSTANCE.toEmployeeJobDto(savedJob);
