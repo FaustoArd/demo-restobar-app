@@ -32,6 +32,7 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\controller\
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\RestoTable.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\PaymentMethod.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\Employee.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\exception\ValueDeletionInvalidException.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\configuration\WebConfiguration.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\ProductCategory.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\PaymentMethodRepository.java
