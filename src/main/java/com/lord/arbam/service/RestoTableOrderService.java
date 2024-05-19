@@ -15,6 +15,8 @@ public interface RestoTableOrderService {
 	
 	public void deleteOderById(Long id);
 	
+	public RestoTableOrder updateDeletedOrderItemPrice(RestoTableOrder order);
+	
 	public List<RestoTableOrder> findAllByRestoTableId(Long restoTableId);
 	
 	

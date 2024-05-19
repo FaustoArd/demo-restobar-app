@@ -3,6 +3,7 @@ package com.lord.arbam.service_impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.mapstruct.ap.shaded.freemarker.core.ReturnInstruction.Return;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.lord.arbam.exception.ItemNotFoundException;
+import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeRepository;
@@ -97,6 +99,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			wDay.setTotalMP(new BigDecimal(totalMpResult));
 			wDay.setTotalWorkingDay(bdTotalTablesResult.add(wDay.getTotalStartCash()));
 			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
+			wDay.setDayStarted(false);
 			return workingDayRepository.save(wDay);
 
 		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
@@ -132,12 +135,20 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public void deleteWorkingDayById(Long id) {
+		log.info("Eliminado jornada de trbajo por id");
 		if(workingDayRepository.existsById(id)) {
+		WorkingDay wdToBeDeleted   = findWorkingDayById(id);
+		if(wdToBeDeleted.isDayStarted()) {
+			throw new RestoTableOpenException("No se puede eliminar, el dia de trabajo sigue abierto.");
+		
+		}else {
+			log.info("Jornada de trabajo cerrada, se puede eliminar");
 			workingDayRepository.deleteById(id);
+		}
+		
 		}else {
 			throw new ItemNotFoundException("Working day not found");
 		}
-		
 	}
 
 	@Override
@@ -145,5 +156,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 	return (List<WorkingDay>)workingDayRepository.findByEmployeesId(employeeId);
 	
 	}
+	
 
 }
