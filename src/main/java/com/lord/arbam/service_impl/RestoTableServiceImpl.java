@@ -17,10 +17,12 @@ import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.RestoTable;
 import com.lord.arbam.model.RestoTableClosed;
 import com.lord.arbam.model.RestoTableOrder;
+import com.lord.arbam.model.RestoTableOrderClosed;
 import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeRepository;
 import com.lord.arbam.repository.PaymentMethodRepository;
 import com.lord.arbam.repository.RestoTableClosedRepository;
+import com.lord.arbam.repository.RestoTableOrderClosedRepository;
 import com.lord.arbam.repository.RestoTableOrderRepository;
 import com.lord.arbam.repository.RestoTableRepository;
 import com.lord.arbam.repository.WorkingDayRepository;
@@ -41,6 +43,9 @@ public class RestoTableServiceImpl implements RestoTableService {
 	
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
+	
+	@Autowired
+	private final RestoTableOrderClosedRepository restoTableOrderClosedRepository;
 	
 	@Autowired
 	private final WorkingDayRepository workingDayRepository;
@@ -101,7 +106,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 	RestoTable findedTable = restoTableRepository.findById(restoTableId).orElseThrow(()-> new ItemNotFoundException("resto table not found"));
 		Employee employee = employeeRepository.findById(findedTable.getEmployee().getId()).orElseThrow(()-> new ItemNotFoundException("No se encontro el empleado"));
 		WorkingDay workingDay = workingDayRepository.findById(workingDayId).orElseThrow(()-> new ItemNotFoundException("No se encontro el dia de trabajo"));
-		log.info("Copying table id: " + restoTableId + " data");
+		log.info("Copying table, id: " + restoTableId + " data");
 		RestoTableClosed tableClosed = RestoTableClosed.builder()
 				.tableNumber(findedTable.getTableNumber())
 				.employeeName(employee.getEmployeeName())
@@ -109,7 +114,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 				.paymentMethod(paymentMethod.getPaymentMethod())
 				.workingDay(workingDay).build();
 		
-		restoTableClosedRepository.save(tableClosed);
+		RestoTableClosed savedTableClosed =  restoTableClosedRepository.save(tableClosed);
 		log.info("Restarting resto table, id: " + restoTableId);
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
@@ -117,14 +122,27 @@ public class RestoTableServiceImpl implements RestoTableService {
 		findedTable.setPaymentMethod(null);
 		findedTable.setTotalTablePrice(null);
 		List<RestoTableOrder> orders = restoTableOrderRepository.findAllByRestoTableId(restoTableId);
+		List<RestoTableOrderClosed> ordersClosed = mapTableOrderToTableOrderClosed(orders, savedTableClosed);
+		log.info("Saving orders  table backup. ");
+		restoTableOrderClosedRepository.saveAll(ordersClosed);
 		log.info("Deleting orders from Table id: " + restoTableId);
 		restoTableOrderRepository.deleteAll(orders);
-		
-		
 		return restoTableRepository.save(findedTable);
+		
 	
 	}
 	
+	private static List<RestoTableOrderClosed> mapTableOrderToTableOrderClosed(List<RestoTableOrder> orders,RestoTableClosed tableClosed) {
+	List<RestoTableOrderClosed> ordersClosed = orders.stream().map(orderItem -> {
+		RestoTableOrderClosed orderClosedItem = new RestoTableOrderClosed();
+		orderClosedItem.setProductName(orderItem.getProduct().getProductName());
+		orderClosedItem.setProductQuantity(orderItem.getProductQuantity());
+		orderClosedItem.setTotalOrderPrice(orderItem.getTotalOrderPrice());
+		orderClosedItem.setRestoTableClosed(tableClosed);
+		return orderClosedItem;
+	}).toList();
+	return ordersClosed;
+	}
 	
 
 	@Override

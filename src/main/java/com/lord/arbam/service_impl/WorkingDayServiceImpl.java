@@ -17,6 +17,7 @@ import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeRepository;
 import com.lord.arbam.repository.RestoTableClosedRepository;
+import com.lord.arbam.repository.RestoTableOrderClosedRepository;
 import com.lord.arbam.repository.WorkingDayRepository;
 import com.lord.arbam.service.WorkingDayService;
 
@@ -33,6 +34,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
+	
+	
 
 	@Autowired
 	private final EmployeeRepository employeeRepository;
@@ -104,6 +107,8 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
+	
+	
 
 	@Override
 	public WorkingDay deleteEmployeesById(Long employeeId, Long workingDayId) {

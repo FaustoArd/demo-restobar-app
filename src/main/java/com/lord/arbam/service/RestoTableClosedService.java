@@ -3,6 +3,7 @@ package com.lord.arbam.service;
 import java.util.List;
 
 import com.lord.arbam.model.RestoTableClosed;
+import com.lord.arbam.model.RestoTableOrderClosed;
 
 public interface RestoTableClosedService {
 	
@@ -17,5 +18,7 @@ public interface RestoTableClosedService {
 	public RestoTableClosed saveTableClosed(RestoTableClosed restoTableClosed);
 	
 	public void deleteTableClosedById(Long id);
+	
+	public List<RestoTableOrderClosed> findAllOrdersClosed(long restoTableClosedId);
 
 }

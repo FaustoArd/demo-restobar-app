@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.model.RestoTableClosed;
+import com.lord.arbam.model.RestoTableOrderClosed;
 import com.lord.arbam.repository.RestoTableClosedRepository;
+import com.lord.arbam.repository.RestoTableOrderClosedRepository;
 import com.lord.arbam.service.RestoTableClosedService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,10 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
-
+	
+	@Autowired
+	private final RestoTableOrderClosedRepository restoTableOrderClosedRepository;
+	
 	@Override
 	public RestoTableClosed findTableClosedById(Long id) {
 		return restoTableClosedRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
@@ -53,6 +58,12 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 	@Override
 	public List<RestoTableClosed> findAllByWorkingDayIdOrderByTableNumberAsc(Long workingDayId) {
 		return (List<RestoTableClosed>)restoTableClosedRepository.findAllByWorkingDayIdOrderByTableNumberAsc(workingDayId);
+	}
+
+	@Override
+	public List<RestoTableOrderClosed> findAllOrdersClosed(long restoTableClosedId) {
+		RestoTableClosed restoTableClosed = restoTableClosedRepository.findById(restoTableClosedId).orElseThrow(()-> new ItemNotFoundException("No se encontro la mesa cerrada"));
+		return (List<RestoTableOrderClosed>)restoTableOrderClosedRepository.findAllByRestoTableClosed(restoTableClosed);
 	}
 
 }
