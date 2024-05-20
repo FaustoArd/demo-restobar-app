@@ -2,6 +2,9 @@ package com.lord.arbam.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,8 +41,9 @@ public class RestoTableOrderClosed {
 	@Column(name="product_name")
 	private String productName;
 	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-	@JoinColumn(name="resto_table_id", referencedColumnName = "id")
+	@JoinColumn(name="resto_table_closed_id", referencedColumnName = "id")
 	private RestoTableClosed restoTableClosed;
 	
 
