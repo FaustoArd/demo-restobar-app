@@ -426,8 +426,8 @@ public class RestoTableIntegrationServicesTest {
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
-		assertEquals(orders.size(), 1);
-		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 12600.00);
+		assertEquals(orders.size(), 2);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 14100.00);
 
 	}
 
@@ -443,10 +443,10 @@ public class RestoTableIntegrationServicesTest {
 		RestoTableOrder updatedOrder = restoTableOrderService.createOrder(order);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
 		RestoTable updatedTable = restoTableService.updateRestoTableTotalPrice(table, orders);
-		assertEquals(orders.size(), 2);
+		assertEquals(orders.size(), 3);
 		assertEquals(updatedOrder.getProduct().getProductName(), "Cerveza heineken");
 		assertEquals(updatedOrder.getTotalOrderPrice().doubleValue(), 11900.00);
-		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 24500.00);
+		assertEquals(updatedTable.getTotalTablePrice().doubleValue(), 26000.00);
 	}
 
 	// table id : 1
@@ -461,11 +461,11 @@ public class RestoTableIntegrationServicesTest {
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
 		
 
-		assertEquals(table.getTotalTablePrice().doubleValue(), 24500.00);
+		assertEquals(table.getTotalTablePrice().doubleValue(), 26000.00);
 		assertEquals(table.getEmployee().getId(), 1L);
 
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getTotalPrice()
-				.doubleValue(), 24500.00);
+				.doubleValue(), 26000.00);
 		assertEquals(
 				restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getEmployeeName(),
 				"Carla Mesera");
@@ -671,12 +671,12 @@ public class RestoTableIntegrationServicesTest {
 		WorkingDay day = workingDayService.closeWorkingDay(workingDayId);
 		assertEquals(day.getTotalStartCash().doubleValue(), 10000.00);
 		assertEquals(day.getId(), workingDayId);
-		assertEquals(day.getTotalCash().doubleValue(),  24500.00);
+		assertEquals(day.getTotalCash().doubleValue(),  26000.00);
 		assertEquals(day.getTotalDebit().doubleValue(),14400.00 );
 		assertEquals(day.getTotalCredit().doubleValue(), 4800.00);
 		assertEquals(day.getTotalEmployeeSalary().doubleValue(), 10000.00);
-		assertEquals(day.getTotalWorkingDayWithDiscount().doubleValue(), 43700.00);
-		assertEquals(day.getTotalWorkingDay().doubleValue(), 53700.00);
+		assertEquals(day.getTotalWorkingDayWithDiscount().doubleValue(), 45200.00);
+		assertEquals(day.getTotalWorkingDay().doubleValue(), 55200.00);
 		assertThat(day.getDate().getTimeInMillis()).isBetween(date.getTimeInMillis() - 2000L,
 				date.getTimeInMillis());
 		

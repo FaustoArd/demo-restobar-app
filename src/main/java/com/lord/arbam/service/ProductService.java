@@ -21,5 +21,7 @@ public interface ProductService {
 	
 	public List<Product> findByCategoryId(Long id);
 	
+	public List<Long> findProductIdsByCategory(Long categoryId);
+	
 	public List<Product> findAllProductByProductNameOrderAsc();
 }

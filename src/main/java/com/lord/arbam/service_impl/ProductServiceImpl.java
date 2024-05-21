@@ -119,6 +119,11 @@ public class ProductServiceImpl implements ProductService {
 		
 		return (List<Product>)productRepository.findAll(sort);
 	}
+
+	@Override
+	public List<Long> findProductIdsByCategory(Long categoryId) {
+		return (List<Long>)productRepository.findByCategoryId(categoryId).stream().map(p -> p.getId()).toList();
+	}
 	
 
 

@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lord.arbam.dto.PriceUpdateReportDto;
 import com.lord.arbam.dto.ProductDto;
 import com.lord.arbam.dto.ProductStockDto;
 import com.lord.arbam.mapper.ProductMapper;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.service.IngredientService;
+import com.lord.arbam.service.ProductPriceService;
 import com.lord.arbam.service.ProductService;
 import com.lord.arbam.service.ProductStockService;
 import com.nimbusds.jose.shaded.gson.Gson;
@@ -42,6 +45,9 @@ public class ProductController {
 
 	@Autowired
 	private final IngredientService ingredientService;
+	
+	@Autowired
+	private final ProductPriceService priceService;
 
 	private static final Gson gson = new Gson();
 
@@ -141,5 +147,12 @@ public class ProductController {
 				gson.toJson("Stock eliminado correctamete, cantidad total actual: " + savedStock.getProductStock()),
 				HttpStatus.OK);
 
+	}
+	@PutMapping("/update-by-percentage")
+	ResponseEntity<List<PriceUpdateReportDto>> updatePriceByPercentageByCategory
+	(@RequestParam("categoryId")long categoryId,@RequestBody double percentage,@RequestParam("positive")boolean positive){
+		List<Long> productIds = productService.findProductIdsByCategory(categoryId);
+		List<PriceUpdateReportDto> priceReports = priceService.updateAllPriceByPercentageByCategory(productIds, percentage, positive);
+		return new ResponseEntity<List<PriceUpdateReportDto>>(priceReports,HttpStatus.OK);
 	}
 }
