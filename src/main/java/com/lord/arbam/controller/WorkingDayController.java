@@ -72,10 +72,11 @@ public class WorkingDayController {
 	}
 	
 	@GetMapping("/close/{id}")
-	ResponseEntity<?> closeWorkingDay(@PathVariable("id") Long id){
+	ResponseEntity<WorkingDayDto> closeWorkingDay(@PathVariable("id") Long id){
 		restoTableService.checkTablesOpen();
-		workingDayService.closeWorkingDay(id);
-		return new ResponseEntity<String>(gson.toJson("Jornada finalizada con exito!"),HttpStatus.OK);
+		WorkingDay workingDay =  workingDayService.closeWorkingDay(id);
+		WorkingDayDto workingDayDto = WorkingDayMapper.INSTANCE.toWorkingDayDto(workingDay);
+		return new ResponseEntity<WorkingDayDto>(workingDayDto,HttpStatus.OK);
 		
 	}
 	@DeleteMapping("/{id}")
