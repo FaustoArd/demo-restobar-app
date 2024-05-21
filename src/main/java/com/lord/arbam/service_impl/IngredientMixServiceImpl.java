@@ -68,17 +68,35 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public void deleteIngredientMixById(Long id) {
 
 		if (ingredientMixRepository.existsById(id)) {
-			log.info("Eliminando item de receta");
-			ingredientMixRepository.deleteById(id);
+			setIngredientMixDeleted(id);
 		} else {
 			log.info("No se encontro el ingrediente");
 			throw new ItemNotFoundException("Ingredient Mix not found");
 		}
 
+	}
+	
+	private void setIngredientMixDeleted(long ingredientMixId) {
+		long productId = findIngredientMixById(ingredientMixId).getProduct().getId();
+		long count = ingredientMixRepository.findByProductId(productId).stream().count();
+		if (count == 1) {
+			log.info("El producto no contiene ningun item de receta, seteando product.mixed a false");
+			Product product = findProductById(productId);
+			product.setMixed(false);
+			productRepository.save(product);
+			log.info("Eliminando item de receta");
+			ingredientMixRepository.deleteById(ingredientMixId);
+			
+		} else {
+		log.info("El producto todavia contiene mas de un ingrediente.");
+			log.info("Eliminando item de receta");
+			ingredientMixRepository.deleteById(ingredientMixId);
+		}
 	}
 
 	@Override
@@ -90,15 +108,19 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 	@Override
 	public List<IngredientMix> findByProductId(Long id) {
 
-		return (List<IngredientMix>) ingredientMixRepository.findByProductId(id)
-				.orElseThrow(() -> new ItemNotFoundException("Ingredient Mix not found."));
+		return (List<IngredientMix>) ingredientMixRepository.findByProductId(id);
+
 	}
 
 	@Override
 	public List<IngredientMix> findByProductIdByOrderAsc(Long id) {
+		return (List<IngredientMix>) ingredientMixRepository.findByProductIdOrderByIngredientIngredientNameAsc(id);
 
-		return (List<IngredientMix>) ingredientMixRepository.findByProductIdOrderByIngredientIngredientNameAsc(id)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro la receta"));
+	}
+
+	private Product findProductById(long productId) {
+		return productRepository.findById(productId)
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro el prodcucto."));
 	}
 
 }

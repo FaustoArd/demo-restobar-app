@@ -11,9 +11,9 @@ import com.lord.arbam.model.IngredientMix;
 public interface IngredientMixRepository extends JpaRepository<IngredientMix, Long> {
 
 	
-	public Optional<List<IngredientMix>> findByProductIdOrderByIngredientIngredientNameAsc(Long id);
+	public List<IngredientMix> findByProductIdOrderByIngredientIngredientNameAsc(Long id);
 	
-	public Optional<List<IngredientMix>> findByProductId(Long id);
+	public List<IngredientMix> findByProductId(Long id);
 	
 	public IngredientMix findByProductIdAndIngredientId(Long productId,Long ingredientId);
 }

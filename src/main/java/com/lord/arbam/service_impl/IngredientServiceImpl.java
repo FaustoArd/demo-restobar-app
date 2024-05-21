@@ -84,7 +84,7 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
 	public void updateIngredientAmount(Integer stockCreated, Long productId) {
 		log.info("Actualizando ingredientes despues de producir stock");
-		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
+		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		mixesIterator.forEachRemaining(mix -> {
@@ -105,7 +105,7 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
 	public void increaseIngredientAmount(Integer stockDeleted, Long productId) {
 		log.info("Actualizando ingredientes despues de eliminar stock");
-		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId).orElseThrow(()-> new ItemNotFoundException("No se encontro la receta"));
+		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		mixesIterator.forEachRemaining(mix -> {
