@@ -69,10 +69,10 @@ public class ProductStockServiceImpl implements ProductStockService {
 			throw new ItemNotFoundException("Stock not found");
 		} else if (stockReduced.getProductStock() < 0
 				|| stockResult.get().getProductStock() - stockReduced.getProductStock() < 0) {
-			log.warn("Stock con numero negativo o el resultado de la reduccion de stock daba un numero negativo");
-			throw new NegativeNumberException("Negative number, or as a result of stock reduction stock quantity is negative");
+			log.warn("Negative number, or as a result of stock reduction stock quantity is negative");
+			throw new NegativeNumberException("Stock con numero negativo o el resultado de la reduccion de stock daba un numero negativo");
 		} else {
-			log.info("Eliminando stock");
+			log.info("Delete stock");
 			ProductStock deletedStock = stockResult.get();
 			deletedStock.setProductStock(deletedStock.getProductStock() - stockReduced.getProductStock());
 			return productStockRepository.save(deletedStock);
@@ -83,6 +83,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
 	@Override
 	public ProductStock findStockByProductId(Long id) {
+		log.info("Find stock by id");
 		return productStockRepository.findStockByProductId(id)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el stock"));
 	}

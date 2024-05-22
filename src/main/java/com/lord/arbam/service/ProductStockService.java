@@ -1,5 +1,6 @@
 package com.lord.arbam.service;
 
+import com.lord.arbam.dto.ProductStockUpdateReportDto;
 import com.lord.arbam.model.ProductStock;
 
 public interface ProductStockService {
