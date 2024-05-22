@@ -109,7 +109,7 @@ public class ProductUpdateStockTest {
 		
 		
 		if(product.isMixed()) {
-			ingredientService.updateIngredientAmount(stock.getProductStock(), product.getId());
+			ingredientService.decreaseIngredientAmount(stock.getProductStock(), product.getId());
 		}
 		ProductStock savedStock = productStockService.updateStock(stock, product.getId());
 		this.currentStockId = savedStock.getId();
@@ -145,7 +145,7 @@ public class ProductUpdateStockTest {
 			Product product = productService.findProductById(1L);
 			ProductStock newStock = new ProductStock(10);
 			if(product.isMixed()) {
-			ingredientService.updateIngredientAmount(newStock.getProductStock(), product.getId());
+			ingredientService.decreaseIngredientAmount(newStock.getProductStock(), product.getId());
 			}
 			ProductStock stock = productStockService.findStockById(this.currentStockId);
 			ProductStock savedStock = productStockService.updateStock(newStock, 1L);
@@ -204,7 +204,7 @@ public class ProductUpdateStockTest {
 			
 			}, "No Exception throw");
 			
-			assertTrue(exception.getMessage().equals( "Negative number, or as a result of stock reduction stock quantity is negative"));
+			assertTrue(exception.getMessage().equals( "Stock con numero negativo o el resultado de la reduccion de stock daba un numero negativo"));
 		
 			
 		}

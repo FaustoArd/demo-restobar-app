@@ -1,5 +1,6 @@
 package com.lord.arbam.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lord.arbam.dto.IngredientStockUpdateReportDto;
 import com.lord.arbam.dto.PriceUpdateReportDto;
 import com.lord.arbam.dto.ProductDto;
 import com.lord.arbam.dto.ProductStockDto;
+import com.lord.arbam.dto.ProductStockUpdateReportDto;
 import com.lord.arbam.mapper.ProductMapper;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductStock;
@@ -113,41 +116,65 @@ public class ProductController {
 	}
 
 	@PostMapping("/create_stock")
-	ResponseEntity<ProductDto> createStock(@RequestParam("productId") Long productId,
+	ResponseEntity<ProductStockUpdateReportDto> createStock(@RequestParam("productId") Long productId,
 			@RequestBody ProductStockDto stockDto) {
 		log.info("Buscando producto por id");
 		Product product = productService.findProductById(productId);
+		int oldProductStock = productStockService.findStockByProductId(product.getId()).getProductStock();
+		
 		if (product.isMixed()) {
 			log.info("Actualizando la cantidad de ingredientes");
-			ingredientService.updateIngredientAmount(stockDto.getProductStock(), productId);
+			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService.decreaseIngredientAmount(stockDto.getProductStock(), productId);
+			ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
+			log.info("Creando o actualizando stock");
+			ProductStock savedStock = productStockService.updateStock(stock, productId);
+			log.info("Guardando producto");
+			Product productUpdated = productService.createProductStock(product, savedStock);
+			
+			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock, savedStock, ingredientReportDtos);
+			return new ResponseEntity<ProductStockUpdateReportDto>(report, HttpStatus.CREATED);
 		}
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
 		log.info("Creando o actualizando stock");
 		ProductStock savedStock = productStockService.updateStock(stock, productId);
 		log.info("Guardando producto");
 		Product productUpdated = productService.createProductStock(product, savedStock);
-		ProductDto newProductDto = ProductMapper.INSTANCE.toProductDto(productUpdated);
-		return new ResponseEntity<ProductDto>(newProductDto, HttpStatus.CREATED);
+		ProductStockUpdateReportDto report = mapToProductUpdateReportDto
+				(productUpdated, oldProductStock, savedStock, new ArrayList<IngredientStockUpdateReportDto>());
+		return new ResponseEntity<ProductStockUpdateReportDto>(report, HttpStatus.CREATED);
 
 	}
-
+	
 	@PutMapping("/reduce_stock")
-	ResponseEntity<String> reduceStock(@RequestParam("productId") Long productId,
+	ResponseEntity<ProductStockUpdateReportDto> reduceStock(@RequestParam("productId") Long productId,
 			@RequestBody ProductStockDto stockDto) {
 		Product product = productService.findProductById(productId);
+		int oldProductStock = productStockService.findStockByProductId(product.getId()).getProductStock();
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
 		log.info("Eliminando stock");
 		ProductStock savedStock = productStockService.reduceStock(stock, productId);
 		if (product.isMixed()) {
 			log.info("Actualizando la cantidad de ingredientes");
-			ingredientService.increaseIngredientAmount(stockDto.getProductStock(), productId);
-
+			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService.increaseIngredientAmount(stockDto.getProductStock(), productId);
+			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(product, oldProductStock, savedStock, ingredientReportDtos);
+			return new ResponseEntity<ProductStockUpdateReportDto>(report, HttpStatus.OK);
+			
 		}
-		return new ResponseEntity<String>(
-				gson.toJson("Stock eliminado correctamete, cantidad total actual: " + savedStock.getProductStock()),
-				HttpStatus.OK);
+		ProductStockUpdateReportDto report = mapToProductUpdateReportDto(product, oldProductStock, savedStock,  new ArrayList<IngredientStockUpdateReportDto>());
+		return new ResponseEntity<ProductStockUpdateReportDto>(report, HttpStatus.OK);
 
 	}
+	private static ProductStockUpdateReportDto mapToProductUpdateReportDto
+	(Product product,int oldProductStock,ProductStock savedStock,List<IngredientStockUpdateReportDto> ingredientReportDtos) {
+		ProductStockUpdateReportDto productStockUpdateReportDto = new ProductStockUpdateReportDto();
+		productStockUpdateReportDto.setProductName(product.getProductName());
+		productStockUpdateReportDto.setProductOldQuantity(oldProductStock);
+		productStockUpdateReportDto.setProductNewQuantity(savedStock.getProductStock());
+		productStockUpdateReportDto.setIngrdientStockReports(ingredientReportDtos);
+		return productStockUpdateReportDto;
+	}
+	
+	
 	@PutMapping("/update-by-percentage")
 	ResponseEntity<List<PriceUpdateReportDto>> updatePriceByPercentageByCategory
 	(@RequestParam("categoryId")long categoryId,@RequestBody double percentage,@RequestParam("positive")boolean positive){

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.dto.IngredientStockDto;
+import com.lord.arbam.dto.IngredientStockUpdateReportDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
@@ -85,11 +86,12 @@ public class IngredientServiceImpl implements IngredientService {
 	/*Throw Exception if the final ingredient amount is minor to zero */
 	@Transactional
 	@Override
-	public void updateIngredientAmount(Integer stockCreated, Long productId) {
+	public List<IngredientStockUpdateReportDto> decreaseIngredientAmount(Integer stockCreated, Long productId) {
 		log.info("Updating ingredient quantity after create product stock");
 		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		List<IngredientStockUpdateReportDto> ingredientReportDtos = new ArrayList<IngredientStockUpdateReportDto>();
 		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
 			if(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount())<0) {
@@ -97,29 +99,56 @@ public class IngredientServiceImpl implements IngredientService {
 				throw new NegativeNumberException("Not enough ingredient amount to produce that stock");
 			}else {
 				log.info("Guardando la cantidad restante de ingredientes");
+				int ingredientOldQuantity = ingredient.getIngredientAmount();
 			ingredient
 					.setIngredientAmount(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount()));
 			ingredients.add(ingredient);
+			ingredientReportDtos.add(mapToIngredientStockUpdateReportDto(mix, ingredient, ingredientOldQuantity, stockCreated,true));
+			
 			}
 		});
 		ingredientRepository.saveAll(ingredients);
-
+		return ingredientReportDtos;
+		}
+	
+	private IngredientStockUpdateReportDto mapToIngredientStockUpdateReportDto
+	(IngredientMix mix,Ingredient ingredient,int ingredientOldQuantity,Integer stockCreated,boolean subtracted) {
+		IngredientStockUpdateReportDto ingredientStockUpdateReportDto = new IngredientStockUpdateReportDto();
+		ingredientStockUpdateReportDto.setIngredientName(ingredient.getIngredientName());
+		ingredientStockUpdateReportDto.setIngredientRecipeQuantity(mix.getIngredientAmount());
+		
+		ingredientStockUpdateReportDto.setIngredientOldQuantity(ingredientOldQuantity);
+		ingredientStockUpdateReportDto.setIngredientNewQuantity(ingredient.getIngredientAmount());
+		if(subtracted) {
+			ingredientStockUpdateReportDto.setIngredientQuantitySubstracted(mix.getIngredientAmount()* stockCreated);
+			ingredientStockUpdateReportDto.setSubstracted(true);
+		}else {
+			ingredientStockUpdateReportDto.setIngredientQuantityIncreased(mix.getIngredientAmount()* stockCreated);
+			ingredientStockUpdateReportDto.setSubstracted(false);
+		}
+		
+		return ingredientStockUpdateReportDto;
+		
 	}
+	
 	@Override
-	public void increaseIngredientAmount(Integer stockDeleted, Long productId) {
+	public List<IngredientStockUpdateReportDto> increaseIngredientAmount(Integer stockDeleted, Long productId) {
 		log.info("Updating ingredient quantity after delete product stock");
 		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		List<IngredientStockUpdateReportDto> ingredientReportDtos = new ArrayList<IngredientStockUpdateReportDto>();
 		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
+			int ingredientOldQuantity  =ingredient.getIngredientAmount();
 			ingredient
 					.setIngredientAmount(ingredient.getIngredientAmount() + (stockDeleted * mix.getIngredientAmount()));
 			ingredients.add(ingredient);
+			ingredientReportDtos.add(mapToIngredientStockUpdateReportDto(mix, ingredient, ingredientOldQuantity, stockDeleted,false));
 			
 		});
 		ingredientRepository.saveAll(ingredients);
-		
+		return ingredientReportDtos;
 	}
 	
 

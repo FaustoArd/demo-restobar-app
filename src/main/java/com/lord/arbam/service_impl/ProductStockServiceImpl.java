@@ -59,14 +59,16 @@ public class ProductStockServiceImpl implements ProductStockService {
 			}
 		}
 	}
+	
+
 
 	@Transactional
 	@Override
 	public ProductStock reduceStock(ProductStock stockReduced, Long productId) {
 		Optional<ProductStock> stockResult = productStockRepository.findStockByProductId(productId);
 		if (stockResult.isEmpty()) {
-			log.info("Stock inexistente");
-			throw new ItemNotFoundException("Stock not found");
+			log.info("Stock not found");
+			throw new ItemNotFoundException("Stock inexistente");
 		} else if (stockReduced.getProductStock() < 0
 				|| stockResult.get().getProductStock() - stockReduced.getProductStock() < 0) {
 			log.warn("Negative number, or as a result of stock reduction stock quantity is negative");
