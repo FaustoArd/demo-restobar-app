@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.lord.arbam.dto.IngredientStockDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
@@ -38,14 +40,14 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Ingredient findIngredientById(Long id) {
-		log.info("Buscando ingrediente por id");
+		log.info("find ingredient by id");
 		return ingredientRepository.findById(id).orElseThrow(
 				() -> new ItemNotFoundException("No se encontro el ingrediente. RecipentServiceImpl.findRecipentById"));
 	}
 
 	@Override
 	public Ingredient saveIngredient(IngredientCategory category, Ingredient ingredient) {
-		log.info("guardando ingrediente");
+		log.info("saving ingredient");
 		Ingredient savedIngredient = Ingredient.builder().ingredientName(ingredient.getIngredientName())
 				.ingredientCategory(category).ingredientAmount(ingredient.getIngredientAmount())
 				.ingredientAmount(ingredient.getIngredientAmount()).expirationDate(ingredient.getExpirationDate())
@@ -55,7 +57,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public Ingredient updateIngredient(IngredientCategory category, Ingredient ingredient) {
-		log.info("actualizando ingrediente");
+		log.info("updating ingredient");
 		return ingredientRepository.findById(ingredient.getId()).map(updatedIngredient -> {
 			updatedIngredient.setIngredientName(ingredient.getIngredientName());
 			updatedIngredient.setIngredientCategory(category);
@@ -69,6 +71,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public void deleteIngredientById(Long id) {
+		log.info("eliminando ingrediente");
 		if (ingredientRepository.existsById(id)) {
 			ingredientRepository.deleteById(id);
 		} else {
@@ -83,7 +86,7 @@ public class IngredientServiceImpl implements IngredientService {
 	@Transactional
 	@Override
 	public void updateIngredientAmount(Integer stockCreated, Long productId) {
-		log.info("Actualizando ingredientes despues de producir stock");
+		log.info("Updating ingredient quantity after create product stock");
 		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
@@ -104,7 +107,7 @@ public class IngredientServiceImpl implements IngredientService {
 	}
 	@Override
 	public void increaseIngredientAmount(Integer stockDeleted, Long productId) {
-		log.info("Actualizando ingredientes despues de eliminar stock");
+		log.info("Updating ingredient quantity after delete product stock");
 		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
 		ListIterator<IngredientMix> mixesIterator = mixes.listIterator();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
@@ -122,14 +125,43 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	public List<Ingredient> findAllIngredients() {
+		log.info("buscando todos los  ingredientes");
 		return (List<Ingredient>)ingredientRepository.findAll();
 	}
 
 	@Override
 	public List<Ingredient> findAllIngredientsOrderByNameAsc() {
-		//Sort sort =  Sort.by("ingredientName");
+		log.info("find all ingredients by name asc");
 		return (List<Ingredient>)ingredientRepository.findAll(sort);
 	}
+
+	@Override
+	public IngredientStockDto increaseIngredientStock(IngredientStockDto ingredientStockDto) {
+		log.info("Increase ingredient stock");
+		Ingredient ingredient = findIngredientById(ingredientStockDto.getId());
+		ingredient.setIngredientAmount(ingredient.getIngredientAmount()+ingredientStockDto.getIngredientAmount());
+		Ingredient saveIngredient = ingredientRepository.save(ingredient);
+		return mapIngredientToStockDto(saveIngredient);
+		
+	}
+	
+	@Override
+	public IngredientStockDto DecreaseIngredientStock(IngredientStockDto ingredientStockDto) {
+		log.info("Decrease ingredient stock");
+		Ingredient ingredient = findIngredientById(ingredientStockDto.getId());
+		if(ingredient.getIngredientAmount()-ingredientStockDto.getIngredientAmount()<0) {
+			throw new NegativeNumberException("No se puede realizar la operacion, el stock quedaria en negativo"); 
+		}else {
+			ingredient.setIngredientAmount(ingredient.getIngredientAmount()-ingredientStockDto.getIngredientAmount());
+			Ingredient savedIngredient = ingredientRepository.save(ingredient);
+			return mapIngredientToStockDto(savedIngredient);
+		}
+		
+	}
+	private IngredientStockDto mapIngredientToStockDto(Ingredient ingredient) {
+		return new IngredientStockDto(ingredient.getId(),ingredient.getIngredientName(),ingredient.getIngredientAmount());
+	}
+
 
 	
 }

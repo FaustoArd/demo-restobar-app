@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lord.arbam.dto.IngredientCategoryDto;
 import com.lord.arbam.dto.IngredientDto;
+import com.lord.arbam.dto.IngredientStockDto;
 import com.lord.arbam.mapper.CategoryMapper;
 import com.lord.arbam.mapper.IngredientMapper;
 import com.lord.arbam.model.Ingredient;
@@ -84,5 +85,15 @@ public class IngredientController {
 	ResponseEntity<String> deleteIngredient(@PathVariable("id")Long id){
 		ingredientService.deleteIngredientById(id);
 		return new ResponseEntity<String>(gson.toJson("Se elimino el ingrediente"),HttpStatus.OK);
+	}
+	@PutMapping("/increase-stock")
+	ResponseEntity<IngredientStockDto> increaseIngredientStock(@RequestBody IngredientStockDto ingredientStockDto){
+		IngredientStockDto updatedIngredientStockDto = ingredientService.increaseIngredientStock(ingredientStockDto);
+		return new ResponseEntity<IngredientStockDto>(updatedIngredientStockDto,HttpStatus.OK);
+	}
+	@PutMapping("/decrease-stock")
+	ResponseEntity<IngredientStockDto> decreaseIngredientStock(@RequestBody IngredientStockDto ingredientStockDto){
+		IngredientStockDto updaIngredientStockDto = ingredientService.DecreaseIngredientStock(ingredientStockDto);
+		return new ResponseEntity<IngredientStockDto>(updaIngredientStockDto,HttpStatus.OK);
 	}
 }

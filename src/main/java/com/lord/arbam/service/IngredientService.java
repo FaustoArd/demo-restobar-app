@@ -2,6 +2,7 @@ package com.lord.arbam.service;
 
 import java.util.List;
 
+import com.lord.arbam.dto.IngredientStockDto;
 import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
 
@@ -22,5 +23,9 @@ public interface IngredientService {
 	public void increaseIngredientAmount(Integer stockDeleted,Long productId);
 	
 	public List<Ingredient> findAllIngredientsOrderByNameAsc();
+	
+	public IngredientStockDto increaseIngredientStock(IngredientStockDto ingredientStockDto);
+	
+	public IngredientStockDto DecreaseIngredientStock(IngredientStockDto ingredientStockDto);
 
 }
