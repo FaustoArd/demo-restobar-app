@@ -2,6 +2,8 @@ package com.lord.arbam.service;
 
 import java.util.List;
 
+import com.lord.arbam.dto.ProductStockDto;
+import com.lord.arbam.dto.ProductStockUpdateReportDto;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductStock;
 
@@ -24,4 +26,10 @@ public interface ProductService {
 	public List<Long> findProductIdsByCategory(Long categoryId);
 	
 	public List<Product> findAllProductByProductNameOrderAsc();
+	
+	public ProductStockUpdateReportDto increaseProductStock(long productId,ProductStockDto stockDto);
+	
+	public ProductStockUpdateReportDto decreaseProductStock(long productId,ProductStockDto stockDto);
+		
+
 }
