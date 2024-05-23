@@ -1,6 +1,6 @@
 package com.lord.arbam.service;
 
-import com.lord.arbam.dto.ProductStockUpdateReportDto;
+
 import com.lord.arbam.model.ProductStock;
 
 public interface ProductStockService {
@@ -16,6 +16,8 @@ public interface ProductStockService {
 	public ProductStock findStockByProductId(Long productId);
 	
 	public void subTractStockFromOrder(Integer amount,Long productId);
+	
+	public boolean checkStockPresent(long productId);
 	
 	
 

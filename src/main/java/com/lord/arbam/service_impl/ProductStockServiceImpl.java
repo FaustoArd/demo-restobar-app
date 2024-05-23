@@ -106,4 +106,9 @@ public class ProductStockServiceImpl implements ProductStockService {
 
 	}
 
+	@Override
+	public boolean checkStockPresent(long productId) {
+		return productStockRepository.findStockByProductId(productId).isPresent();
+	}
+
 }
