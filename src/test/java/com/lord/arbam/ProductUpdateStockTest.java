@@ -148,14 +148,11 @@ public class ProductUpdateStockTest {
 		RuntimeException exception = Assertions.assertThrows(NegativeNumberException.class, ()->{ 
 			
 			Product product = productService.findProductById(1L);
-			ProductStock newStock = new ProductStock(10);
-			if(product.isMixed()) {
-			ingredientService.decreaseIngredientAmount(newStock.getProductStock(), product.getId());
-			}
-			ProductStock stock = productStockService.findStockById(this.currentStockId);
+			ProductStockDto newStock = new ProductStockDto();
+			newStock.setProductStock(50);
+			ProductStockUpdateReportDto report = productService.decreaseProductStock(product.getId(), newStock);
+			//ProductStock stock = productStockService.findStockById(product.getProductStock().getId());
 			
-			ProductStock savedStock = productStockService.updateStock(newStock, 1L);
-			Product savedProduct = productService.createProductStock(product, savedStock);
 		}, "No Exception throw");
 		
 		assertTrue(exception.getMessage().equals( "Not enough ingredient amount to produce that stock"));

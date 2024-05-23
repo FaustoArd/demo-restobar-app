@@ -41,11 +41,11 @@ public class IngredientMixController {
 	}
 	
 	@PostMapping("/")
-	ResponseEntity<String> createMix(@RequestBody IngredientMixDto ingredientMixDto,@RequestParam("productId") Long productId){
+	ResponseEntity<IngredientMixDto> createMix(@RequestBody IngredientMixDto ingredientMixDto,@RequestParam("productId") Long productId){
 		IngredientMix mix = IngredientMixMapper.INSTANCE.toIngredientMix(ingredientMixDto);
 		IngredientMix savedMix = ingredientMixService.saveIngredientMix(mix,productId);
 		IngredientMixDto savedMixDto = IngredientMixMapper.INSTANCE.toIngredientMixDto(savedMix);
-		return new ResponseEntity<String>(gson.toJson("Receta actualizada, se agrego: " + savedMixDto.getIngredientName()), HttpStatus.CREATED);
+		return new ResponseEntity<IngredientMixDto>(savedMixDto, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/{id}")

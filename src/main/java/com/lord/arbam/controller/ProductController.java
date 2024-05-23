@@ -120,7 +120,7 @@ public class ProductController {
 	@PutMapping("/reduce_stock")
 	ResponseEntity<ProductStockUpdateReportDto> reduceStock(@RequestParam("productId") Long productId,
 			@RequestBody ProductStockDto stockDto) {
-		ProductStockUpdateReportDto report = productService.increaseProductStock(productId, stockDto);
+		ProductStockUpdateReportDto report = productService.decreaseProductStock(productId, stockDto);
 		return new ResponseEntity<ProductStockUpdateReportDto>(report,HttpStatus.CREATED);
 	
 	}
