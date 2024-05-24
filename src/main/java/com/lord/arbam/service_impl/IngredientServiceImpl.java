@@ -97,11 +97,7 @@ public class IngredientServiceImpl implements IngredientService {
 		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
 			if(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount())<0) {
-				int ingredientOldQuantity = ingredient.getIngredientAmount();
-				
-				String ingredientNames = ingredientRepository.findAllById(mixes.stream().map(m -> m.getIngredient().getId()).toList())
-						.stream().map(m -> m.getIngredientName()).collect(Collectors.joining(","));
-				throw new NegativeNumberException(ingredientNames);
+				throw new NegativeNumberException("No hay suficiente stock de ingredientes");
 			}else {
 				log.info("Guardando la cantidad restante de ingredientes");
 				int ingredientOldQuantity = ingredient.getIngredientAmount();

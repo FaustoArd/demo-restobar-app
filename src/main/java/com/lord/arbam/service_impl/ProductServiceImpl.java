@@ -115,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
 			productRepository.deleteById(id);
 		} else {
 			log.info("Cant delete, product not found");
-			throw new ItemNotFoundException("Product not found. ProductServiceImpl.deleteProductById");
+			throw new ItemNotFoundException("No se encontro el producto");
 		}
 
 	}
