@@ -3,6 +3,8 @@ package com.lord.arbam.service_impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,11 +98,10 @@ public class IngredientServiceImpl implements IngredientService {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
 			if(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount())<0) {
 				int ingredientOldQuantity = ingredient.getIngredientAmount();
-				log.warn("Not enough ingredient amount to produce that stock");
-				ProductStockUpdateReportDto report = new ProductStockUpdateReportDto();
-				report.setProductName("TEST!");
-				report.setProductNewQuantity(5670);
-				throw new NegativeNumberException("Error");
+				
+				String ingredientNames = ingredientRepository.findAllById(mixes.stream().map(m -> m.getIngredient().getId()).toList())
+						.stream().map(m -> m.getIngredientName()).collect(Collectors.joining(","));
+				throw new NegativeNumberException(ingredientNames);
 			}else {
 				log.info("Guardando la cantidad restante de ingredientes");
 				int ingredientOldQuantity = ingredient.getIngredientAmount();
