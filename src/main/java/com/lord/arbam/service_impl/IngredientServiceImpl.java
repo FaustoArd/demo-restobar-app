@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.lord.arbam.dto.IngredientStockDto;
 import com.lord.arbam.dto.IngredientStockUpdateReportDto;
+import com.lord.arbam.dto.ProductStockUpdateReportDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
@@ -97,7 +97,10 @@ public class IngredientServiceImpl implements IngredientService {
 			if(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount())<0) {
 				int ingredientOldQuantity = ingredient.getIngredientAmount();
 				log.warn("Not enough ingredient amount to produce that stock");
-				throw new NegativeNumberException("No hay suficiente cantidad de ingrediente: "+ingredient.getIngredientName());
+				ProductStockUpdateReportDto report = new ProductStockUpdateReportDto();
+				report.setProductName("TEST!");
+				report.setProductNewQuantity(5670);
+				throw new NegativeNumberException("Error");
 			}else {
 				log.info("Guardando la cantidad restante de ingredientes");
 				int ingredientOldQuantity = ingredient.getIngredientAmount();

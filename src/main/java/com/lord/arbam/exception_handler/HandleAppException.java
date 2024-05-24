@@ -6,7 +6,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.lord.arbam.exception.EmployeeNotSelectedException;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
@@ -54,5 +53,6 @@ public class HandleAppException extends ResponseEntityExceptionHandler {
 	ResponseEntity<String> handleValueDeleteInvalid(ValueDeletionInvalidException ex){
 		return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
+
 
 }
