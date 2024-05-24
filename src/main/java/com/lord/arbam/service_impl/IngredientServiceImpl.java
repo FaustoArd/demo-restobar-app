@@ -101,11 +101,12 @@ public class IngredientServiceImpl implements IngredientService {
 		mixesIterator.forEachRemaining(mix -> {
 			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
 			int ingredientOldQuantity = ingredient.getIngredientAmount();
-
+			boolean check = true;
 			if (ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount()) < 0) {
 				log.warn("Not enough ingredient amount to produce that stock");
 				ingredientReportDtos.add(mapFailureToIngredientStockUpdateReportDto(mix, ingredient,
 						ingredientOldQuantity, stockCreated));
+				//throw new NegativeNumberException("Error");
 
 				// throw new NegativeNumberException("No hay suficiente cantidad de ingrediente:
 				// "+ingredient.getIngredientName());
@@ -120,7 +121,8 @@ public class IngredientServiceImpl implements IngredientService {
 			}
 
 		});
-		if (ingredientReportDtos.stream().filter(report -> !report.isSuccessful()).findAny().isPresent()) {
+		boolean failure = ingredientReportDtos.stream().filter(m -> m.isSuccessful()==false).findFirst().isPresent();
+		if (failure) {
 			log.info("returning ingredient failure report");
 			return ingredientReportDtos;
 		} else {
