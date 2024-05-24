@@ -16,4 +16,8 @@ public class ProductStockUpdateReportDto {
 	private int productNewQuantity;
 	
 	private List<IngredientStockUpdateReportDto> ingrdientStockReports;
+	
+	private boolean completed;
+	
+
 }

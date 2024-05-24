@@ -151,27 +151,48 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		if (product.isMixed()) {
-			log.info("Actualizando la cantidad de ingredientes");
+			log.info("Updating ingredient quantity");
 			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService
 					.decreaseIngredientAmount(stockDto.getProductStock(), productId);
 			ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
-			log.info("Creando o actualizando stock");
-			ProductStock savedStock = productStockService.updateStock(stock, productId);
-			log.info("Guardando producto");
-			Product productUpdated = createProductStock(product, savedStock);
-			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock,
-					savedStock, ingredientReportDtos);
-			return report;
+
+			return updateIngredients(product, oldProductStock, stock, ingredientReportDtos);
 		}
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
-		log.info("Creando o actualizando stock");
+		log.info("Creating or updating stock");
 		ProductStock savedStock = productStockService.updateStock(stock, productId);
-		log.info("Guardando producto");
+		log.info("Saving product");
 		Product productUpdated = createProductStock(product, savedStock);
 		ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock, savedStock,
 				new ArrayList<IngredientStockUpdateReportDto>());
 		return report;
+	}
 
+	private ProductStockUpdateReportDto updateIngredients(Product product, int oldProductStock, ProductStock stock,
+			List<IngredientStockUpdateReportDto> ingredientReportDtos) {
+		if (ingredientReportDtos.stream().filter(report -> !report.isSuccessful()).findFirst().isPresent()) {
+			log.warn(
+					"Add product stock operation unsucessful, Not enough ingredient stock, returning ingredient failure report");
+			return mapFailureToProductUpdateReportDto(product, oldProductStock, stock, ingredientReportDtos);
+		}
+		log.info("Creating or updating stock");
+		ProductStock savedStock = productStockService.updateStock(stock, product.getId());
+		log.info("Saving product");
+		Product productUpdated = createProductStock(product, savedStock);
+		ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock, savedStock,
+				ingredientReportDtos);
+		return report;
+	}
+
+	private static ProductStockUpdateReportDto mapFailureToProductUpdateReportDto(Product product, int oldProductStock,
+			ProductStock stock, List<IngredientStockUpdateReportDto> ingredientReportDtos) {
+		ProductStockUpdateReportDto productStockUpdateReportDto = new ProductStockUpdateReportDto();
+		productStockUpdateReportDto.setCompleted(false);
+		productStockUpdateReportDto.setProductName(product.getProductName());
+		productStockUpdateReportDto.setProductOldQuantity(oldProductStock);
+		productStockUpdateReportDto.setProductNewQuantity(oldProductStock);
+		productStockUpdateReportDto.setIngrdientStockReports(ingredientReportDtos);
+		return productStockUpdateReportDto;
 	}
 
 	@Override
@@ -186,7 +207,7 @@ public class ProductServiceImpl implements ProductService {
 		log.info("Eliminando stock");
 		ProductStock savedStock = productStockService.reduceStock(stock, productId);
 		if (product.isMixed()) {
-			log.info("Actualizando la cantidad de ingredientes");
+			log.info("Increse ingredient quantity");
 			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService
 					.increaseIngredientAmount(stockDto.getProductStock(), productId);
 			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(product, oldProductStock, savedStock,

@@ -11,6 +11,8 @@ public class IngredientStockUpdateReportDto {
 	
 	private boolean substracted;
 	
+	private boolean successful;
+	
 	private int ingredientRecipeQuantity;
 	
 	private int ingredientQuantitySubstracted;
@@ -20,5 +22,7 @@ public class IngredientStockUpdateReportDto {
 	private int ingredientOldQuantity;
 	
 	private int ingredientNewQuantity;
+	
+	private int ingredientQuantityRequired;
 
 }
