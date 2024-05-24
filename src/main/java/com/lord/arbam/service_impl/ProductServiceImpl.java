@@ -11,12 +11,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lord.arbam.dto.IngredientItemStockReportDto;
+import com.lord.arbam.dto.IngredientStockReportDto;
 import com.lord.arbam.dto.IngredientStockUpdateReportDto;
 import com.lord.arbam.dto.ProductStockDto;
 import com.lord.arbam.dto.ProductStockUpdateReportDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.mapper.ProductMapper;
+import com.lord.arbam.model.IngredientMix;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductCategory;
 import com.lord.arbam.model.ProductPrice;
@@ -207,6 +210,18 @@ public class ProductServiceImpl implements ProductService {
 		productStockUpdateReportDto.setProductNewQuantity(savedStock.getProductStock());
 		productStockUpdateReportDto.setIngrdientStockReports(ingredientReportDtos);
 		return productStockUpdateReportDto;
+	}
+
+	@Override
+	public IngredientStockReportDto checkIngredientsStock(long productId, int stock) {
+		log.info("Checking ingredients stock");
+		Product product = findProductById(productId);
+		IngredientStockReportDto ingredientStockReportDto = new IngredientStockReportDto();
+		ingredientStockReportDto.setProductName(product.getProductName());
+		ingredientStockReportDto.setStockRequestedQuantity(stock);
+		List<IngredientItemStockReportDto> ingredientReports = ingredientService.checkIngredientsStock(product.getId(), stock);
+		ingredientStockReportDto.setIngredients(ingredientReports);
+		return ingredientStockReportDto;
 	}
 
 }

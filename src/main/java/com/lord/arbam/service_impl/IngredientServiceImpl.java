@@ -10,13 +10,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lord.arbam.dto.IngredientItemStockReportDto;
 import com.lord.arbam.dto.IngredientStockDto;
+import com.lord.arbam.dto.IngredientStockReportDto;
 import com.lord.arbam.dto.IngredientStockUpdateReportDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.model.IngredientMix;
+import com.lord.arbam.model.Product;
+import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.repository.IngredientRepository;
 import com.lord.arbam.repository.IngredientMixRepository;
 import com.lord.arbam.service.IngredientService;
@@ -190,6 +194,32 @@ public class IngredientServiceImpl implements IngredientService {
 	private IngredientStockDto mapIngredientToStockDto(Ingredient ingredient) {
 		return new IngredientStockDto(ingredient.getId(),ingredient.getIngredientName(),ingredient.getIngredientAmount());
 	}
+
+	@Override
+	public List<IngredientItemStockReportDto> checkIngredientsStock(long productId, int stock) {
+		List<IngredientMix> mixes = ingredientMixRepository.findByProductId(productId);
+		List<IngredientItemStockReportDto> items =  mixes.stream().map(mix -> {
+			IngredientItemStockReportDto ingredientReport= new IngredientItemStockReportDto();
+			Ingredient ingredient = findIngredientById(mix.getIngredient().getId());
+			ingredientReport.setIngredientName(ingredient.getIngredientName());
+			ingredientReport.setIngredientCurrentQuantity(ingredient.getIngredientAmount());
+			int stockPlusMixIngredientAmount = mix.getIngredientAmount()* stock;
+			ingredientReport.setIngredientMixQuantity(mix.getIngredientAmount());
+			
+			if(stockPlusMixIngredientAmount<ingredient.getIngredientAmount()) {
+			ingredientReport.setIngredientQuantityRequired(0);	
+			}else {
+				ingredientReport.setIngredientQuantityRequired(stockPlusMixIngredientAmount-ingredient.getIngredientAmount());	
+			}
+			return ingredientReport;
+			
+		}).toList();
+		return  items;
+	}
+	
+	
+
+	
 
 
 	

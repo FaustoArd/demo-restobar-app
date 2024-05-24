@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.lord.arbam.dto.IngredientStockReportDto;
 import com.lord.arbam.dto.PriceUpdateReportDto;
 import com.lord.arbam.dto.ProductDto;
 import com.lord.arbam.dto.ProductStockDto;
@@ -133,5 +133,10 @@ public class ProductController {
 		List<Long> productIds = productService.findProductIdsByCategory(categoryId);
 		List<PriceUpdateReportDto> priceReports = priceService.updateAllPriceByPercentageByCategory(productIds, percentage, positive);
 		return new ResponseEntity<List<PriceUpdateReportDto>>(priceReports,HttpStatus.OK);
+	}
+	@GetMapping("/check-ingredients-stock")
+	ResponseEntity<IngredientStockReportDto> checkIngredientsStock(@RequestParam("productId")long productId,@RequestParam("stock")int stock){
+		IngredientStockReportDto report = productService.checkIngredientsStock(productId, stock);
+		return ResponseEntity.ok(report);
 	}
 }
