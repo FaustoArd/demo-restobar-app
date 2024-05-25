@@ -1,4 +1,5 @@
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\controller\UserController.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\PriceUpdateReportDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service\ProductStockService.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service\ProductPriceService.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service_impl\RestoTableOrderServiceImpl.java
@@ -10,8 +11,11 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service\Res
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\controller\CategoryController.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\controller\WorkingDayController.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\ProductStockDto.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientStockUpdateReportDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service_impl\EmployeeServiceImpl.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\ArbamApplication.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientItemStockReportDto.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\RestoTableOrderClosed.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\User.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\mapper\RestoTableOrderMapper.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\RestoTableRepository.java
@@ -29,11 +33,14 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\util\RSAKey
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service_impl\ProductServiceImpl.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\mapper\RestoTableMapper.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\controller\RestoTableOrderController.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientStockDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\RestoTable.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\PaymentMethod.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\Employee.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\ProductStockUpdateReportDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\exception\ValueDeletionInvalidException.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\configuration\WebConfiguration.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientStockReportDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\ProductCategory.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\PaymentMethodRepository.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\RestoTableClosed.java
@@ -42,6 +49,7 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\Produ
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service\ProductService.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\ProductPriceRepository.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\exception\ProductOutOfStockException.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\RestoTableOrderClosedDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\EmployeeJobRepository.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\RoleRepository.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientCategoryDto.java
@@ -80,6 +88,7 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\RestoTableDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service_impl\UserServiceImpl.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\RestoTableClosedDto.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\repository\RestoTableOrderClosedRepository.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service_impl\ProductCategoryServiceImpl.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\IngredientMixDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\mapper\UserMapper.java
@@ -111,4 +120,5 @@ D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\service\Emp
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\EmployeeJobDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\dto\RestoTableOrderDto.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\exception\ItemNotFoundException.java
+D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\mapper\RestoTableOrderClosedMapper.java
 D:\workspaces\arbam-app-workspace\arbam\src\main\java\com\lord\arbam\model\IngredientCategory.java

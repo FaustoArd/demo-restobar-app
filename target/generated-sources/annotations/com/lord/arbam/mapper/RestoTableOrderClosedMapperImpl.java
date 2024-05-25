@@ -9,8 +9,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-20T10:17:39-0300",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2024-05-24T13:48:35-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class RestoTableOrderClosedMapperImpl implements RestoTableOrderClosedMapper {
 
@@ -27,9 +27,9 @@ public class RestoTableOrderClosedMapperImpl implements RestoTableOrderClosedMap
             restoTableOrderClosedDto.setRestoTableClosedId( id );
         }
         restoTableOrderClosedDto.setId( restoTableOrderClosed.getId() );
-        restoTableOrderClosedDto.setProductName( restoTableOrderClosed.getProductName() );
         restoTableOrderClosedDto.setProductQuantity( restoTableOrderClosed.getProductQuantity() );
         restoTableOrderClosedDto.setTotalOrderPrice( restoTableOrderClosed.getTotalOrderPrice() );
+        restoTableOrderClosedDto.setProductName( restoTableOrderClosed.getProductName() );
 
         return restoTableOrderClosedDto;
     }
