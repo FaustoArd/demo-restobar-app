@@ -146,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductStockUpdateReportDto increaseProductStock(long productId, ProductStockDto stockDto) {
-		log.info("Buscando producto por id");
+		log.info("Find product by id");
 		Product product = findProductById(productId);
 		int oldProductStock = 0;
 		if (productStockService.checkStockPresent(productId)) {
@@ -154,22 +154,22 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		if (product.isMixed()) {
-			log.info("Actualizando la cantidad de ingredientes");
+			log.info("Updating ingredient quantity");
 			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService
 					.decreaseIngredientAmount(stockDto.getProductStock(), productId);
 			ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
-			log.info("Creando o actualizando stock");
+			log.info("creating or updating stock");
 			ProductStock savedStock = productStockService.updateStock(stock, productId);
-			log.info("Guardando producto");
+			log.info("Saving  product");
 			Product productUpdated = createProductStock(product, savedStock);
 			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock,
 					savedStock, ingredientReportDtos);
 			return report;
 		}
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
-		log.info("Creando o actualizando stock");
+		log.info("creating or updating stock");
 		ProductStock savedStock = productStockService.updateStock(stock, productId);
-		log.info("Guardando producto");
+		log.info("Saving  product");
 		Product productUpdated = createProductStock(product, savedStock);
 		ProductStockUpdateReportDto report = mapToProductUpdateReportDto(productUpdated, oldProductStock, savedStock,
 				new ArrayList<IngredientStockUpdateReportDto>());
@@ -186,10 +186,10 @@ public class ProductServiceImpl implements ProductService {
 		}
 		oldProductStock = productStockService.findStockByProductId(product.getId()).getProductStock();
 		ProductStock stock = ProductMapper.INSTANCE.toStock(stockDto);
-		log.info("Eliminando stock");
+		log.info("Deleting product stock");
 		ProductStock savedStock = productStockService.reduceStock(stock, productId);
 		if (product.isMixed()) {
-			log.info("Actualizando la cantidad de ingredientes");
+			log.info("Updating ingredient amount");
 			List<IngredientStockUpdateReportDto> ingredientReportDtos = ingredientService
 					.increaseIngredientAmount(stockDto.getProductStock(), productId);
 			ProductStockUpdateReportDto report = mapToProductUpdateReportDto(product, oldProductStock, savedStock,
