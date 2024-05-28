@@ -2,6 +2,8 @@ package com.lord.arbam.service;
 
 import java.util.List;
 
+import com.lord.arbam.dto.OrderPaymentMethodDto;
+import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.model.RestoTableClosed;
 import com.lord.arbam.model.RestoTableOrderClosed;
 
@@ -19,6 +21,8 @@ public interface RestoTableClosedService {
 	
 	public void deleteTableClosedById(Long id);
 	
-	public List<RestoTableOrderClosed> findAllOrdersClosed(long restoTableClosedId);
+	public List<OrderPaymentMethodResponse> findAllPaymentsByRestoTableClosed(long restoTableClosedId);
+	
+//	public List<RestoTableOrderClosed> findAllOrdersClosed(long restoTableClosedId);
 
 }

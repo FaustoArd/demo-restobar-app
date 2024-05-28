@@ -3,6 +3,7 @@ package com.lord.arbam.service_impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,11 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.lord.arbam.dto.WorkingDayPaymentTableDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.model.Employee;
+import com.lord.arbam.model.OrderPaymentMethod;
+import com.lord.arbam.model.PaymentMethod;
+import com.lord.arbam.model.RestoTableOrderClosed;
 import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeRepository;
+import com.lord.arbam.repository.OrderPaymentMethodRepository;
+import com.lord.arbam.repository.PaymentMethodRepository;
 import com.lord.arbam.repository.RestoTableClosedRepository;
 import com.lord.arbam.repository.RestoTableOrderClosedRepository;
 import com.lord.arbam.repository.WorkingDayRepository;
@@ -34,8 +42,12 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Autowired
 	private final RestoTableClosedRepository restoTableClosedRepository;
-	
-	
+
+	@Autowired
+	private final PaymentMethodRepository paymentMethodRepository;
+
+	@Autowired
+	private final OrderPaymentMethodRepository orderPaymentMethodRepository;
 
 	@Autowired
 	private final EmployeeRepository employeeRepository;
@@ -72,50 +84,115 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
 
+	private WorkingDayPaymentTableDto getTotalResults(List<OrderPaymentMethod> orderPaymentMethods) {
+
+		WorkingDayPaymentTableDto wdPtDto = new WorkingDayPaymentTableDto();
+		wdPtDto.setTotalWorkingDay(new BigDecimal(0));
+		orderPaymentMethods.stream().forEach(payment -> {
+			if (payment.getPaymentMethod().getPaymentMethod().equals("Efectivo")) {
+				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+				wdPtDto.setTotalCash(cash);
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equals("Tarjeta de debito")) {
+				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+				wdPtDto.setTotalDebit(cash);
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equals("Transferencia")) {
+				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+				wdPtDto.setTotalTransf(cash);
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equals("Tarjeta de credito")) {
+				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+				wdPtDto.setTotalCredit(cash);
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equals("Mercado pago")) {
+				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+				wdPtDto.setTotalMP(cash);
+			}
+			wdPtDto.setTotalWorkingDay(
+					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));
+		});
+		return wdPtDto;
+	}
+
+	private static double getTablesOrderTotals(List<RestoTableOrderClosed> orders) {
+		return orders.stream().mapToDouble(order -> order.getTotalOrderPrice().doubleValue()).sum();
+	}
+
 	@Override
 	public WorkingDay closeWorkingDay(Long workingDayId) {
 		log.info("Sumando los totales de las mesas.");
-		double totalTablesResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.mapToDouble(res -> res.getTotalPrice().doubleValue()).sum();
-		BigDecimal bdTotalTablesResult = new BigDecimal(totalTablesResult); 
-		log.info("Filtrando totales por metodo de pago");
-		double totalCashResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Efectivo")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
-		double totalDebitResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Tarjeta de debito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
-		double totalTransResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Transferencia")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
-		double totalCreditResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Tarjeta de credito")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
-		double totalMpResult = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
-				.filter(res -> res.getPaymentMethod().equals("Mercado pago")).mapToDouble(ef -> ef.getTotalPrice().doubleValue()).sum();
-		
-		log.info("Guardando total pago a empleados y todos los totales");
-		return workingDayRepository.findById(workingDayId).map(wDay -> {
+		List<WorkingDayPaymentTableDto> totals = restoTableClosedRepository.findAllByWorkingDayId(workingDayId).stream()
+				.map(table -> {
+					return getTotalResults(orderPaymentMethodRepository.findAllByRestoTableClosed(table));
+				}).toList();
+		log.info("Guardando todos los totales");
+		WorkingDay workingDay = workingDayRepository.findById(workingDayId).map(wDay -> {
 			double employeeTotalResult = wDay.getEmployees().stream()
 					.mapToDouble(emp -> emp.getEmployeeJob().getEmployeeSalary().doubleValue()).sum();
+
 			wDay.setTotalEmployeeSalary(new BigDecimal(employeeTotalResult));
-			wDay.setTotalCash(new BigDecimal(totalCashResult));
-			wDay.setTotalDebit(new BigDecimal(totalDebitResult));
-			wDay.setTotalTransf(new BigDecimal(totalTransResult));
-			wDay.setTotalCredit(new BigDecimal(totalCreditResult));
-			wDay.setTotalMP(new BigDecimal(totalMpResult));
-			wDay.setTotalWorkingDay(bdTotalTablesResult.add(wDay.getTotalStartCash()));
+			wDay.setTotalCash(getTableTotalCash(totals));
+			wDay.setTotalDebit(getTableTotalDebit(totals));
+			wDay.setTotalTransf(getTableTotalTransf(totals));
+			wDay.setTotalCredit(getTableTotalCredit(totals));
+			wDay.setTotalMP(getTableTotalMp(totals));
+			wDay.setTotalWorkingDay(getTotalWorkingDay(totals).add(wDay.getTotalStartCash()));
 			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
 			wDay.setDayStarted(false);
 			return workingDayRepository.save(wDay);
 
-		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
+		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
+		System.out.println("cash:" + workingDay.getTotalCash());
+		System.out.println("debit: " + workingDay.getTotalDebit());
+		System.out.println("transf: " + workingDay.getTotalTransf());
+		System.out.println("mp: " + workingDay.getTotalMP());
+		return workingDay;
 	}
-	
-	
+
+	private static BigDecimal getTableTotalCash(List<WorkingDayPaymentTableDto> totals) {
+
+		return totals.stream().filter(f -> f.getTotalCash() != null).map(tableTotal -> tableTotal.getTotalCash())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	private static BigDecimal getTableTotalDebit(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalDebit() != null).map(tableTotal -> tableTotal.getTotalDebit())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+	}
+
+	private static BigDecimal getTableTotalTransf(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalTransf() != null).map(tableTotal -> tableTotal.getTotalTransf())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	private static BigDecimal getTableTotalCredit(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalCredit() != null).map(tableTotal -> tableTotal.getTotalCredit())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	private static BigDecimal getTableTotalMp(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalMP() != null).map(tableTotal -> tableTotal.getTotalMP())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	private static BigDecimal getTotalWorkingDay(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalWorkingDay() != null)
+				.map(tableTotal -> tableTotal.getTotalWorkingDay()).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
 
 	@Override
 	public WorkingDay deleteEmployeesById(Long employeeId, Long workingDayId) {
 		log.info("Buscando empleado por id");
 		WorkingDay workingDay = findWorkingDayById(workingDayId);
-		List<Employee> employees = workingDay.getEmployees().stream()
-				.filter(e -> e.getId() != employeeId).map(es -> es).collect(Collectors.toList());
+		List<Employee> employees = workingDay.getEmployees().stream().filter(e -> e.getId() != employeeId).map(es -> es)
+				.collect(Collectors.toList());
 		workingDay.setEmployees(employees);
 		log.info("Finalizando eliminacion de empleado de la jornada de trabajo");
 		return workingDayRepository.save(workingDay);
@@ -135,32 +212,33 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 
 	@Override
 	public List<WorkingDay> findAllByOrderByDateAsc() {
-	return (List<WorkingDay>)workingDayRepository.findAllByOrderByDateAsc();
+		return (List<WorkingDay>) workingDayRepository.findAllByOrderByDateAsc();
 	}
 
 	@Override
 	public void deleteWorkingDayById(Long id) {
 		log.info("Eliminado jornada de trbajo por id");
-		if(workingDayRepository.existsById(id)) {
-		WorkingDay wdToBeDeleted   = findWorkingDayById(id);
-		if(wdToBeDeleted.isDayStarted()) {
-			throw new RestoTableOpenException("No se puede eliminar, el dia de trabajo sigue abierto.");
-		
-		}else {
-			log.info("Jornada de trabajo cerrada, se puede eliminar");
-			workingDayRepository.deleteById(id);
-		}
-		
-		}else {
-			throw new ItemNotFoundException("Working day not found");
+		if (workingDayRepository.existsById(id)) {
+			WorkingDay wdToBeDeleted = findWorkingDayById(id);
+			if (wdToBeDeleted.isDayStarted()) {
+				throw new RestoTableOpenException("No se puede eliminar, el dia de trabajo sigue abierto.");
+
+			} else {
+				log.info("Cannot delete, working day still open.");
+				workingDayRepository.deleteById(id);
+			}
+
+		} else {
+			throw new ItemNotFoundException("No se encontro el dia de trabajo");
 		}
 	}
 
 	@Override
 	public List<WorkingDay> findByEmployeesId(Long employeeId) {
-	return (List<WorkingDay>)workingDayRepository.findByEmployeesId(employeeId);
-	
+		return (List<WorkingDay>) workingDayRepository.findByEmployeesId(employeeId);
+
 	}
+
 	
 
 }

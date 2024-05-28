@@ -1,6 +1,7 @@
 package com.lord.arbam.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,11 @@ public class RestoTableClosedDto {
 	
 	private BigDecimal totalPrice;
 	
-	private String paymentMethod;
+	private List<OrderPaymentMethodDto> ordersPaymentMethodDtos;
 	
 	private Long workingDayId;
+	
+	
 	
 
 }

@@ -27,11 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+
+import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.EmployeeJob;
 import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.model.IngredientMix;
+import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductCategory;
@@ -456,7 +459,8 @@ public class RestoTableIntegrationServicesTest {
 	void closeRestoTable1Test() {
 		RestoTable table = restoTableService.findRestoTableById(1L);
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Efectivo").build();
-		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,paymentMethod);
+		List<OrderPaymentMethodDto> ordersNull = new ArrayList<>();
+		RestoTable closedTable = restoTableService.closeRestoTable(1L, workingDayId,ordersNull);
 		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(1L);
 		
@@ -471,11 +475,11 @@ public class RestoTableIntegrationServicesTest {
 				"Carla Mesera");
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getWorkingDay()
 				.getId(), 1);
-		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 1).findFirst().get().getPaymentMethod(), "Efectivo");
+		
 
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
-		assertEquals(closedTable.getPaymentMethod(), null);
+		
 		assertEquals(closedTable.getTableNumber(), null);
 		assertEquals(closedTable.getTotalTablePrice(), null);
 		assertEquals(orders.size(), 0);
@@ -565,24 +569,24 @@ public class RestoTableIntegrationServicesTest {
 	void closeRestoTable20Test() {
 		RestoTable table = restoTableService.findRestoTableById(15L);
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tarjeta de credito").build();
-		RestoTable closedTable = restoTableService.closeRestoTable(15L, workingDayId,paymentMethod);
+		List<OrderPaymentMethodDto> ordersNull = new ArrayList<>();
+		RestoTable closedTable = restoTableService.closeRestoTable(15L, workingDayId,ordersNull);
 		List<RestoTableClosed> restoTablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 
 		assertEquals(table.getTotalTablePrice().doubleValue(), 4800.00);
-		assertEquals(table.getEmployee().getId(), 1L);
+	assertEquals(table.getEmployee().getId(), 1L);
 
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 20).findFirst().get().getTotalPrice()
 				.doubleValue(), 4800.00);
-		assertEquals(
-				restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 20).findFirst().get().getEmployeeName(),
+	 assertEquals(
+			restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 20).findFirst().get().getEmployeeName(),
 				"Carla Mesera");
 		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 20).findFirst().get().getWorkingDay()
 				.getId(), 1);
-		assertEquals(restoTablesClosed.stream().filter(rt -> rt.getTableNumber() == 20).findFirst().get().getPaymentMethod(), "Tarjeta de credito");
+		
 
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
-		assertEquals(closedTable.getPaymentMethod(), null);
 		assertEquals(closedTable.getTableNumber(), null);
 		assertEquals(closedTable.getTotalTablePrice(), null);
 	}
@@ -622,20 +626,20 @@ public class RestoTableIntegrationServicesTest {
 	@Order(27)
 	void closeRestoTable8Test() {
 		RestoTable table = restoTableService.findRestoTableById(2L);
+		List<OrderPaymentMethodDto> ordersNull = new ArrayList<>();
 		PaymentMethod paymentMethod = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
-		RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,paymentMethod);
+	RestoTable closedTable = restoTableService.closeRestoTable(2L, workingDayId,ordersNull);
 		List<RestoTableClosed> tablesClosed = restoTableClosedService.findAllByWorkingDayId(workingDayId);
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getTotalPrice()
 				.doubleValue(), 14400.00);
 		assertEquals(
 				tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getEmployeeName(),
-				"Silvana Mesera");
+			"Silvana Mesera");
 		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getWorkingDay()
 				.getId(), 1);
-		assertEquals(tablesClosed.stream().filter(rt -> rt.getTableNumber() == 8).findFirst().get().getPaymentMethod(),"Tarjeta de debito");
+		
 		assertEquals(closedTable.getId(), table.getId());
 		assertEquals(closedTable.getEmployee(), null);
-		assertEquals(closedTable.getPaymentMethod(), null);
 		assertEquals(closedTable.getTableNumber(), null);
 		assertEquals(closedTable.getTotalTablePrice(), null);
 		

@@ -102,7 +102,7 @@ public class IngredientServiceImpl implements IngredientService {
 				log.warn("Not enough ingredient amount to produce that stock");
 				throw new NegativeNumberException("No hay suficiente cantidad de ingrediente: "+ingredient.getIngredientName());
 			}else {
-				log.info("Guardando la cantidad restante de ingredientes");
+				log.info("Updating ingredient amount");
 				int ingredientOldQuantity = ingredient.getIngredientAmount();
 			ingredient
 					.setIngredientAmount(ingredient.getIngredientAmount() - (stockCreated * mix.getIngredientAmount()));

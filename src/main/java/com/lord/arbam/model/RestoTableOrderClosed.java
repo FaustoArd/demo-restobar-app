@@ -42,9 +42,11 @@ public class RestoTableOrderClosed {
 	private String productName;
 	
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
-	@JoinColumn(name="resto_table_closed_id", referencedColumnName = "id")
-	private RestoTableClosed restoTableClosed;
+	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+	@JoinColumn(name="order_payment_method_id", referencedColumnName = "id")
+	private OrderPaymentMethod orderPaymentMethod;
+	
+	
 	
 
 }

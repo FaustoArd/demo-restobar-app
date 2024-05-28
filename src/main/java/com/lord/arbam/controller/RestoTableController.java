@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.PaymentMethodDto;
 import com.lord.arbam.dto.RestoTableDto;
 import com.lord.arbam.mapper.RestoTableMapper;
@@ -83,9 +84,8 @@ public class RestoTableController {
 	
 	@PutMapping("/close_table")
 	ResponseEntity<String> closeTable(@RequestParam("restoTableId")
-	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestBody PaymentMethod paymentMethod){
-		
-		restoTableService.closeRestoTable(restoTableId,workingDayId,paymentMethod);
+	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestBody List<OrderPaymentMethodDto> orderPaymentMethods){
+		restoTableService.closeRestoTable(restoTableId,workingDayId,orderPaymentMethods);
 		return new ResponseEntity<String>(gson.toJson("La mesa fue cerrada con exito"),HttpStatus.OK);
 	}
 	

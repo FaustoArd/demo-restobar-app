@@ -3,6 +3,8 @@ package com.lord.arbam.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.lord.arbam.dto.OrderPaymentMethodDto;
+import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.RestoTable;
 import com.lord.arbam.model.RestoTableOrder;
@@ -15,7 +17,7 @@ public interface RestoTableService {
 	
 	public RestoTable openRestoTable(RestoTable restoTable);
 	
-	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,PaymentMethod paymentMethod);
+	public RestoTable closeRestoTable(Long restoTableId,Long workingDayId,List<OrderPaymentMethodDto> orderPaymentMethodDtos);
 	
 	public List<RestoTable> findAllByOrderByIdAsc();
 	
@@ -26,6 +28,8 @@ public interface RestoTableService {
 	public Optional<RestoTable> findByTableNumber(Integer tableNumber);
 	
 	public List<PaymentMethod> findAllPaymentMethods();
+	
+	
 	
 	public void checkTablesOpen();
 	
