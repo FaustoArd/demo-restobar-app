@@ -2,10 +2,10 @@ package com.lord.arbam.service;
 
 import java.util.List;
 
-import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
+import com.lord.arbam.dto.RestoTableClosedDto;
 import com.lord.arbam.model.RestoTableClosed;
-import com.lord.arbam.model.RestoTableOrderClosed;
+
 
 public interface RestoTableClosedService {
 	

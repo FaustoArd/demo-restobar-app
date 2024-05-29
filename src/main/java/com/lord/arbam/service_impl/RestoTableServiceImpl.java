@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.PaymentMethodDto;
+import com.lord.arbam.dto.RestoTableClosedDto;
 import com.lord.arbam.dto.RestoTableOrderClosedDto;
 import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.exception.ItemNotFoundException;
@@ -116,7 +117,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Transactional
 	@Override
-	public List<OrderPaymentMethodResponse> closeRestoTable(Long restoTableId, Long workingDayId,
+	public RestoTableClosedDto closeRestoTable(Long restoTableId, Long workingDayId,
 			List<OrderPaymentMethodDto> orderPaymentMethodDtos) {
 		log.info("Starting close resto table id: " + restoTableId);
 		RestoTable findedTable = findRestoTableById(restoTableId);
@@ -132,8 +133,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 		restoTableOrderRepository.deleteAll(orders);
 		log.info("Saving new default table");
 		restoTableRepository.save(setRestoTableToDefault(findedTable));
-		
-		return mapPaymentsToResponses(savedOrderPaymentMethods, savedTableClosed);
+		log.info("Map RestoTableClosed to Dto and return");
+		RestoTableClosedDto restoTableClosedDto = RestoTableClosedMapper.INSTANCE.toTableClosedDto(savedTableClosed);
+		restoTableClosedDto.setOrderPaymentMethodResponses(mapPaymentsToResponses(savedOrderPaymentMethods, savedTableClosed));
+		return restoTableClosedDto ;
 
 	}
 	private static RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay) {

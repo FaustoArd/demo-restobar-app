@@ -89,30 +89,30 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		WorkingDayPaymentTableDto wdPtDto = new WorkingDayPaymentTableDto();
 		wdPtDto.setTotalWorkingDay(new BigDecimal(0));
 		orderPaymentMethods.stream().forEach(payment -> {
-			if (payment.getPaymentMethod().getPaymentMethod().equals("Efectivo")) {
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("efectivo")) {
 				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
 						.reduce(BigDecimal.ZERO, BigDecimal::add);
 				wdPtDto.setTotalCash(cash);
 			}
-			if (payment.getPaymentMethod().getPaymentMethod().equals("Tarjeta de debito")) {
-				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de debito")) {
+				BigDecimal debit = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
 						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalDebit(cash);
+				wdPtDto.setTotalDebit(debit);
 			}
-			if (payment.getPaymentMethod().getPaymentMethod().equals("Transferencia")) {
-				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("transferencia")) {
+				BigDecimal transf = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
 						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalTransf(cash);
+				wdPtDto.setTotalTransf(transf);
 			}
-			if (payment.getPaymentMethod().getPaymentMethod().equals("Tarjeta de credito")) {
-				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de credito")) {
+				BigDecimal credit = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
 						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalCredit(cash);
+				wdPtDto.setTotalCredit(credit);
 			}
-			if (payment.getPaymentMethod().getPaymentMethod().equals("Mercado pago")) {
-				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")) {
+				BigDecimal mp = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
 						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalMP(cash);
+				wdPtDto.setTotalMP(mp);
 			}
 			wdPtDto.setTotalWorkingDay(
 					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));

@@ -18,7 +18,7 @@ public class RestoTableClosedDto {
 	
 	private BigDecimal totalPrice;
 	
-	private List<OrderPaymentMethodDto> ordersPaymentMethodDtos;
+	private List<OrderPaymentMethodResponse> orderPaymentMethodResponses;
 	
 	private Long workingDayId;
 	

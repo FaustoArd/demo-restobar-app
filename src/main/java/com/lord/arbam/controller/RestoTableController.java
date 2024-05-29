@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.PaymentMethodDto;
+import com.lord.arbam.dto.RestoTableClosedDto;
 import com.lord.arbam.dto.RestoTableDto;
 import com.lord.arbam.mapper.RestoTableMapper;
 import com.lord.arbam.model.PaymentMethod;
@@ -84,10 +85,10 @@ public class RestoTableController {
 
 	
 	@PutMapping("/close_table")
-	ResponseEntity<List<OrderPaymentMethodResponse>> closeTable(@RequestParam("restoTableId")
+	ResponseEntity<RestoTableClosedDto> closeTable(@RequestParam("restoTableId")
 	Long restoTableId,@RequestParam("workingDayId")Long workingDayId,@RequestBody List<OrderPaymentMethodDto> orderPaymentMethods){
-		List<OrderPaymentMethodResponse> responses =  restoTableService.closeRestoTable(restoTableId,workingDayId,orderPaymentMethods);
-		return new ResponseEntity<List<OrderPaymentMethodResponse>>(responses,HttpStatus.OK);
+		RestoTableClosedDto restoTableClosedDto =  restoTableService.closeRestoTable(restoTableId,workingDayId,orderPaymentMethods);
+		return new ResponseEntity<RestoTableClosedDto>(restoTableClosedDto,HttpStatus.OK);
 	}
 	
 	@GetMapping("/all_methods")

@@ -14,12 +14,12 @@ public interface RestoTableClosedMapper {
 	
 	public static RestoTableClosedMapper INSTANCE = Mappers.getMapper(RestoTableClosedMapper.class);
 	
-	@Mapping(target = "ordersPaymentMethodDtos",ignore = true)
+	@Mapping(target = "orderPaymentMethodResponses",ignore = true)
 	@Mapping(target = "workingDayId",ignore = true)
 	public RestoTableClosedDto toTableClosedDto(RestoTableClosed restoTableClosed);
 	
 	@Mapping(target="workingDayId",ignore = true)
-	@Mapping(target="ordersPaymentMethodDtos",ignore = true)
+	@Mapping(target="orderPaymentMethodResponses",ignore = true)
 	public List<RestoTableClosedDto> toTableClosedDtos(List<RestoTableClosed> tablesClosed);
 
 }
