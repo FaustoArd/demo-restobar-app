@@ -101,13 +101,13 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 		}).toList();
 	}
 	
-	private PaymentMethodDto mapPaymentMethodToDto(PaymentMethod paymentMethod) {
+	private static PaymentMethodDto mapPaymentMethodToDto(PaymentMethod paymentMethod) {
 		PaymentMethodDto paymentMethodDto = new PaymentMethodDto();
 		paymentMethodDto.setId(paymentMethod.getId());
 		paymentMethodDto.setPaymentMethod(paymentMethod.getPaymentMethod());
 		return paymentMethodDto;
 	}
-	private RestoTableClosedDto mapTableClosedToDto(RestoTableClosed tableClosed) {
+	private static RestoTableClosedDto mapTableClosedToDto(RestoTableClosed tableClosed) {
 		RestoTableClosedDto restoTableClosedDto = new RestoTableClosedDto();
 		restoTableClosedDto.setId(tableClosed.getId());
 		restoTableClosedDto.setEmployeeName(tableClosed.getEmployeeName());
@@ -117,7 +117,7 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 		return restoTableClosedDto;
 	}
 	
-	private List<RestoTableOrderClosedDto> mapOrderClosedToOrderDto(List<RestoTableOrderClosed> orderCloseds){
+	private static List<RestoTableOrderClosedDto> mapOrderClosedToOrderDto(List<RestoTableOrderClosed> orderCloseds){
 		List<RestoTableOrderClosedDto> ordersDto = orderCloseds.stream().map(orderClosed ->{
 			RestoTableOrderClosedDto orderDto = new RestoTableOrderClosedDto();
 			orderDto.setId(orderClosed.getId());

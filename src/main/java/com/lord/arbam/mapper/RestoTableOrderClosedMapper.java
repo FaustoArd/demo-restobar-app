@@ -14,10 +14,13 @@ public interface RestoTableOrderClosedMapper {
 	
 	public static RestoTableOrderClosedMapper INSTANCE = Mappers.getMapper(RestoTableOrderClosedMapper.class);
 	
+	@Mapping(target = "orderPaymentMethod",ignore=true)
+	public RestoTableOrderClosed dtoToOrderClosed(RestoTableOrderClosedDto restoTableOrderClosedDto);
+	
 	@Mapping(target="restoTableClosedId",ignore = true)
 	public RestoTableOrderClosedDto orderClosedToDto(RestoTableOrderClosed restoTableOrderClosed);
 	
-	@Mapping(target="ordersPaymentMethoDtos",ignore=true)
+	
 	public List<RestoTableOrderClosedDto> orderClosedToDtos(List<RestoTableOrderClosed> restoTableOrderCloseds);
 
 }

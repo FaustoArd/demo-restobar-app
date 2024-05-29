@@ -11,10 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.dto.OrderPaymentMethodDto;
+import com.lord.arbam.dto.OrderPaymentMethodResponse;
+import com.lord.arbam.dto.PaymentMethodDto;
+import com.lord.arbam.dto.RestoTableOrderClosedDto;
 import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.exception.ValueAlreadyExistException;
+import com.lord.arbam.mapper.RestoTableClosedMapper;
+import com.lord.arbam.mapper.RestoTableOrderClosedMapper;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
@@ -111,31 +116,72 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Transactional
 	@Override
-	public RestoTable closeRestoTable(Long restoTableId, Long workingDayId,
+	public List<OrderPaymentMethodResponse> closeRestoTable(Long restoTableId, Long workingDayId,
 			List<OrderPaymentMethodDto> orderPaymentMethodDtos) {
 		log.info("Starting close resto table id: " + restoTableId);
 		RestoTable findedTable = findRestoTableById(restoTableId);
 		Employee employee = findEmployeeById(findedTable.getEmployee().getId());
 		WorkingDay workingDay = findworkingDayById(workingDayId);
 		log.info("Copying table, id: " + restoTableId + " data");
-		
-		RestoTableClosed tableClosed = RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
-				.employeeName(employee.getEmployeeName()).totalPrice(findedTable.getTotalTablePrice())
-				.workingDay(workingDay).build();
+		RestoTableClosed tableClosed = buildTableClosed(findedTable, employee, workingDay);
 		RestoTableClosed savedTableClosed =  restoTableClosedRepository.save(tableClosed);
 		List<OrderPaymentMethod> paymentMethods = getAllOrderPaymentMethods(orderPaymentMethodDtos,savedTableClosed);
-		orderPaymentMethodRepository.saveAll(paymentMethods);
-		log.info("Restarting resto table, id: " + restoTableId);
+		List<OrderPaymentMethod> savedOrderPaymentMethods =  orderPaymentMethodRepository.saveAll(paymentMethods);
+		List<RestoTableOrder> orders = restoTableOrderRepository.findAllByRestoTableId(restoTableId);
+		log.info("Deleting orders from Table id: " + restoTableId);
+		restoTableOrderRepository.deleteAll(orders);
+		log.info("Saving new default table");
+		restoTableRepository.save(setRestoTableToDefault(findedTable));
+		
+		return mapPaymentsToResponses(savedOrderPaymentMethods, savedTableClosed);
+
+	}
+	private static RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay) {
+		return  RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
+				.employeeName(employee.getEmployeeName()).totalPrice(findedTable.getTotalTablePrice())
+				.workingDay(workingDay).build();
+	}
+	
+	private static RestoTable setRestoTableToDefault(RestoTable findedTable) {
+		log.info("Restarting resto table, id: " + findedTable.getId());
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
 		findedTable.setOpen(false);
 		findedTable.setTotalTablePrice(null);
-		List<RestoTableOrder> orders = restoTableOrderRepository.findAllByRestoTableId(restoTableId);
-		log.info("Deleting orders from Table id: " + restoTableId);
-		restoTableOrderRepository.deleteAll(orders);
-		return restoTableRepository.save(findedTable);
-
+		return findedTable;
+				
 	}
+	
+	private List<OrderPaymentMethodResponse> mapPaymentsToResponses
+	(List<OrderPaymentMethod> savedOrderPaymentMethods,RestoTableClosed savedTableClosed
+			){
+		List<OrderPaymentMethodResponse> paymentResponses = savedOrderPaymentMethods.stream().map(payment -> {
+			OrderPaymentMethodResponse paymentResponse = new OrderPaymentMethodResponse();
+			paymentResponse.setId(payment.getId());
+			PaymentMethod paymentMethod = findPaymentMethodById(payment.getPaymentMethod().getId());
+			paymentResponse.setPaymentMethod(mapToPaymentMethodDto(paymentMethod));
+			paymentResponse.setPaymentTotal(payment.getPaymentTotal());
+			paymentResponse.setRestoTableClosedDto(RestoTableClosedMapper.INSTANCE.toTableClosedDto(savedTableClosed));
+			List<RestoTableOrderClosed> orderCloseds = restoTableOrderClosedRepository
+					.findAllById(payment.getOrders().stream().map(m -> m.getId()).toList());
+			paymentResponse.setOrderCloseds(mapOrderClosedsToDtos(orderCloseds));
+			return paymentResponse;
+		}).toList();
+		return paymentResponses;
+	}
+	
+	private static List<RestoTableOrderClosedDto> mapOrderClosedsToDtos(List<RestoTableOrderClosed> orderCloseds){
+		return orderCloseds.stream().map(orderClosed ->{
+			RestoTableOrderClosedDto restoTableOrderClosedDto = new RestoTableOrderClosedDto();
+		restoTableOrderClosedDto.setId(orderClosed.getId());
+		restoTableOrderClosedDto.setProductName(orderClosed.getProductName());
+		restoTableOrderClosedDto.setProductQuantity(orderClosed.getProductQuantity());
+		restoTableOrderClosedDto.setTotalOrderPrice(orderClosed.getTotalOrderPrice());
+	
+		return restoTableOrderClosedDto;
+		}).toList();
+	}
+	
 	private List<OrderPaymentMethod> getAllOrderPaymentMethods(List<OrderPaymentMethodDto> orderPaymentMethodDtos,RestoTableClosed tableClosed) {
 		List<OrderPaymentMethod> orderPaymentMethods = orderPaymentMethodDtos.stream().map(paymentDto -> {
 			PaymentMethod paymentMethod = findPaymentMethodByPaymentMethod(paymentDto.getPaymentMethod().getPaymentMethod());
@@ -217,6 +263,17 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	private PaymentMethod findPaymentMethodByPaymentMethod(String paymentMethod) {
 		return paymentMethodRepository.findByPaymentMethod(paymentMethod).orElseThrow(() -> new ItemNotFoundException("No se encontro el metodo de pago"));
+	}
+	
+	private PaymentMethod findPaymentMethodById(long paymentMethodId) {
+		return paymentMethodRepository.findById(paymentMethodId).orElseThrow(()-> new ItemNotFoundException("No se encontro el metodo de pago."));
+	}
+	private PaymentMethodDto mapToPaymentMethodDto(PaymentMethod paymentMethod) {
+		
+		PaymentMethodDto dto = new PaymentMethodDto();
+		dto.setId(paymentMethod.getId());
+		dto.setPaymentMethod(paymentMethod.getPaymentMethod());
+		return dto;
 	}
 
 }
