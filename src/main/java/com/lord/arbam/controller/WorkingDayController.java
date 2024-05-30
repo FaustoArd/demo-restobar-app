@@ -21,6 +21,7 @@ import com.lord.arbam.mapper.EmployeeMapper;
 import com.lord.arbam.mapper.WorkingDayMapper;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.WorkingDay;
+import com.lord.arbam.service.RestoTableClosedService;
 import com.lord.arbam.service.RestoTableService;
 import com.lord.arbam.service.WorkingDayService;
 import com.nimbusds.jose.shaded.gson.Gson;
@@ -37,6 +38,9 @@ public class WorkingDayController {
 	
 	@Autowired
 	private final RestoTableService restoTableService;
+	
+	@Autowired
+	private final RestoTableClosedService restoTableClosedService;
 	
 	private static final Gson gson = new Gson();
 	

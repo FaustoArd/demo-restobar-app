@@ -21,6 +21,8 @@ public interface RestoTableClosedService {
 	
 	public void deleteTableClosedById(Long id);
 	
+	
+	
 	public List<OrderPaymentMethodResponse> findAllPaymentsByRestoTableClosed(long restoTableClosedId);
 	
 //	public List<RestoTableOrderClosed> findAllOrdersClosed(long restoTableClosedId);

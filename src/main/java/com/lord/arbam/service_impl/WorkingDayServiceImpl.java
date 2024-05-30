@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lord.arbam.dto.WorkingDayPaymentTableDto;
 import com.lord.arbam.exception.ItemNotFoundException;
@@ -19,6 +20,7 @@ import com.lord.arbam.exception.RestoTableOpenException;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
+import com.lord.arbam.model.RestoTableClosed;
 import com.lord.arbam.model.RestoTableOrderClosed;
 import com.lord.arbam.model.WorkingDay;
 import com.lord.arbam.repository.EmployeeRepository;
@@ -84,41 +86,7 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
 
-	private WorkingDayPaymentTableDto getTotalResults(List<OrderPaymentMethod> orderPaymentMethods) {
-
-		WorkingDayPaymentTableDto wdPtDto = new WorkingDayPaymentTableDto();
-		wdPtDto.setTotalWorkingDay(new BigDecimal(0));
-		orderPaymentMethods.stream().forEach(payment -> {
-			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("efectivo")) {
-				BigDecimal cash = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalCash(cash);
-			}
-			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de debito")) {
-				BigDecimal debit = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalDebit(debit);
-			}
-			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("transferencia")) {
-				BigDecimal transf = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalTransf(transf);
-			}
-			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de credito")) {
-				BigDecimal credit = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalCredit(credit);
-			}
-			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")) {
-				BigDecimal mp = payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add);
-				wdPtDto.setTotalMP(mp);
-			}
-			wdPtDto.setTotalWorkingDay(
-					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));
-		});
-		return wdPtDto;
-	}
+	
 
 	private static double getTablesOrderTotals(List<RestoTableOrderClosed> orders) {
 		return orders.stream().mapToDouble(order -> order.getTotalOrderPrice().doubleValue()).sum();
@@ -153,6 +121,56 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		System.out.println("transf: " + workingDay.getTotalTransf());
 		System.out.println("mp: " + workingDay.getTotalMP());
 		return workingDay;
+	}
+	private WorkingDayPaymentTableDto getTotalResults(List<OrderPaymentMethod> orderPaymentMethods) {
+
+		WorkingDayPaymentTableDto wdPtDto = setWDPTDtoToDefault();
+		
+		orderPaymentMethods.stream().forEach(payment -> {
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("efectivo")) {
+				wdPtDto.setTotalCash(wdPtDto.getTotalCash().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de debito")) {
+				
+				wdPtDto.setTotalDebit(wdPtDto.getTotalDebit().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("transferencia")) {
+			
+				wdPtDto.setTotalTransf(wdPtDto.getTotalTransf().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de credito")) {
+			
+				wdPtDto.setTotalCredit(wdPtDto.getTotalCredit().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")) {
+				
+				wdPtDto.setTotalMP(wdPtDto.getTotalMP().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
+						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			wdPtDto.setTotalWorkingDay(
+					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));
+		});
+		return wdPtDto;
+	}
+	
+	private static  WorkingDayPaymentTableDto setWDPTDtoToDefault() {
+		WorkingDayPaymentTableDto wDPTDto = new WorkingDayPaymentTableDto();
+		wDPTDto.setTotalWorkingDay(new BigDecimal(0));
+		wDPTDto.setTotalCash(new BigDecimal(0));
+		wDPTDto.setTotalCredit(new BigDecimal(0));
+		wDPTDto.setTotalDebit(new BigDecimal(0));
+		wDPTDto.setTotalEmployeeSalary(new BigDecimal(0));
+		wDPTDto.setTotalMP(new BigDecimal(0));
+		wDPTDto.setTotalStartCash(new BigDecimal(0));
+		wDPTDto.setTotalTransf(new BigDecimal(0));
+		wDPTDto.setTotalWorkingDay(new BigDecimal(0));
+		wDPTDto.setTotalWorkingDayWithDiscount(new BigDecimal(0));
+		return wDPTDto;
+		
 	}
 
 	private static BigDecimal getTableTotalCash(List<WorkingDayPaymentTableDto> totals) {
@@ -215,16 +233,21 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return (List<WorkingDay>) workingDayRepository.findAllByOrderByDateAsc();
 	}
 
+	@Transactional
 	@Override
 	public void deleteWorkingDayById(Long id) {
-		log.info("Eliminado jornada de trbajo por id");
+		log.info("Delete working day by id proccess");
 		if (workingDayRepository.existsById(id)) {
 			WorkingDay wdToBeDeleted = findWorkingDayById(id);
 			if (wdToBeDeleted.isDayStarted()) {
-				throw new RestoTableOpenException("No se puede eliminar, el dia de trabajo sigue abierto.");
+				log.info("Cannot delete, working day still open.");
+				throw new RestoTableOpenException("No se puede eliminar, la jornada de trabajo sigue abierta.");
 
 			} else {
-				log.info("Cannot delete, working day still open.");
+				List<RestoTableClosed> tableCloseds = restoTableClosedRepository.findAllByWorkingDayId(id);
+				log.info("Delete all order payment methods by resto table closeds");
+				orderPaymentMethodRepository.deleteAllByRestoTableClosedIn(tableCloseds);
+				log.info("Delete Working day by id");
 				workingDayRepository.deleteById(id);
 			}
 

@@ -13,6 +13,8 @@ public interface OrderPaymentMethodRepository extends JpaRepository<OrderPayment
 	
 	public List<OrderPaymentMethod> findAllByRestoTableClosed(RestoTableClosed restoTableClosed);
 	
+	public void deleteAllByRestoTableClosedIn(List<RestoTableClosed> restoTableCloseds);
+	
 	
 
 }

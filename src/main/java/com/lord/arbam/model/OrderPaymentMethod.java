@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +44,7 @@ public class OrderPaymentMethod {
 	@JoinColumn(name="resto_table_closed_id", referencedColumnName = "id")
 	private RestoTableClosed restoTableClosed;
 	
-	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	@JoinTable(name="orders_order_payment_method_junction",
 	joinColumns = {@JoinColumn(name="order_payment_method_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn
 			(name="resto_table_order_closed_id", referencedColumnName = "id")})

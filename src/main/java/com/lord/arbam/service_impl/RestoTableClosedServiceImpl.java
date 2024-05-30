@@ -145,4 +145,6 @@ public class RestoTableClosedServiceImpl implements RestoTableClosedService {
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el metodo de pago"));
 	}
 
+	
+
 }
