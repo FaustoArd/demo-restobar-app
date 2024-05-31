@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lord.arbam.custom_mapper.RestoTableServiceCustomMapper;
 import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.PaymentMethodDto;
@@ -71,6 +72,9 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Autowired
 	private final OrderPaymentMethodRepository orderPaymentMethodRepository;
+	
+	@Autowired
+	private final RestoTableServiceCustomMapper restoTableServiceCustomMapper;
 
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -124,7 +128,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		Employee employee = findEmployeeById(findedTable.getEmployee().getId());
 		WorkingDay workingDay = findworkingDayById(workingDayId);
 		log.info("Copying table, id: " + restoTableId + " data");
-		RestoTableClosed tableClosed = buildTableClosed(findedTable, employee, workingDay);
+		RestoTableClosed tableClosed = restoTableServiceCustomMapper.buildTableClosed(findedTable, employee, workingDay);
 		RestoTableClosed savedTableClosed =  restoTableClosedRepository.save(tableClosed);
 		List<OrderPaymentMethod> paymentMethods = getAllOrderPaymentMethods(orderPaymentMethodDtos,savedTableClosed);
 		List<OrderPaymentMethod> savedOrderPaymentMethods =  orderPaymentMethodRepository.saveAll(paymentMethods);
@@ -132,28 +136,28 @@ public class RestoTableServiceImpl implements RestoTableService {
 		log.info("Deleting orders from Table id: " + restoTableId);
 		restoTableOrderRepository.deleteAll(orders);
 		log.info("Saving new default table");
-		restoTableRepository.save(setRestoTableToDefault(findedTable));
+		restoTableRepository.save(restoTableServiceCustomMapper.setRestoTableToDefault(findedTable));
 		log.info("Map RestoTableClosed to Dto and return");
 		RestoTableClosedDto restoTableClosedDto = RestoTableClosedMapper.INSTANCE.toTableClosedDto(savedTableClosed);
 		restoTableClosedDto.setOrderPaymentMethodResponses(mapPaymentsToResponses(savedOrderPaymentMethods, savedTableClosed));
 		return restoTableClosedDto ;
 
 	}
-	private static RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay) {
-		return  RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
-				.employeeName(employee.getEmployeeName()).totalPrice(findedTable.getTotalTablePrice())
-				.workingDay(workingDay).build();
-	}
-	
-	private static RestoTable setRestoTableToDefault(RestoTable findedTable) {
-		log.info("Restarting resto table, id: " + findedTable.getId());
-		findedTable.setEmployee(null);
-		findedTable.setTableNumber(null);
-		findedTable.setOpen(false);
-		findedTable.setTotalTablePrice(null);
-		return findedTable;
-				
-	}
+//	private static RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay) {
+//		return  RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
+//				.employeeName(employee.getEmployeeName()).totalPrice(findedTable.getTotalTablePrice())
+//				.workingDay(workingDay).build();
+//	}
+//	
+//	private static RestoTable setRestoTableToDefault(RestoTable findedTable) {
+//		log.info("Restarting resto table, id: " + findedTable.getId());
+//		findedTable.setEmployee(null);
+//		findedTable.setTableNumber(null);
+//		findedTable.setOpen(false);
+//		findedTable.setTotalTablePrice(null);
+//		return findedTable;
+//				
+//	}
 	
 	private List<OrderPaymentMethodResponse> mapPaymentsToResponses
 	(List<OrderPaymentMethod> savedOrderPaymentMethods,RestoTableClosed savedTableClosed
@@ -167,23 +171,23 @@ public class RestoTableServiceImpl implements RestoTableService {
 			paymentResponse.setRestoTableClosedDto(RestoTableClosedMapper.INSTANCE.toTableClosedDto(savedTableClosed));
 			List<RestoTableOrderClosed> orderCloseds = restoTableOrderClosedRepository
 					.findAllById(payment.getOrders().stream().map(m -> m.getId()).toList());
-			paymentResponse.setOrderCloseds(mapOrderClosedsToDtos(orderCloseds));
+			paymentResponse.setOrderCloseds(restoTableServiceCustomMapper.mapOrderClosedsToDtos(orderCloseds));
 			return paymentResponse;
 		}).toList();
 		return paymentResponses;
 	}
 	
-	private static List<RestoTableOrderClosedDto> mapOrderClosedsToDtos(List<RestoTableOrderClosed> orderCloseds){
-		return orderCloseds.stream().map(orderClosed ->{
-			RestoTableOrderClosedDto restoTableOrderClosedDto = new RestoTableOrderClosedDto();
-		restoTableOrderClosedDto.setId(orderClosed.getId());
-		restoTableOrderClosedDto.setProductName(orderClosed.getProductName());
-		restoTableOrderClosedDto.setProductQuantity(orderClosed.getProductQuantity());
-		restoTableOrderClosedDto.setTotalOrderPrice(orderClosed.getTotalOrderPrice());
-	
-		return restoTableOrderClosedDto;
-		}).toList();
-	}
+//	private static List<RestoTableOrderClosedDto> mapOrderClosedsToDtos(List<RestoTableOrderClosed> orderCloseds){
+//		return orderCloseds.stream().map(orderClosed ->{
+//			RestoTableOrderClosedDto restoTableOrderClosedDto = new RestoTableOrderClosedDto();
+//		restoTableOrderClosedDto.setId(orderClosed.getId());
+//		restoTableOrderClosedDto.setProductName(orderClosed.getProductName());
+//		restoTableOrderClosedDto.setProductQuantity(orderClosed.getProductQuantity());
+//		restoTableOrderClosedDto.setTotalOrderPrice(orderClosed.getTotalOrderPrice());
+//	
+//		return restoTableOrderClosedDto;
+//		}).toList();
+//	}
 	
 	private List<OrderPaymentMethod> getAllOrderPaymentMethods(List<OrderPaymentMethodDto> orderPaymentMethodDtos,RestoTableClosed tableClosed) {
 		List<OrderPaymentMethod> orderPaymentMethods = orderPaymentMethodDtos.stream().map(paymentDto -> {
@@ -212,17 +216,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return restoTableOrderClosedRepository.saveAll(orderClosedList);
 	}
 
-//	private static List<RestoTableOrderClosed> mapTableOrderToTableOrderClosed(List<RestoTableOrder> orders,
-//			RestoTableClosed tableClosed) {
-//		List<RestoTableOrderClosed> ordersClosed = orders.stream().map(orderItem -> {
-//			RestoTableOrderClosed orderClosedItem = new RestoTableOrderClosed();
-//			orderClosedItem.setProductName(orderItem.getProduct().getProductName());
-//			orderClosedItem.setProductQuantity(orderItem.getProductQuantity());
-//			orderClosedItem.setTotalOrderPrice(orderItem.getTotalOrderPrice());
-//			return orderClosedItem;
-//		}).toList();
-//		return ordersClosed;
-//	}
+
 
 	@Override
 	public List<RestoTable> findAllByOrderByIdAsc() {

@@ -1,16 +1,21 @@
 package com.lord.arbam;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -26,26 +31,36 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lord.arbam.dto.RestoTableClosedDto;
+import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.EmployeeJob;
 import com.lord.arbam.model.Ingredient;
 import com.lord.arbam.model.IngredientCategory;
 import com.lord.arbam.model.IngredientMix;
+import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductCategory;
 import com.lord.arbam.model.ProductPrice;
 import com.lord.arbam.model.ProductStock;
 import com.lord.arbam.model.RestoTable;
+import com.lord.arbam.model.RestoTableClosed;
+import com.lord.arbam.model.RestoTableOrder;
 import com.lord.arbam.repository.EmployeeJobRepository;
 import com.lord.arbam.repository.PaymentMethodRepository;
 import com.lord.arbam.repository.ProductCategoryRepository;
+import com.lord.arbam.repository.RestoTableOrderRepository;
 import com.lord.arbam.repository.RestoTableRepository;
 import com.lord.arbam.service.CategoryService;
 import com.lord.arbam.service.EmployeeService;
 import com.lord.arbam.service.IngredientMixService;
 import com.lord.arbam.service.IngredientService;
+import com.lord.arbam.service.ProductPriceService;
 import com.lord.arbam.service.ProductService;
+import com.lord.arbam.service.RestoTableClosedService;
+import com.nimbusds.jose.shaded.gson.Gson;
 
 
 @SpringBootTest
@@ -56,6 +71,9 @@ public class RestoTableIntegrationControllersTest {
 	
 	@Autowired
 	private RestoTableRepository restoTableRepository;
+	
+	@Autowired
+	private RestoTableOrderRepository restoTableOrderRepository;
 	
 	@Autowired
 	private PaymentMethodRepository paymentMethodRepository;
@@ -81,6 +99,16 @@ public class RestoTableIntegrationControllersTest {
 	@Autowired
 	private ProductService productService;
 	
+	@Autowired
+	private ProductPriceService productPriceService;
+	
+	@Autowired
+	private RestoTableClosedService restoTableClosedService;
+	
+	
+	
+	private static final Gson gson = new Gson();
+	
 	
 	
 
@@ -91,6 +119,13 @@ public class RestoTableIntegrationControllersTest {
 
 	private String jwtToken;
 	
+	private Product mainProduct1;
+
+	private Product mainProduct2;
+	
+	private Product mainProduct3;
+	
+	private Product mainProduct4;
 	@Test
 	@Order(1)
 	void setup() {
@@ -118,15 +153,21 @@ public class RestoTableIntegrationControllersTest {
 	
 		Product product1 = Product.builder().productName("Grande Muzza").category(pCategory1)
 				.productPrice(new ProductPrice(new BigDecimal(1500.00))).build();
-		Product savedProduct1 = productService.saveProduct(product1);
-
+		mainProduct1 = productService.saveProduct(product1);
+		ProductPrice productPrice1 = productPriceService.findByProductId(mainProduct1.getId());
+		mainProduct1.setProductPrice(productPrice1);
+				
 		Product product2 = Product.builder().productName("Grande Cebolla").category(pCategory1)
 				.productPrice(new ProductPrice(new BigDecimal(1800.00))).build();
-		Product savedProduct2 = productService.saveProduct(product2);
+		mainProduct2 = productService.saveProduct(product2);
+		ProductPrice productPrice2 = productPriceService.findByProductId(mainProduct2.getId());
+		mainProduct2.setProductPrice(productPrice2);
 		
 		Product product3 = Product.builder().productName("Cerveza heineken").category(pCategory3)
 				.productPrice(new ProductPrice(new BigDecimal(1700.00))).build();
-		Product savedProduct3 = productService.saveProduct(product3);
+		mainProduct3 = productService.saveProduct(product3);
+		ProductPrice productPrice3 = productPriceService.findByProductId(mainProduct3.getId());
+		mainProduct3.setProductPrice(productPrice3);
 		
 		Product product4 = Product.builder().productName("Cerveza Brahma").category(pCategory3)
 				.productPrice(new ProductPrice(new BigDecimal(2500.00))).build();
@@ -139,7 +180,7 @@ public class RestoTableIntegrationControllersTest {
 		Product product6 = Product.builder().productName("Pollo al horno").category(pCategory2)
 				.productPrice(new ProductPrice(new BigDecimal(2400.00))).build();
 		Product savedProduct6 = productService.saveProduct(product6);
-
+		
 		IngredientCategory ingredientCategory3 = IngredientCategory.builder().categoryName("Especias").build();
 		IngredientCategory savedIngredientCategory3 = ingredientCategoryService.saveCategory(ingredientCategory3);
 		IngredientCategory ingredientCategory1 = IngredientCategory.builder().categoryName("Salsa de tomate").build();
@@ -156,10 +197,10 @@ public class RestoTableIntegrationControllersTest {
 		Ingredient pimienta = Ingredient.builder().ingredientName("pimienta").ingredientAmount(4000).build();
 		Ingredient savedPimienta = ingredientService.saveIngredient(savedIngredientCategory3, pimienta);
 		
-		IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(savedProduct1).ingredientAmount(500).build();
-		ingredientMixService.saveIngredientMix(mix1,savedProduct1.getId());
-		IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(savedProduct1).ingredientAmount(300).build();
-		ingredientMixService.saveIngredientMix(mix2,savedProduct1.getId());
+		IngredientMix mix1 = IngredientMix.builder().ingredient(savedSal).product(mainProduct1).ingredientAmount(500).build();
+		ingredientMixService.saveIngredientMix(mix1,mainProduct1.getId());
+		IngredientMix mix2 = IngredientMix.builder().ingredient(savedPimienta).product(mainProduct1).ingredientAmount(300).build();
+		ingredientMixService.saveIngredientMix(mix2,mainProduct1.getId());
 		
 		Product product = productService.findProductById(1L);
 		ProductStock stock = new ProductStock(10);
@@ -237,25 +278,172 @@ public class RestoTableIntegrationControllersTest {
 		}
 	}
 	
+	private long workingDay1Id;
 	@Test
 	@Order(4)
 	void createWorkingDay()throws Exception{
-		this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/working_days/")
+	 this.mvcResult = 	this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/working_days/")
 				.content("{\"totalStartCash\":5000,\"employees\":[1,3]}").header("Authorization", "Bearer " + this.jwtToken)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-		.andExpect(jsonPath("$.totalStartCash", is(5000)));
+		.andExpect(jsonPath("$.totalStartCash", is(5000))).andReturn();
+	 
+	 String[] list = mvcResult.getResponse().getContentAsString().split(",");
+	 Stream.of(list).forEach(e -> System.out.println(e));
+	 workingDay1Id =Long.parseLong(Stream.of(list).filter(f -> idPattern.matcher(idRegex).find()).map(m ->  m).findFirst().get().replaceAll("[^0-9]", "").strip());
+			 
 	}
 
+	String idRegex = "(?=.*[0-9]{1})";
+	private Pattern idPattern = Pattern.compile(idRegex,Pattern.CASE_INSENSITIVE);
+	
+	private long restoTable15Id;
 	@Test
 	@Order(5)
-	void whenCreateNewRestoTable_MustReturnNewRestoTableDto() throws Exception {
+	void createNewRestoTable15() throws Exception {
 
-		this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/resto_tables/open_table")
+	 this.mvcResult = 	this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/resto_tables/open_table")
 				.content("{\"id\":1,\"tableNumber\":15,\"employeeId\":1}").header("Authorization", "Bearer " + this.jwtToken)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.employeeName", is("Carla Mesera")))
-				.andExpect(jsonPath("$.open", is(true)));
+			 	.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.employeeName", is("Carla Mesera")))
+				.andExpect(jsonPath("$.open", is(true))).andReturn();
+	 
+	 String[] list = mvcResult.getResponse().getContentAsString().split(",");
+	 Stream.of(list).forEach(e -> System.out.println(e));
+	 restoTable15Id =Long.parseLong(Stream.of(list).filter(f -> idPattern.matcher(idRegex).find()).map(m ->  m).findFirst().get().replaceAll("[^0-9]", "").strip());
+			 
 	}
 	
+	private long order1Table15Id;
+	@Test
+	@Order(6)
+	void createNewOrder1Table15()throws Exception{
+		RestoTableOrderDto orderDto = new RestoTableOrderDto();
+		orderDto.setProductId(mainProduct1.getId());
+		orderDto.setProductQuantity(2);
+		orderDto.setRestoTableId(restoTable15Id);
+		
+	 this.mvcResult = 	this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/orders/create_order")
+				.content(gson.toJson(orderDto)).header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+		.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.productId", is(mainProduct1.getId().intValue())))
+		.andExpect(jsonPath("$.productQuantity", is(2)))
+		.andExpect(jsonPath("$.totalOrderPrice", is(3000.00))).andReturn();
+	 
+	 String[] list = mvcResult.getResponse().getContentAsString().split(",");
+	 Stream.of(list).forEach(e -> System.out.println(e));
+	 order1Table15Id =Long.parseLong(Stream.of(list).filter(f -> idPattern.matcher(idRegex).find()).map(m ->  m).findFirst().get().replaceAll("[^0-9]", "").strip());
+			 
+		} 
+	
+	@Test
+	@Order(7)
+	void updateRestoTablePrice()throws Exception{
+		this.mockMvc.perform(put("http://localhost:8080/api/v1/arbam/resto_tables/update_price/{id}",gson.toJson(restoTable15Id))
+				.header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		.andExpect(jsonPath("id", is((int)restoTable15Id)))
+		.andExpect(jsonPath("$.totalTablePrice", is(mainProduct1.getProductPrice().getPrice().multiply(new BigDecimal(2)).intValue())));
+		
+	}
+	
+	@Test
+	@Order(8)
+	void createNewOrder2()throws Exception{
+		RestoTableOrderDto orderDto = new RestoTableOrderDto();
+		orderDto.setProductId(mainProduct2.getId());
+		orderDto.setProductQuantity(3);
+		orderDto.setRestoTableId(restoTable15Id);
+		
+		this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/orders/create_order")
+				.content(gson.toJson(orderDto)).header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+		.andExpect(jsonPath("$.id", notNullValue())).andExpect(jsonPath("$.productId", is(mainProduct2.getId().intValue())))
+		.andExpect(jsonPath("$.productQuantity", is(3)))
+		.andExpect(jsonPath("$.totalOrderPrice", is(5400.00)));
+		
+	}
+	@Test
+	@Order(9)
+	void updateOrder1()throws Exception{
+		RestoTableOrderDto orderDto = new RestoTableOrderDto();
+		orderDto.setProductId(mainProduct1.getId());
+		orderDto.setProductQuantity(2);
+		orderDto.setRestoTableId(restoTable15Id);
+		
+		this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/orders/create_order")
+				.content(gson.toJson(orderDto)).header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+		.andExpect(jsonPath("$.id", is((int)order1Table15Id))).andExpect(jsonPath("$.productId", is(mainProduct1.getId().intValue())))
+		.andExpect(jsonPath("$.productQuantity", is(4)))
+		.andExpect(jsonPath("$.totalOrderPrice", is(6000.00)));
+		
+	}
+	
+	@Test
+	@Order(10)
+	void deleteOrder1Product()throws Exception{
+		this.mockMvc.perform(delete("http://localhost:8080/api/v1/arbam/orders/{id}",gson.toJson(order1Table15Id))
+				.header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+			.andExpect(jsonPath("$", is("Se elimino el producto")));
+	}
+	@Test
+	@Order(11)
+	void checkOrderStatus()throws Exception{
+		RestoTableOrder order1= restoTableOrderRepository.findById(order1Table15Id).get();
+		assertThat(order1.getProductQuantity()).isEqualTo(3);
+		assertThat(order1.getTotalOrderPrice().doubleValue()).isEqualTo(4500.00);
+		
+	}
+	
+	private long restoTable8Id;
+	@Test
+	@Order(12)
+	void createNewRestoTable8() throws Exception {
+
+	 this.mvcResult = 	this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/resto_tables/open_table")
+				.content("{\"id\":2,\"tableNumber\":8,\"employeeId\":1}").header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+			 	.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.employeeName", is("Carla Mesera")))
+				.andExpect(jsonPath("$.open", is(true))).andReturn();
+	 String[] list = mvcResult.getResponse().getContentAsString().split(",");
+	this.restoTable8Id =Long.parseLong(Stream.of(list).filter(f -> idPattern.matcher(idRegex).find()).map(m ->  m).findFirst().get().replaceAll("[^0-9]", "").strip());
+			 
+	}
+	
+	private long order3Table8Id;
+	@Test
+	@Order(13)
+	void createNewOrder3Table8() throws Exception{
+		RestoTableOrderDto orderDto = new RestoTableOrderDto();
+		orderDto.setProductId(mainProduct3.getId());
+		orderDto.setProductQuantity(3);
+		orderDto.setRestoTableId(restoTable8Id);
+		
+	 this.mvcResult = 	this.mockMvc.perform(post("http://localhost:8080/api/v1/arbam/orders/create_order")
+				.content(gson.toJson(orderDto)).header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+		.andExpect(jsonPath("$.id", is(notNullValue()))).andExpect(jsonPath("$.productId", is(mainProduct3.getId().intValue())))
+		.andExpect(jsonPath("$.productQuantity", is(3)))
+		.andExpect(jsonPath("$.totalOrderPrice", is(5100.00))).andReturn();
+	 
+	 String[] list = mvcResult.getResponse().getContentAsString().split(",");
+	 Stream.of(list).forEach(e -> System.out.println(e));
+	 order3Table8Id =Long.parseLong(Stream.of(list).filter(f -> idPattern.matcher(idRegex).find()).map(m ->  m).findFirst().get().replaceAll("[^0-9]", "").strip());
+	}
+	
+	@Test
+	@Order(14)
+	void closeRestoTable15()throws Exception{
+		
+	this.mvcResult = this.mockMvc.perform(put("http://localhost:8080/api/v1/arbam/resto_tables/close_table")
+				.param("restoTableId", gson.toJson(restoTable15Id)).param("workingDayId",gson.toJson(workingDay1Id)).header("Authorization", "Bearer " + this.jwtToken)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+		.andExpect(jsonPath("$.id", is(notNullValue()))).andReturn();
+	String json = mvcResult.getResponse().getContentAsString();
+	//RestoTableClosedDto restoTableClosedDto = new ObjectMapper().readValue(json, RestoTableClosedDto.class);
+	}
+	
+
 
 }
