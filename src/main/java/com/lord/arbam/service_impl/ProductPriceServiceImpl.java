@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.lord.arbam.dto.PriceUpdateReportDto;
 import com.lord.arbam.exception.ItemNotFoundException;
+import com.lord.arbam.exception.NegativeNumberException;
 import com.lord.arbam.model.ProductPrice;
 import com.lord.arbam.repository.ProductPriceRepository;
 import com.lord.arbam.service.ProductPriceService;
@@ -68,8 +69,12 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 				priceReports.add(new PriceUpdateReportDto(itemPrice.getProduct().getProductName(),tempItemPrice,udpateItemPrice));
 				return itemPrice;
 			}else {
+				if(itemPrice.getPrice().subtract(updatedPrice).doubleValue()<0.00) {
+					throw new NegativeNumberException("El precio no puede ser negativo.");
+				}
 				BigDecimal udpateItemPrice = itemPrice.getPrice().subtract(updatedPrice);
 				itemPrice.setPrice(udpateItemPrice);
+				
 				priceReports.add(new PriceUpdateReportDto(itemPrice.getProduct().getProductName(),tempItemPrice,udpateItemPrice));
 				return itemPrice;
 			}

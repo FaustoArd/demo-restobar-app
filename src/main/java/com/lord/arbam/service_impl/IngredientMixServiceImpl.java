@@ -35,8 +35,9 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 
 	@Override
 	public IngredientMix findIngredientMixById(Long id) {
+		log.info("Find ingredient mix by id.");
 		return ingredientMixRepository.findById(id)
-				.orElseThrow(() -> new ItemNotFoundException("Ingredient mix not found"));
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro la receta"));
 	}
 
 	@Transactional
@@ -44,8 +45,8 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 	public IngredientMix saveIngredientMix(IngredientMix ingredientMix, Long productId) {
 		if (findByProductId(productId).stream().filter(mix -> mix.getIngredient().getIngredientName()
 				.equals(ingredientMix.getIngredient().getIngredientName())).findFirst().isPresent()) {
-			log.warn("Ese ingrediente ya existe en esta receta");
-			throw new ValueAlreadyExistException("Ingredient already exist in this recipe");
+			log.warn("Ingredient already exist in this recipe");
+			throw new ValueAlreadyExistException("Ese ingrediente ya existe en esta receta");
 		} else {
 
 			log.info("Agregando Ingrediente a la receta");
@@ -75,8 +76,8 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 		if (ingredientMixRepository.existsById(id)) {
 			setIngredientMixDeleted(id);
 		} else {
-			log.info("No se encontro el ingrediente");
-			throw new ItemNotFoundException("Ingredient Mix not found");
+			log.info("Ingredient Mix not found");
+			throw new ItemNotFoundException("No se encontro el ingrediente");
 		}
 
 	}
@@ -120,7 +121,7 @@ public class IngredientMixServiceImpl implements IngredientMixService {
 
 	private Product findProductById(long productId) {
 		return productRepository.findById(productId)
-				.orElseThrow(() -> new ItemNotFoundException("No se encontro el prodcucto."));
+				.orElseThrow(() -> new ItemNotFoundException("No se encontro el producto."));
 	}
 
 }
