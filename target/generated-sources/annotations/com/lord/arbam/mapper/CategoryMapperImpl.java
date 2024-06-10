@@ -10,8 +10,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-29T18:20:07-0300",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2024-05-31T17:19:11-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class CategoryMapperImpl implements CategoryMapper {
 
@@ -23,8 +23,8 @@ public class CategoryMapperImpl implements CategoryMapper {
 
         ProductCategory.ProductCategoryBuilder productCategory = ProductCategory.builder();
 
-        productCategory.categoryName( productCategoryDto.getCategoryName() );
         productCategory.id( productCategoryDto.getId() );
+        productCategory.categoryName( productCategoryDto.getCategoryName() );
 
         return productCategory.build();
     }
@@ -37,8 +37,8 @@ public class CategoryMapperImpl implements CategoryMapper {
 
         ProductCategoryDto productCategoryDto = new ProductCategoryDto();
 
-        productCategoryDto.setCategoryName( productCategory.getCategoryName() );
         productCategoryDto.setId( productCategory.getId() );
+        productCategoryDto.setCategoryName( productCategory.getCategoryName() );
 
         return productCategoryDto;
     }
@@ -65,8 +65,8 @@ public class CategoryMapperImpl implements CategoryMapper {
 
         IngredientCategory.IngredientCategoryBuilder ingredientCategory = IngredientCategory.builder();
 
-        ingredientCategory.categoryName( ingredientCategoryDto.getCategoryName() );
         ingredientCategory.id( ingredientCategoryDto.getId() );
+        ingredientCategory.categoryName( ingredientCategoryDto.getCategoryName() );
 
         return ingredientCategory.build();
     }
@@ -79,8 +79,8 @@ public class CategoryMapperImpl implements CategoryMapper {
 
         IngredientCategoryDto ingredientCategoryDto = new IngredientCategoryDto();
 
-        ingredientCategoryDto.setCategoryName( ingredientCategory.getCategoryName() );
         ingredientCategoryDto.setId( ingredientCategory.getId() );
+        ingredientCategoryDto.setCategoryName( ingredientCategory.getCategoryName() );
 
         return ingredientCategoryDto;
     }

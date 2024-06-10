@@ -8,8 +8,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-29T18:20:07-0300",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2024-05-31T17:19:11-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
 
@@ -21,11 +21,11 @@ public class UserMapperImpl implements UserMapper {
 
         User.UserBuilder user = User.builder();
 
-        user.email( regDto.getEmail() );
-        user.lastname( regDto.getLastname() );
         user.name( regDto.getName() );
-        user.password( regDto.getPassword() );
+        user.lastname( regDto.getLastname() );
         user.username( regDto.getUsername() );
+        user.email( regDto.getEmail() );
+        user.password( regDto.getPassword() );
 
         return user.build();
     }
@@ -38,11 +38,11 @@ public class UserMapperImpl implements UserMapper {
 
         RegistrationDto registrationDto = new RegistrationDto();
 
-        registrationDto.setEmail( user.getEmail() );
-        registrationDto.setLastname( user.getLastname() );
         registrationDto.setName( user.getName() );
-        registrationDto.setPassword( user.getPassword() );
+        registrationDto.setLastname( user.getLastname() );
         registrationDto.setUsername( user.getUsername() );
+        registrationDto.setEmail( user.getEmail() );
+        registrationDto.setPassword( user.getPassword() );
 
         return registrationDto;
     }
@@ -55,8 +55,8 @@ public class UserMapperImpl implements UserMapper {
 
         User.UserBuilder user = User.builder();
 
-        user.password( LoginDto.getPassword() );
         user.username( LoginDto.getUsername() );
+        user.password( LoginDto.getPassword() );
 
         return user.build();
     }
@@ -69,11 +69,11 @@ public class UserMapperImpl implements UserMapper {
 
         UserDto userDto = new UserDto();
 
-        userDto.setEmail( user.getEmail() );
         userDto.setId( user.getId() );
-        userDto.setLastname( user.getLastname() );
         userDto.setName( user.getName() );
+        userDto.setLastname( user.getLastname() );
         userDto.setUsername( user.getUsername() );
+        userDto.setEmail( user.getEmail() );
 
         return userDto;
     }

@@ -14,7 +14,7 @@ public class OrderPaymentMethodResponse {
 	
 	private PaymentMethodDto paymentMethod;
 	
-	private long paymentMethodId;
+//	private long paymentMethodId;
 	
 	private RestoTableClosedDto restoTableClosedDto;
 	
