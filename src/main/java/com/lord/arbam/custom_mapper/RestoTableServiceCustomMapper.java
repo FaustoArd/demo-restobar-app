@@ -23,6 +23,7 @@ public class RestoTableServiceCustomMapper {
 		
 		findedTable.setEmployee(null);
 		findedTable.setTableNumber(null);
+		findedTable.setTableDescription(null);
 		findedTable.setOpen(false);
 		findedTable.setTotalTablePrice(null);
 		return findedTable;

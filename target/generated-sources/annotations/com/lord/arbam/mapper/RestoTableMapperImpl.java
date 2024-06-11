@@ -11,8 +11,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-31T17:19:11-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
+    date = "2024-06-10T23:31:15-0300",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 21 (Oracle Corporation)"
 )
 public class RestoTableMapperImpl implements RestoTableMapper {
 
@@ -26,9 +26,10 @@ public class RestoTableMapperImpl implements RestoTableMapper {
 
         restoTable.employee( restoTableDtoToEmployee( restoTableDto ) );
         restoTable.id( restoTableDto.getId() );
+        restoTable.open( restoTableDto.isOpen() );
+        restoTable.tableDescription( restoTableDto.getTableDescription() );
         restoTable.tableNumber( restoTableDto.getTableNumber() );
         restoTable.totalTablePrice( restoTableDto.getTotalTablePrice() );
-        restoTable.open( restoTableDto.isOpen() );
 
         return restoTable.build();
     }
@@ -44,9 +45,10 @@ public class RestoTableMapperImpl implements RestoTableMapper {
         restoTableDto.setEmployeeId( restoTableEmployeeId( restoTable ) );
         restoTableDto.setEmployeeName( restoTableEmployeeEmployeeName( restoTable ) );
         restoTableDto.setId( restoTable.getId() );
+        restoTableDto.setOpen( restoTable.isOpen() );
+        restoTableDto.setTableDescription( restoTable.getTableDescription() );
         restoTableDto.setTableNumber( restoTable.getTableNumber() );
         restoTableDto.setTotalTablePrice( restoTable.getTotalTablePrice() );
-        restoTableDto.setOpen( restoTable.isOpen() );
 
         return restoTableDto;
     }

@@ -19,12 +19,10 @@ public interface RestoTableMapper {
 	@Mapping(target="employee.id", source="employeeId")
 	@Mapping(target="employee.employeeName", source="employeeName")
 	@Mapping(target="tableOrders",ignore = true)
-	
 	public RestoTable toRestoTable(RestoTableDto restoTableDto);
 	
 	@Mapping(target="employeeId", source="employee.id")
 	@Mapping(target="employeeName", source="employee.employeeName")
-	
 	public RestoTableDto toRestotableDto(RestoTable restoTable);
 	
 	@Mapping(target="employeeId", source="employee.id")

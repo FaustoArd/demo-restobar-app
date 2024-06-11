@@ -14,6 +14,8 @@ public class RestoTableDto {
 	
 	private Integer tableNumber;
 	
+	private String tableDescription;
+	
 	private Long employeeId;
 	
 	private String employeeName;

@@ -37,6 +37,9 @@ public class RestoTable {
 
 	@Column(name = "table_number")
 	private Integer tableNumber;
+	
+	@Column(name="table_description", length = 50)
+	private String tableDescription;
 
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id", referencedColumnName = "id")

@@ -65,12 +65,18 @@ public class RestoTableController {
 	
 	@PostMapping("/open_table")
 	ResponseEntity<RestoTableDto> openRestoTable(@RequestBody RestoTableDto restoTableDto){
-		
 		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
-		System.err.println(table.getId());
 		RestoTable createdTable = restoTableService.openRestoTable(table);
 		RestoTableDto createdTableDto = RestoTableMapper.INSTANCE.toRestotableDto(createdTable);
 		return new ResponseEntity<RestoTableDto>(createdTableDto,HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/update_table")
+	ResponseEntity<RestoTableDto> updateRestoTable(@RequestBody RestoTableDto restoTableDto){
+		RestoTable table = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
+		RestoTable udpatedTable = restoTableService.updateRestoTable(table);
+		RestoTableDto updatedTableDto = RestoTableMapper.INSTANCE.toRestotableDto(udpatedTable);
+		return new ResponseEntity<RestoTableDto>(updatedTableDto,HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/update_price/{id}")
