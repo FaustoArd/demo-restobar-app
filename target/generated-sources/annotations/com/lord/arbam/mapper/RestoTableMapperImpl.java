@@ -11,7 +11,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-10T23:31:15-0300",
+    date = "2024-06-17T18:51:57-0300",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 21 (Oracle Corporation)"
 )
 public class RestoTableMapperImpl implements RestoTableMapper {
@@ -25,6 +25,7 @@ public class RestoTableMapperImpl implements RestoTableMapper {
         RestoTable.RestoTableBuilder restoTable = RestoTable.builder();
 
         restoTable.employee( restoTableDtoToEmployee( restoTableDto ) );
+        restoTable.copy( restoTableDto.isCopy() );
         restoTable.id( restoTableDto.getId() );
         restoTable.open( restoTableDto.isOpen() );
         restoTable.tableDescription( restoTableDto.getTableDescription() );
@@ -44,6 +45,7 @@ public class RestoTableMapperImpl implements RestoTableMapper {
 
         restoTableDto.setEmployeeId( restoTableEmployeeId( restoTable ) );
         restoTableDto.setEmployeeName( restoTableEmployeeEmployeeName( restoTable ) );
+        restoTableDto.setCopy( restoTable.isCopy() );
         restoTableDto.setId( restoTable.getId() );
         restoTableDto.setOpen( restoTable.isOpen() );
         restoTableDto.setTableDescription( restoTable.getTableDescription() );

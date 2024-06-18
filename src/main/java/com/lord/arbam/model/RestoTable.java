@@ -21,11 +21,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 @Builder
 @Entity
 @Table(name = "resto_tables")
@@ -53,5 +56,8 @@ public class RestoTable {
 
 	@Column(name = "open")
 	private boolean open;
+	
+	@Column(name = "copy")
+	private boolean copy;
 
 }

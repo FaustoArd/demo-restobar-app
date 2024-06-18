@@ -6,6 +6,8 @@ import java.util.Optional;
 import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.RestoTableClosedDto;
+import com.lord.arbam.dto.RestoTableDto;
+import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.RestoTable;
@@ -33,7 +35,7 @@ public interface RestoTableService {
 	
 	public List<PaymentMethod> findAllPaymentMethods();
 	
-	
+	public RestoTableDto copyRemainingTable(List<RestoTableOrderDto> restoTableOrderDtos);
 	
 	public void checkTablesOpen();
 	

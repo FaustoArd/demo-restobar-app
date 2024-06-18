@@ -18,6 +18,7 @@ import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.PaymentMethodDto;
 import com.lord.arbam.dto.RestoTableClosedDto;
 import com.lord.arbam.dto.RestoTableDto;
+import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.mapper.RestoTableMapper;
 import com.lord.arbam.model.PaymentMethod;
 import com.lord.arbam.model.RestoTable;
@@ -48,6 +49,12 @@ public class RestoTableController {
 		RestoTable table = restoTableService.findRestoTableById(id);
 		RestoTableDto tableDto = RestoTableMapper.INSTANCE.toRestotableDto(table);
 		return new ResponseEntity<RestoTableDto>(tableDto,HttpStatus.OK);
+	}
+	
+	@PutMapping("/copy_table")
+	ResponseEntity<RestoTableDto> copyRemainingTable(@RequestBody List<RestoTableOrderDto> restoTableOrderDtos){
+		RestoTableDto dto = restoTableService.copyRemainingTable(restoTableOrderDtos);
+		return ResponseEntity.ok(dto);
 	}
 	
 	@GetMapping("/all")

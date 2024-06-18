@@ -1,27 +1,29 @@
 package com.lord.arbam.service_impl;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.lord.arbam.custom_mapper.RestoTableServiceCustomMapper;
 import com.lord.arbam.dto.OrderPaymentMethodDto;
 import com.lord.arbam.dto.OrderPaymentMethodResponse;
 import com.lord.arbam.dto.PaymentMethodDto;
 import com.lord.arbam.dto.RestoTableClosedDto;
-import com.lord.arbam.dto.RestoTableOrderClosedDto;
+import com.lord.arbam.dto.RestoTableDto;
 import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.exception.RestoTableOpenException;
-import com.lord.arbam.exception.ValueAlreadyExistException;
 import com.lord.arbam.mapper.RestoTableClosedMapper;
-import com.lord.arbam.mapper.RestoTableOrderClosedMapper;
+import com.lord.arbam.mapper.RestoTableMapper;
+import com.lord.arbam.mapper.RestoTableOrderMapper;
 import com.lord.arbam.model.Employee;
 import com.lord.arbam.model.OrderPaymentMethod;
 import com.lord.arbam.model.PaymentMethod;
@@ -40,7 +42,10 @@ import com.lord.arbam.repository.RestoTableOrderClosedRepository;
 import com.lord.arbam.repository.RestoTableOrderRepository;
 import com.lord.arbam.repository.RestoTableRepository;
 import com.lord.arbam.repository.WorkingDayRepository;
+import com.lord.arbam.service.RestoTableOrderService;
 import com.lord.arbam.service.RestoTableService;
+
+import ch.qos.logback.core.joran.conditional.Condition;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -75,6 +80,12 @@ public class RestoTableServiceImpl implements RestoTableService {
 
 	@Autowired
 	private final RestoTableServiceCustomMapper restoTableServiceCustomMapper;
+	
+	@Autowired
+	private final ProductRepository productRepository;
+	
+	@Autowired
+	private final RestoTableOrderService restoTableOrderService;
 
 	@Override
 	public RestoTable findRestoTableById(Long id) {
@@ -135,8 +146,8 @@ public class RestoTableServiceImpl implements RestoTableService {
 		Employee employee = findEmployeeById(findedTable.getEmployee().getId());
 		WorkingDay workingDay = findworkingDayById(workingDayId);
 		log.info("Copying table, id: " + restoTableId + " data");
-		RestoTableClosed tableClosed = restoTableServiceCustomMapper.buildTableClosed(findedTable, employee,
-				workingDay);
+		RestoTableClosed tableClosed = restoTableServiceCustomMapper.buildTableClosed(findedTable, employee, workingDay,
+				orderPaymentMethodDtos);
 		RestoTableClosed savedTableClosed = restoTableClosedRepository.save(tableClosed);
 		List<OrderPaymentMethod> paymentMethods = getAllOrderPaymentMethods(orderPaymentMethodDtos, savedTableClosed);
 		List<OrderPaymentMethod> savedOrderPaymentMethods = orderPaymentMethodRepository.saveAll(paymentMethods);
@@ -152,21 +163,6 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return restoTableClosedDto;
 
 	}
-//	private static RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay) {
-//		return  RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
-//				.employeeName(employee.getEmployeeName()).totalPrice(findedTable.getTotalTablePrice())
-//				.workingDay(workingDay).build();
-//	}
-//	
-//	private static RestoTable setRestoTableToDefault(RestoTable findedTable) {
-//		log.info("Restarting resto table, id: " + findedTable.getId());
-//		findedTable.setEmployee(null);
-//		findedTable.setTableNumber(null);
-//		findedTable.setOpen(false);
-//		findedTable.setTotalTablePrice(null);
-//		return findedTable;
-//				
-//	}
 
 	private List<OrderPaymentMethodResponse> mapPaymentsToResponses(List<OrderPaymentMethod> savedOrderPaymentMethods,
 			RestoTableClosed savedTableClosed) {
@@ -184,18 +180,6 @@ public class RestoTableServiceImpl implements RestoTableService {
 		}).toList();
 		return paymentResponses;
 	}
-
-//	private static List<RestoTableOrderClosedDto> mapOrderClosedsToDtos(List<RestoTableOrderClosed> orderCloseds){
-//		return orderCloseds.stream().map(orderClosed ->{
-//			RestoTableOrderClosedDto restoTableOrderClosedDto = new RestoTableOrderClosedDto();
-//		restoTableOrderClosedDto.setId(orderClosed.getId());
-//		restoTableOrderClosedDto.setProductName(orderClosed.getProductName());
-//		restoTableOrderClosedDto.setProductQuantity(orderClosed.getProductQuantity());
-//		restoTableOrderClosedDto.setTotalOrderPrice(orderClosed.getTotalOrderPrice());
-//	
-//		return restoTableOrderClosedDto;
-//		}).toList();
-//	}
 
 	private List<OrderPaymentMethod> getAllOrderPaymentMethods(List<OrderPaymentMethodDto> orderPaymentMethodDtos,
 			RestoTableClosed tableClosed) {
@@ -255,7 +239,44 @@ public class RestoTableServiceImpl implements RestoTableService {
 		}
 
 	}
+	
+	@Override
+	public RestoTableDto copyRemainingTable(
+			List<RestoTableOrderDto> restoTableOrderDtos) {
+		long restoTableId = restoTableOrderDtos.stream().map(m -> m.getRestoTableId()).findAny().get().longValue();
+		BigDecimal totalTablePrice = restoTableOrderDtos.stream().map(m -> m.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
+		RestoTable originTable = findRestoTableById(restoTableId);
+		RestoTable destinationTable = mapOriginToDestinationTable(restoTableOrderDtos, originTable, totalTablePrice);
+		RestoTable copiedTable = restoTableRepository.save(destinationTable);
+		return RestoTableMapper.INSTANCE.toRestotableDto(copiedTable);
+		
+	}
+	
+	private RestoTable mapOriginToDestinationTable(List<RestoTableOrderDto> restoTableOrderDtos,RestoTable originTable,BigDecimal totalTablePrice) {
+		return  restoTableRepository.findFirstByOpen(false).map(dest -> {
+			dest.setTableOrders(mapRemainingOrders(restoTableOrderDtos,dest));
+			dest.setTableNumber(originTable.getTableNumber());
+			dest.setTableDescription("Copia");
+			dest.setOpen(true);
+			Employee employee = findEmployeeById(originTable.getEmployee().getId());
+			dest.setEmployee(employee);
+			dest.setCopy(true);
+			dest.setTotalTablePrice(totalTablePrice);
+			return dest;
+			}).get();
+	}
 
+	private Set<RestoTableOrder> mapRemainingOrders(List<RestoTableOrderDto> restoTableOrderDtos,RestoTable destinationTable) {
+		Set<RestoTableOrder> orders =  restoTableOrderDtos.stream().map(orderDto -> {
+			RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(orderDto);
+			order.setRestoTable(destinationTable);
+			return restoTableOrderService.createOrder(order);
+		}).collect(Collectors.toSet());
+		
+		return restoTableOrderRepository.saveAll(orders).stream().collect(Collectors.toSet());
+	}
+	
+	
 	private Employee findEmployeeById(long employeeId) {
 		return employeeRepository.findById(employeeId)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el empleado"));
@@ -275,6 +296,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return paymentMethodRepository.findById(paymentMethodId)
 				.orElseThrow(() -> new ItemNotFoundException("No se encontro el metodo de pago."));
 	}
+	
+	private Product findProductbyId(long productId) {
+		return productRepository.findById(productId).orElseThrow(() -> new ItemNotFoundException("No se encontro el producto."));
+	}
 
 	private PaymentMethodDto mapToPaymentMethodDto(PaymentMethod paymentMethod) {
 
@@ -283,5 +308,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		dto.setPaymentMethod(paymentMethod.getPaymentMethod());
 		return dto;
 	}
+
+	
 
 }

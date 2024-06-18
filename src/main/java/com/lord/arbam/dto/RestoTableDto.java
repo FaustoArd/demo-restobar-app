@@ -23,5 +23,7 @@ public class RestoTableDto {
 	private BigDecimal totalTablePrice;
 	
 	private boolean open;
+	
+	private boolean copy;
 
 }
