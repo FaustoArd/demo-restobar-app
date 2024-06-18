@@ -21,6 +21,6 @@ public class RestoTableOrderDto {
 	
 	private BigDecimal totalOrderPrice;
 	
-	
+	private boolean amount;
 
 }

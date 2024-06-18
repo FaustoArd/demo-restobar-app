@@ -48,7 +48,8 @@ public class RestoTableOrder {
 	@JoinColumn(name="resto_table_id", referencedColumnName = "id")
 	private RestoTable restoTable;
 	
-	
+	@Column(name="amount")
+	private boolean amount;
 	
 	
 	

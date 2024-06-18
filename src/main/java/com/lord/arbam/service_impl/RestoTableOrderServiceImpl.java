@@ -59,8 +59,18 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 			log.info("orden existente,actualizando...");
 			return updateOrder(existingOrder.get(), order.getProductQuantity());
 		}
-		Product product = findProductById(order.getProduct().getId());
+		
 		RestoTable table = findRestoTableById(order.getRestoTable().getId());
+		System.out.println("Amount" + order.isAmount());
+		if(order.isAmount()){
+			RestoTableOrder newAmount = RestoTableOrder.builder()
+					.productQuantity(order.getProductQuantity())
+					.restoTable(table)
+					.amount(order.isAmount())
+					.totalOrderPrice(order.getTotalOrderPrice()).build();
+			return restoTableOrderRepository.save(newAmount);
+		}
+		Product product = findProductById(order.getProduct().getId());
 		RestoTableOrder newOrder = RestoTableOrder.builder().product(product)
 				.productQuantity(order.getProductQuantity()).restoTable(table)
 				.totalOrderPrice(
