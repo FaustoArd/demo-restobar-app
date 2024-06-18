@@ -35,7 +35,7 @@ public interface RestoTableService {
 	
 	public List<PaymentMethod> findAllPaymentMethods();
 	
-	public RestoTableDto copyRemainingTable(List<RestoTableOrderDto> restoTableOrderDtos);
+	public RestoTableDto copyRemainingTable(RestoTableDto restoTableDto);
 	
 	public void checkTablesOpen();
 	

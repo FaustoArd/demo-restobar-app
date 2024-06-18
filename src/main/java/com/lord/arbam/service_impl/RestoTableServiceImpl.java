@@ -241,22 +241,22 @@ public class RestoTableServiceImpl implements RestoTableService {
 	}
 	
 	@Override
-	public RestoTableDto copyRemainingTable(
-			List<RestoTableOrderDto> restoTableOrderDtos) {
-		long restoTableId = restoTableOrderDtos.stream().map(m -> m.getRestoTableId()).findAny().get().longValue();
-		BigDecimal totalTablePrice = restoTableOrderDtos.stream().map(m -> m.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
-		RestoTable originTable = findRestoTableById(restoTableId);
-		RestoTable destinationTable = mapOriginToDestinationTable(restoTableOrderDtos, originTable, totalTablePrice);
+	@Transactional
+	public RestoTableDto copyRemainingTable(RestoTableDto restoTableDto) {
+		//long restoTableId = restoTableOrderDtos.stream().map(m -> m.getRestoTableId()).findAny().get().longValue();
+		BigDecimal totalTablePrice = restoTableDto.getRestoTableOrders().stream().map(m -> m.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
+		RestoTable originTable = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
+		RestoTable destinationTable = mapOriginToDestinationTable( restoTableDto.getRestoTableOrders(), originTable, totalTablePrice);
 		RestoTable copiedTable = restoTableRepository.save(destinationTable);
 		return RestoTableMapper.INSTANCE.toRestotableDto(copiedTable);
 		
 	}
 	
 	private RestoTable mapOriginToDestinationTable(List<RestoTableOrderDto> restoTableOrderDtos,RestoTable originTable,BigDecimal totalTablePrice) {
-		return  restoTableRepository.findFirstByOpen(false).map(dest -> {
+		return  restoTableRepository.findById(originTable.getId()).map(dest -> {
 			dest.setTableOrders(mapRemainingOrders(restoTableOrderDtos,dest));
 			dest.setTableNumber(originTable.getTableNumber());
-			dest.setTableDescription("Copia");
+			dest.setTableDescription("PARCIAL");
 			dest.setOpen(true);
 			Employee employee = findEmployeeById(originTable.getEmployee().getId());
 			dest.setEmployee(employee);

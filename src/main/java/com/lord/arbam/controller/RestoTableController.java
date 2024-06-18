@@ -52,8 +52,9 @@ public class RestoTableController {
 	}
 	
 	@PutMapping("/copy_table")
-	ResponseEntity<RestoTableDto> copyRemainingTable(@RequestBody List<RestoTableOrderDto> restoTableOrderDtos){
-		RestoTableDto dto = restoTableService.copyRemainingTable(restoTableOrderDtos);
+	ResponseEntity<RestoTableDto> copyRemainingTable(@RequestBody RestoTableDto restoTableDto){
+	
+		RestoTableDto dto = restoTableService.copyRemainingTable(restoTableDto);
 		return ResponseEntity.ok(dto);
 	}
 	

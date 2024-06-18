@@ -25,5 +25,7 @@ public class RestoTableDto {
 	private boolean open;
 	
 	private boolean copy;
+	
+	List<RestoTableOrderDto> restoTableOrders;
 
 }
