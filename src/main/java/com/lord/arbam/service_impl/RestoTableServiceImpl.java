@@ -256,7 +256,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 		return  restoTableRepository.findById(originTable.getId()).map(dest -> {
 			dest.setTableOrders(mapRemainingOrders(restoTableOrderDtos,dest));
 			dest.setTableNumber(originTable.getTableNumber());
-			dest.setTableDescription("PARCIAL");
+			if(originTable.getTableDescription()==null) {
+				originTable.setTableDescription("");
+			}
+			dest.setTableDescription(originTable.getTableDescription() + "-P-");
 			dest.setOpen(true);
 			Employee employee = findEmployeeById(originTable.getEmployee().getId());
 			dest.setEmployee(employee);
