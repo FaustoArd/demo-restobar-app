@@ -1,6 +1,8 @@
 package com.lord.arbam.service;
 
 import java.util.List;
+
+import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.model.RestoTableOrder;
 
 public interface RestoTableOrderService {
@@ -18,6 +20,8 @@ public interface RestoTableOrderService {
 	public RestoTableOrder updateDeletedOrderItemPrice(RestoTableOrder order);
 	
 	public List<RestoTableOrder> findAllByRestoTableId(Long restoTableId);
+	
+	public List<RestoTableOrderDto> addAmountOrderName(List<RestoTableOrderDto> restoTableOrderDtos);
 	
 	
 

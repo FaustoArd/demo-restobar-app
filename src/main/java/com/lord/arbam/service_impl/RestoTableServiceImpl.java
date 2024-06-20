@@ -248,7 +248,8 @@ public class RestoTableServiceImpl implements RestoTableService {
 		RestoTable originTable = RestoTableMapper.INSTANCE.toRestoTable(restoTableDto);
 		RestoTable destinationTable = mapOriginToDestinationTable( restoTableDto.getRestoTableOrders(), originTable, totalTablePrice);
 		RestoTable copiedTable = restoTableRepository.save(destinationTable);
-		return RestoTableMapper.INSTANCE.toRestotableDto(copiedTable);
+		 return  RestoTableMapper.INSTANCE.toRestotableDto(copiedTable);
+		
 		
 	}
 	
@@ -273,6 +274,7 @@ public class RestoTableServiceImpl implements RestoTableService {
 		Set<RestoTableOrder> orders =  restoTableOrderDtos.stream().map(orderDto -> {
 			RestoTableOrder order = RestoTableOrderMapper.INSTANCE.toOrder(orderDto);
 			order.setRestoTable(destinationTable);
+			log.info("Save order");
 			return restoTableOrderService.createOrder(order);
 		}).collect(Collectors.toSet());
 		
@@ -311,6 +313,10 @@ public class RestoTableServiceImpl implements RestoTableService {
 		dto.setPaymentMethod(paymentMethod.getPaymentMethod());
 		return dto;
 	}
+
+	
+
+
 
 	
 

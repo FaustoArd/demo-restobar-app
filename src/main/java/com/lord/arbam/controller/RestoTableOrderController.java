@@ -51,7 +51,8 @@ public class RestoTableOrderController {
 	ResponseEntity<List<RestoTableOrderDto>> findAllOrdersByRestoTable(@PathVariable("restoTableId")Long restoTableId){
 		List<RestoTableOrder> orders = restoTableOrderService.findAllByRestoTableId(restoTableId);
 		List<RestoTableOrderDto> ordersDto = RestoTableOrderMapper.INSTANCE.toOrdersDto(orders);
-		return new ResponseEntity<List<RestoTableOrderDto>>(ordersDto,HttpStatus.OK);
+		
+		return new ResponseEntity<List<RestoTableOrderDto>>(restoTableOrderService.addAmountOrderName(ordersDto),HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

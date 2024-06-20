@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lord.arbam.dto.ProductDto;
+import com.lord.arbam.dto.RestoTableOrderDto;
 import com.lord.arbam.exception.ItemNotFoundException;
 import com.lord.arbam.model.Product;
 import com.lord.arbam.model.ProductPrice;
@@ -61,14 +63,17 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 		}
 		
 		RestoTable table = findRestoTableById(order.getRestoTable().getId());
-		System.out.println("Amount" + order.isAmount());
+		
 		if(order.isAmount()){
 			RestoTableOrder newAmount = RestoTableOrder.builder()
 					.productQuantity(order.getProductQuantity())
 					.restoTable(table)
 					.amount(order.isAmount())
 					.totalOrderPrice(order.getTotalOrderPrice()).build();
-			return restoTableOrderRepository.save(newAmount);
+			RestoTableOrder savedAmount =  restoTableOrderRepository.save(newAmount);
+			//savedAmount.setProduct(Product.builder().productName("Monto parcial").build());
+			return savedAmount;
+			
 		}
 		Product product = findProductById(order.getProduct().getId());
 		RestoTableOrder newOrder = RestoTableOrder.builder().product(product)
@@ -80,8 +85,8 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 
 		return restoTableOrderRepository.save(newOrder);
 	}
-
-	@Override
+	
+		@Override
 	public RestoTableOrder updateOrder(RestoTableOrder existingOrder, Integer productQuantity) {
 		ProductPrice price = productPriceRepository.findByProductId(existingOrder.getProduct().getId())
 				.orElseThrow(() -> new ItemNotFoundException("Price not found"));
@@ -154,5 +159,19 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 		return restoTableRepository.findById(restoTableId)
 				.orElseThrow(() -> new ItemNotFoundException("Resto table not found"));
 	}
+
+	@Override
+	public List<RestoTableOrderDto> addAmountOrderName(List<RestoTableOrderDto> restoTableOrderDtos) {
+		return restoTableOrderDtos.stream().map(dto -> {
+			if(dto.isAmount()) {
+				dto.setProductName("Monto parcial");
+				return dto;
+			}
+			return dto;
+		}).toList();
+		
+	}
+
+	
 
 }
