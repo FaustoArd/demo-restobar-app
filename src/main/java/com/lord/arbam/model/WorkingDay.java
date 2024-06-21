@@ -70,6 +70,12 @@ public class WorkingDay {
 	@Column(name="total_transf")
 	private BigDecimal totalTransf;
 	
+	@Column(name="total_QR")
+	private BigDecimal totalQR;
+	
+	@Column(name="total_digital_amount")
+	private BigDecimal totalDigitalAmount;
+	
 	@Column(name="total_employee_salary")
 	private BigDecimal totalEmployeeSalary;
 	

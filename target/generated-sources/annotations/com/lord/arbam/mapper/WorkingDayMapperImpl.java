@@ -9,8 +9,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-18T23:52:21-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21 (Oracle Corporation)"
+    date = "2024-06-21T09:27:33-0300",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 21 (Oracle Corporation)"
 )
 public class WorkingDayMapperImpl implements WorkingDayMapper {
 
@@ -22,22 +22,24 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDay.WorkingDayBuilder workingDay = WorkingDay.builder();
 
-        workingDay.id( workingDayDto.getId() );
         workingDay.date( workingDayDto.getDate() );
-        workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
-        workingDay.totalWorkingDay( workingDayDto.getTotalWorkingDay() );
-        workingDay.totalCash( workingDayDto.getTotalCash() );
-        workingDay.totalWorkingDayWithDiscount( workingDayDto.getTotalWorkingDayWithDiscount() );
-        workingDay.totalDebit( workingDayDto.getTotalDebit() );
-        workingDay.totalCredit( workingDayDto.getTotalCredit() );
-        workingDay.totalMP( workingDayDto.getTotalMP() );
-        workingDay.totalTransf( workingDayDto.getTotalTransf() );
-        workingDay.totalEmployeeSalary( workingDayDto.getTotalEmployeeSalary() );
+        workingDay.dayStarted( workingDayDto.isDayStarted() );
         List<Employee> list = workingDayDto.getEmployees();
         if ( list != null ) {
             workingDay.employees( new ArrayList<Employee>( list ) );
         }
-        workingDay.dayStarted( workingDayDto.isDayStarted() );
+        workingDay.id( workingDayDto.getId() );
+        workingDay.totalCash( workingDayDto.getTotalCash() );
+        workingDay.totalCredit( workingDayDto.getTotalCredit() );
+        workingDay.totalDebit( workingDayDto.getTotalDebit() );
+        workingDay.totalDigitalAmount( workingDayDto.getTotalDigitalAmount() );
+        workingDay.totalEmployeeSalary( workingDayDto.getTotalEmployeeSalary() );
+        workingDay.totalMP( workingDayDto.getTotalMP() );
+        workingDay.totalQR( workingDayDto.getTotalQR() );
+        workingDay.totalStartCash( workingDayDto.getTotalStartCash() );
+        workingDay.totalTransf( workingDayDto.getTotalTransf() );
+        workingDay.totalWorkingDay( workingDayDto.getTotalWorkingDay() );
+        workingDay.totalWorkingDayWithDiscount( workingDayDto.getTotalWorkingDayWithDiscount() );
 
         return workingDay.build();
     }
@@ -50,22 +52,24 @@ public class WorkingDayMapperImpl implements WorkingDayMapper {
 
         WorkingDayDto workingDayDto = new WorkingDayDto();
 
-        workingDayDto.setId( workingDay.getId() );
         workingDayDto.setDate( workingDay.getDate() );
-        workingDayDto.setTotalStartCash( workingDay.getTotalStartCash() );
-        workingDayDto.setTotalWorkingDay( workingDay.getTotalWorkingDay() );
-        workingDayDto.setTotalCash( workingDay.getTotalCash() );
-        workingDayDto.setTotalWorkingDayWithDiscount( workingDay.getTotalWorkingDayWithDiscount() );
-        workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
-        workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
-        workingDayDto.setTotalCredit( workingDay.getTotalCredit() );
-        workingDayDto.setTotalMP( workingDay.getTotalMP() );
-        workingDayDto.setTotalEmployeeSalary( workingDay.getTotalEmployeeSalary() );
+        workingDayDto.setDayStarted( workingDay.isDayStarted() );
         List<Employee> list = workingDay.getEmployees();
         if ( list != null ) {
             workingDayDto.setEmployees( new ArrayList<Employee>( list ) );
         }
-        workingDayDto.setDayStarted( workingDay.isDayStarted() );
+        workingDayDto.setId( workingDay.getId() );
+        workingDayDto.setTotalCash( workingDay.getTotalCash() );
+        workingDayDto.setTotalCredit( workingDay.getTotalCredit() );
+        workingDayDto.setTotalDebit( workingDay.getTotalDebit() );
+        workingDayDto.setTotalDigitalAmount( workingDay.getTotalDigitalAmount() );
+        workingDayDto.setTotalEmployeeSalary( workingDay.getTotalEmployeeSalary() );
+        workingDayDto.setTotalMP( workingDay.getTotalMP() );
+        workingDayDto.setTotalQR( workingDay.getTotalQR() );
+        workingDayDto.setTotalStartCash( workingDay.getTotalStartCash() );
+        workingDayDto.setTotalTransf( workingDay.getTotalTransf() );
+        workingDayDto.setTotalWorkingDay( workingDay.getTotalWorkingDay() );
+        workingDayDto.setTotalWorkingDayWithDiscount( workingDay.getTotalWorkingDayWithDiscount() );
 
         return workingDayDto;
     }

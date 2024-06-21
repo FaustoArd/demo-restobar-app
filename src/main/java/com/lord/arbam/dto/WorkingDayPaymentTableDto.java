@@ -25,5 +25,9 @@ public class WorkingDayPaymentTableDto {
 	
 	private BigDecimal totalMP;
 	
+	private BigDecimal totalQR;
+	
+	private BigDecimal totalDigitalAmount;
+	
 	private BigDecimal totalEmployeeSalary;
 }

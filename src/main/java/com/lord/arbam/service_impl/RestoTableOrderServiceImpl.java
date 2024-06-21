@@ -55,13 +55,14 @@ public class RestoTableOrderServiceImpl implements RestoTableOrderService {
 
 	@Override
 	public RestoTableOrder createOrder(RestoTableOrder order) {
+		if(!order.isAmount()) {
 		Optional<RestoTableOrder> existingOrder = restoTableOrderRepository
 				.findByRestoTableIdAndProductId(order.getRestoTable().getId(), order.getProduct().getId());
 		if (existingOrder.isPresent()) {
 			log.info("orden existente,actualizando...");
 			return updateOrder(existingOrder.get(), order.getProductQuantity());
 		}
-		
+		}
 		RestoTable table = findRestoTableById(order.getRestoTable().getId());
 		
 		if(order.isAmount()){

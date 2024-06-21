@@ -571,7 +571,7 @@ public class RestoTableIntegrationControllersTest {
 		assertThat(workingDayDto.getTotalCash().doubleValue()).isEqualTo(tableClosed15CashTotal +tableClosed8CashTotal);
 		assertThat(workingDayDto.getTotalMP().doubleValue()).isEqualTo(tableClosed15MPTotal);
 		assertThat(workingDayDto.getTotalWorkingDay().doubleValue())
-		.isEqualTo(tableClosed15CashTotal + tableClosed8CashTotal + tableClosed15MPTotal + workingDayDto.getTotalStartCash().doubleValue());
+		.isEqualTo(tableClosed15CashTotal + tableClosed8CashTotal + tableClosed15MPTotal);
 	}
 
 	private  OrderPaymentMethodDto getOrderPaymentMethodDto(RestoTable restoTable, String strPaymentMethod,

@@ -86,8 +86,6 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		}).orElseThrow(() -> new ItemNotFoundException("Working Day not found"));
 	}
 
-	
-
 	private static double getTablesOrderTotals(List<RestoTableOrderClosed> orders) {
 		return orders.stream().mapToDouble(order -> order.getTotalOrderPrice().doubleValue()).sum();
 	}
@@ -110,54 +108,63 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 			wDay.setTotalTransf(getTableTotalTransf(totals));
 			wDay.setTotalCredit(getTableTotalCredit(totals));
 			wDay.setTotalMP(getTableTotalMp(totals));
-			wDay.setTotalWorkingDay(getTotalWorkingDay(totals).add(wDay.getTotalStartCash()));
-			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalWorkingDay().subtract(wDay.getTotalEmployeeSalary()));
+			wDay.setTotalQR(getTableTotalQR(totals));
+			wDay.setTotalWorkingDay(getTotalWorkingDay(totals));
+			wDay.setTotalWorkingDayWithDiscount(wDay.getTotalCash().subtract(wDay.getTotalEmployeeSalary()).add(wDay.getTotalStartCash()));
+			wDay.setTotalDigitalAmount(getTotalDigitalAmount(totals));
 			wDay.setDayStarted(false);
 			return workingDayRepository.save(wDay);
 
-		}).orElseThrow(() -> new ItemNotFoundException("No se encontro el dia de trabajo"));
-		System.out.println("cash:" + workingDay.getTotalCash());
-		System.out.println("debit: " + workingDay.getTotalDebit());
-		System.out.println("transf: " + workingDay.getTotalTransf());
-		System.out.println("mp: " + workingDay.getTotalMP());
+		}).orElseThrow(() -> new ItemNotFoundException("No se encontro la jornada de trabajo"));
 		return workingDay;
 	}
+
 	private WorkingDayPaymentTableDto getTotalResults(List<OrderPaymentMethod> orderPaymentMethods) {
 
 		WorkingDayPaymentTableDto wdPtDto = setWDPTDtoToDefault();
-		
+
 		orderPaymentMethods.stream().forEach(payment -> {
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("efectivo")) {
-				wdPtDto.setTotalCash(wdPtDto.getTotalCash().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+				
+				wdPtDto.setTotalCash(wdPtDto.getTotalCash().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de debito")) {
-				
-				wdPtDto.setTotalDebit(wdPtDto.getTotalDebit().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+
+				wdPtDto.setTotalDebit(wdPtDto.getTotalDebit().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("transferencia")) {
-			
-				wdPtDto.setTotalTransf(wdPtDto.getTotalTransf().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+
+				wdPtDto.setTotalTransf(wdPtDto.getTotalTransf().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de credito")) {
-			
-				wdPtDto.setTotalCredit(wdPtDto.getTotalCredit().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+
+				wdPtDto.setTotalCredit(wdPtDto.getTotalCredit().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")) {
-				
-				wdPtDto.setTotalMP(wdPtDto.getTotalMP().add(payment.getOrders().stream().map(order -> order.getTotalOrderPrice())
-						.reduce(BigDecimal.ZERO, BigDecimal::add)));
+
+				wdPtDto.setTotalMP(wdPtDto.getTotalMP().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
 			}
+			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("qr")) {
+
+				wdPtDto.setTotalQR(wdPtDto.getTotalQR().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+			}
+			
+			wdPtDto.setTotalDigitalAmount(wdPtDto.getTotalCredit().add(wdPtDto.getTotalDebit()).add(wdPtDto.getTotalMP())
+					.add(wdPtDto.getTotalQR()).add(wdPtDto.getTotalTransf()));
+			
 			wdPtDto.setTotalWorkingDay(
 					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));
 		});
 		return wdPtDto;
 	}
-	
-	private static  WorkingDayPaymentTableDto setWDPTDtoToDefault() {
+
+	private static WorkingDayPaymentTableDto setWDPTDtoToDefault() {
 		WorkingDayPaymentTableDto wDPTDto = new WorkingDayPaymentTableDto();
 		wDPTDto.setTotalWorkingDay(new BigDecimal(0));
 		wDPTDto.setTotalCash(new BigDecimal(0));
@@ -167,10 +174,12 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		wDPTDto.setTotalMP(new BigDecimal(0));
 		wDPTDto.setTotalStartCash(new BigDecimal(0));
 		wDPTDto.setTotalTransf(new BigDecimal(0));
+		wDPTDto.setTotalQR(new BigDecimal(0));
 		wDPTDto.setTotalWorkingDay(new BigDecimal(0));
 		wDPTDto.setTotalWorkingDayWithDiscount(new BigDecimal(0));
+		wDPTDto.setTotalDigitalAmount(new BigDecimal(0));
 		return wDPTDto;
-		
+
 	}
 
 	private static BigDecimal getTableTotalCash(List<WorkingDayPaymentTableDto> totals) {
@@ -199,10 +208,21 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return totals.stream().filter(f -> f.getTotalMP() != null).map(tableTotal -> tableTotal.getTotalMP())
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
+	
+	private static BigDecimal getTableTotalQR(List<WorkingDayPaymentTableDto> totals) {
+		return totals.stream().filter(f -> f.getTotalQR() != null).map(tableTotal -> tableTotal.getTotalQR())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
 
 	private static BigDecimal getTotalWorkingDay(List<WorkingDayPaymentTableDto> totals) {
 		return totals.stream().filter(f -> f.getTotalWorkingDay() != null)
 				.map(tableTotal -> tableTotal.getTotalWorkingDay()).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+	
+	private static BigDecimal getTotalDigitalAmount(List<WorkingDayPaymentTableDto> totals) {
+	return  totals.stream().filter(f -> f.getTotalDigitalAmount() != null)
+			.map(tableTotal -> tableTotal.getTotalDigitalAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
+	
 	}
 
 	@Override
@@ -261,7 +281,5 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		return (List<WorkingDay>) workingDayRepository.findByEmployeesId(employeeId);
 
 	}
-
-	
 
 }

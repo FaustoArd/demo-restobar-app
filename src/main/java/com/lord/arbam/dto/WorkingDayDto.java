@@ -34,6 +34,10 @@ public class WorkingDayDto {
 	
 	private BigDecimal totalMP;
 	
+	private BigDecimal totalQR;
+	
+	private BigDecimal totalDigitalAmount;
+	
 	private BigDecimal totalEmployeeSalary;
 
 	private List<Employee> employees;
