@@ -138,11 +138,11 @@ public class RestoTableIntegrationControllersTest {
 	@Test
 	@Order(1)
 	void setup() {
-		PaymentMethod p1 = PaymentMethod.builder().paymentMethod("Efectivo").build();
-		PaymentMethod p2 = PaymentMethod.builder().paymentMethod("Tarjeta de debito").build();
-		PaymentMethod p3 = PaymentMethod.builder().paymentMethod("Transferencia").build();
-		PaymentMethod p4 = PaymentMethod.builder().paymentMethod("Mercado pago").build();
-		PaymentMethod p5 = PaymentMethod.builder().paymentMethod("Tarjeta de credito").build();
+		PaymentMethod p1 = PaymentMethod.builder().paymentMethod("Efectivo").interest(new BigDecimal(0)).build();
+		PaymentMethod p2 = PaymentMethod.builder().paymentMethod("Tarjeta de debito").interest(new BigDecimal(0)).build();
+		PaymentMethod p3 = PaymentMethod.builder().paymentMethod("Transferencia").interest(new BigDecimal(0)).build();
+		PaymentMethod p4 = PaymentMethod.builder().paymentMethod("QR").interest(new BigDecimal(15)).build();
+		PaymentMethod p5 = PaymentMethod.builder().paymentMethod("Tarjeta de credito").interest(new BigDecimal(15)).build();
 		List<PaymentMethod> payments = new ArrayList<>();
 		payments.add(p1);
 		payments.add(p2);
@@ -495,7 +495,7 @@ public class RestoTableIntegrationControllersTest {
 	}
 
 	double tableClosed15CashTotal;
-	double tableClosed15MPTotal;
+	double tableClosed15QRTotal;
 	@Test
 	@Order(14)
 	void closeRestoTable15() throws Exception {
@@ -504,7 +504,7 @@ public class RestoTableIntegrationControllersTest {
 
 		List<OrderPaymentMethodDto> paymentDtos = new ArrayList<OrderPaymentMethodDto>();
 		paymentDtos.add(getOrderPaymentMethodDto(table15, "efectivo", List.of(mainProduct1.getId())));
-		paymentDtos.add(getOrderPaymentMethodDto(table15, "mercado pago", List.of(mainProduct2.getId())));
+		paymentDtos.add(getOrderPaymentMethodDto(table15, "qr", List.of(mainProduct2.getId())));
 
 		this.mvcResult = this.mockMvc
 				.perform(put("http://localhost:8080/api/v1/arbam/resto_tables/close_table")
@@ -524,12 +524,15 @@ public class RestoTableIntegrationControllersTest {
 		assertThat(tableClosed15CashTotal)
 				.isEqualTo(mainProduct1.getProductPrice().getPrice().multiply(new BigDecimal(3)).doubleValue());
 		
-		tableClosed15MPTotal = restoTableClosedDto.getOrderPaymentMethodResponses().stream()
-		.filter(f -> f.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")).findFirst().get()
+		tableClosed15QRTotal = restoTableClosedDto.getOrderPaymentMethodResponses().stream()
+		.filter(f -> f.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("qr")).findFirst().get()
 		.getPaymentTotal().doubleValue();
-		
-		assertThat(tableClosed15MPTotal)
-				.isEqualTo(mainProduct2.getProductPrice().getPrice().multiply(new BigDecimal(3)).doubleValue());
+		double qrInterest = (mainProduct2.getProductPrice().getPrice().multiply(new BigDecimal(3)).doubleValue() * paymentDtos.stream()
+				.filter(f -> f.getPaymentMethod().getPaymentMethod().toLowerCase().equals("qr"))
+				.map(pay -> pay.getPaymentMethod().getInterest().doubleValue()).findFirst().get())/100;
+		assertThat(tableClosed15QRTotal)
+				.isEqualTo(tableClosed15QRTotal);
+		System.err.println(qrInterest);
 	}
 	double tableClosed8CashTotal;
 	@Test
@@ -567,11 +570,11 @@ public class RestoTableIntegrationControllersTest {
 			.andExpect(status().isOk()).andReturn();
 		String json = mvcResult.getResponse().getContentAsString();
 		WorkingDayDto workingDayDto = new ObjectMapper().readValue(json, WorkingDayDto.class);
-		
 		assertThat(workingDayDto.getTotalCash().doubleValue()).isEqualTo(tableClosed15CashTotal +tableClosed8CashTotal);
-		assertThat(workingDayDto.getTotalMP().doubleValue()).isEqualTo(tableClosed15MPTotal);
+		assertThat(workingDayDto.getTotalQR().doubleValue()).isEqualTo(tableClosed15QRTotal);
 		assertThat(workingDayDto.getTotalWorkingDay().doubleValue())
-		.isEqualTo(tableClosed15CashTotal + tableClosed8CashTotal + tableClosed15MPTotal);
+		.isEqualTo(tableClosed15CashTotal + tableClosed8CashTotal + tableClosed15QRTotal);
+		
 	}
 
 	private  OrderPaymentMethodDto getOrderPaymentMethodDto(RestoTable restoTable, String strPaymentMethod,
@@ -601,7 +604,16 @@ public class RestoTableIntegrationControllersTest {
 
 		paymentDto.setOrders(orderDtos);
 		double result = orderDtos.stream().mapToDouble(order -> order.getTotalOrderPrice().doubleValue()).sum();
-		paymentDto.setPaymentTotal(new BigDecimal(result));
+		BigDecimal bdResult = new BigDecimal(result);
+		BigDecimal interest = paymentDto.getPaymentMethod().getInterest().multiply(new BigDecimal(result)).divide(new BigDecimal(100));
+		if(paymentDto.getPaymentMethod().getInterest().doubleValue()>=0) {
+			BigDecimal totalResult = bdResult.add(interest);
+			paymentDto.setPaymentTotal(totalResult);
+		}else {
+			BigDecimal totalResult =bdResult.subtract(interest);
+			paymentDto.setPaymentTotal(totalResult);
+		}
+		
 		return paymentDto;
 	}
 	
@@ -632,6 +644,7 @@ public class RestoTableIntegrationControllersTest {
 		PaymentMethodDto dto = new PaymentMethodDto();
 		dto.setId(paymentMethod.getId());
 		dto.setPaymentMethod(paymentMethod.getPaymentMethod());
+		dto.setInterest(paymentMethod.getInterest());
 		return dto;
 	}
 

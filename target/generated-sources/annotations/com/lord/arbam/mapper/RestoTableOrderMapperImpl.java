@@ -10,8 +10,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-18T23:52:20-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21 (Oracle Corporation)"
+    date = "2024-06-22T08:53:28-0300",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.34.0.v20230523-1233, environment: Java 21 (Oracle Corporation)"
 )
 public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
 
@@ -25,10 +25,10 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
 
         restoTableOrder.product( restoTableOrderDtoToProduct( restoTableOrderDto ) );
         restoTableOrder.restoTable( restoTableOrderDtoToRestoTable( restoTableOrderDto ) );
+        restoTableOrder.amount( restoTableOrderDto.isAmount() );
         restoTableOrder.id( restoTableOrderDto.getId() );
         restoTableOrder.productQuantity( restoTableOrderDto.getProductQuantity() );
         restoTableOrder.totalOrderPrice( restoTableOrderDto.getTotalOrderPrice() );
-        restoTableOrder.amount( restoTableOrderDto.isAmount() );
 
         return restoTableOrder.build();
     }
@@ -44,10 +44,10 @@ public class RestoTableOrderMapperImpl implements RestoTableOrderMapper {
         restoTableOrderDto.setProductId( restoTableOrderProductId( restoTableOrder ) );
         restoTableOrderDto.setProductName( restoTableOrderProductProductName( restoTableOrder ) );
         restoTableOrderDto.setRestoTableId( restoTableOrderRestoTableId( restoTableOrder ) );
+        restoTableOrderDto.setAmount( restoTableOrder.isAmount() );
         restoTableOrderDto.setId( restoTableOrder.getId() );
         restoTableOrderDto.setProductQuantity( restoTableOrder.getProductQuantity() );
         restoTableOrderDto.setTotalOrderPrice( restoTableOrder.getTotalOrderPrice() );
-        restoTableOrderDto.setAmount( restoTableOrder.isAmount() );
 
         return restoTableOrderDto;
     }

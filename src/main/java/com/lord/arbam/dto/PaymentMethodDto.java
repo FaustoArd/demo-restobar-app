@@ -1,5 +1,7 @@
 package com.lord.arbam.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,4 +14,6 @@ public class PaymentMethodDto {
 	
 
 	private String paymentMethod;
+	
+	private BigDecimal interest;
 }

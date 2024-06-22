@@ -126,40 +126,79 @@ public class WorkingDayServiceImpl implements WorkingDayService {
 		orderPaymentMethods.stream().forEach(payment -> {
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("efectivo")) {
 				
-				wdPtDto.setTotalCash(wdPtDto.getTotalCash().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				BigDecimal orderTotal =  wdPtDto.getTotalCash().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalCash(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalCash(orderTotal.subtract(interest));
+				}
+			
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de debito")) {
 
-				wdPtDto.setTotalDebit(wdPtDto.getTotalDebit().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				BigDecimal orderTotal =  wdPtDto.getTotalDebit().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalDebit(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalDebit(orderTotal.subtract(interest));
+				}
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("transferencia")) {
 
-				wdPtDto.setTotalTransf(wdPtDto.getTotalTransf().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				BigDecimal orderTotal =  wdPtDto.getTotalTransf().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalTransf(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalTransf(orderTotal.subtract(interest));
+				}
+				
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("tarjeta de credito")) {
 
-				wdPtDto.setTotalCredit(wdPtDto.getTotalCredit().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				BigDecimal orderTotal =  wdPtDto.getTotalCredit().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalCredit(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalCredit(orderTotal.subtract(interest));
+				}
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("mercado pago")) {
 
-				wdPtDto.setTotalMP(wdPtDto.getTotalMP().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				BigDecimal orderTotal =  wdPtDto.getTotalMP().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalMP(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalMP(orderTotal.subtract(interest));
+				}
+				
 			}
 			if (payment.getPaymentMethod().getPaymentMethod().equalsIgnoreCase("qr")) {
-
-				wdPtDto.setTotalQR(wdPtDto.getTotalQR().add(payment.getOrders().stream()
-						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+				
+				BigDecimal orderTotal =  wdPtDto.getTotalQR().add(payment.getOrders().stream()
+						.map(order -> order.getTotalOrderPrice()).reduce(BigDecimal.ZERO, BigDecimal::add));
+				BigDecimal interest = orderTotal.multiply(payment.getPaymentMethod().getInterest()).divide(new BigDecimal(100));
+				if(payment.getPaymentMethod().getInterest().doubleValue()>=0) {
+					wdPtDto.setTotalQR(orderTotal.add(interest));
+				}else {
+					wdPtDto.setTotalQR(orderTotal.subtract(interest));
+				}
+	
 			}
 			
 			wdPtDto.setTotalDigitalAmount(wdPtDto.getTotalCredit().add(wdPtDto.getTotalDebit()).add(wdPtDto.getTotalMP())
 					.add(wdPtDto.getTotalQR()).add(wdPtDto.getTotalTransf()));
-			
-			wdPtDto.setTotalWorkingDay(
-					wdPtDto.getTotalWorkingDay().add(new BigDecimal(getTablesOrderTotals(payment.getOrders()))));
+			wdPtDto.setTotalWorkingDay(wdPtDto.getTotalCash().add(wdPtDto.getTotalDigitalAmount()));
 		});
 		return wdPtDto;
 	}

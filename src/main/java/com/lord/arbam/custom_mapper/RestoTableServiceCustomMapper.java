@@ -17,7 +17,8 @@ public class RestoTableServiceCustomMapper {
 
 	
 	public RestoTableClosed  buildTableClosed(RestoTable findedTable,Employee employee,WorkingDay workingDay,List<OrderPaymentMethodDto> orderPaymentMethodDtos) {
-	 BigDecimal tableResult = orderPaymentMethodDtos.stream().map(payment -> payment.getPaymentTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		BigDecimal tableResult = orderPaymentMethodDtos.stream().map(payment -> payment.getPaymentTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 		return  RestoTableClosed.builder().tableNumber(findedTable.getTableNumber())
 				.employeeName(employee.getEmployeeName()).totalPrice(tableResult)
 				.workingDay(workingDay).build();

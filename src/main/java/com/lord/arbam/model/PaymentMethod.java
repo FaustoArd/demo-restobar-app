@@ -32,5 +32,8 @@ public class PaymentMethod {
 	@Column(name="payment_method")
 	private String paymentMethod;
 	
+	@Column(name="interest")
+	private BigDecimal interest;
+	
 
 }
